@@ -156,6 +156,95 @@ fetch_oida("mnk_customer_orders.csv") # 38 MB — includes suspicious order flag
 
 ---
 
+## Common scenarios
+
+### "I just want to explore the data before committing to a download"
+
+Start with the 2.4 MB sample — it's a small slice of the raw archive to help you understand the format:
+
+```bash
+dvc get https://github.com/nickmanoogian/oioda-registry samples/oida-bulk-download-sample.zip
+```
+
+For the structured CSVs, you can preview just the first few rows without downloading the whole file:
+
+```python
+import pandas as pd
+
+# reads only the first 100 rows — works for any size file
+preview = pd.read_csv(
+    "https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/pennsaid_bydates.csv",
+    nrows=100
+)
+print(preview.shape)
+print(preview.head())
+```
+
+### "I only need one or two columns from a large file"
+
+Use `usecols` to download and parse only the columns you care about — much faster and uses far less memory:
+
+```python
+import pandas as pd
+
+# pull just prescriber name, territory, and weekly totals — skip all the date columns
+df = pd.read_csv(
+    "pennsaid_bydates.csv",
+    usecols=["Prescriber Name", "Territory", "13wk Total PENNSAID 1.5", "prescriber_code"]
+)
+```
+
+### "I want the smallest useful dataset for mock data / CI"
+
+`prescribers.csv` (29 MB) is the best starting point — it's small, has no dependencies, and is the join key for every other dataset. `mnk_customer_orders.csv` (38 MB) is also great for testing order/flagging workflows.
+
+```bash
+# pull both in one command
+make get-small
+```
+
+Or just one:
+
+```bash
+dvc get https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+```
+
+### "I want to browse what's in the raw archive without downloading 7.5 TB"
+
+Download the manifest (581 MB compressed) and filter it locally:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("manifest.tsv.gz", sep="\t")
+
+# see what file types exist
+print(df["key"].str.split(".").str[-1].value_counts())
+
+# find all files for a specific document
+print(df[df["key"].str.contains("ffbb0235")])
+
+# get a random sample of 100 PDFs to download
+sample = df[df["key"].str.endswith(".pdf")].sample(100)
+```
+
+### "I want to understand the data before writing any code"
+
+Open `prescribers.csv` in Excel or Google Sheets — it's small enough to open directly and gives you a feel for how prescribers are identified and organized. Then cross-reference with [`data-products/SCHEMA.md`](data-products/SCHEMA.md) for column definitions.
+
+### "I'm using this in a shared project and want teammates to get the same data"
+
+Use `dvc import` instead of `dvc get`. It creates a small pointer file you commit to git — when teammates clone the project and run `dvc pull`, they get the exact same file you used:
+
+```bash
+dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+git add prescribers.csv.dvc .gitignore
+git commit -m "add prescribers dataset from OIDA registry"
+# teammates run: dvc pull
+```
+
+---
+
 ## Working with the data
 
 ### Where to start
