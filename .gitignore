@@ -3,6 +3,7 @@
 /data-products/*.zip
 /data-products/*.gz
 /data-products/*.txt
+/manifest.tsv.gz
 /f/
 
 # DVC internals
