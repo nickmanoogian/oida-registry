@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/mckinsey_full_dedup.readme.txt
+  etag: fa891a89bd35dfcf97565ff6c36fd25b
+  size: 797
+outs:
+- path: mckinsey_full_dedup.readme.txt
+  hash: etag
+  etag: fa891a89bd35dfcf97565ff6c36fd25b
+  size: 797
+  isexec: false

@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/mnk_customer_orders.csv.zip
+  etag: 601779a74b17067f8a2e453b6754e0b4
+  size: 3748041
+outs:
+- path: mnk_customer_orders.csv.zip
+  hash: etag
+  etag: 601779a74b17067f8a2e453b6754e0b4
+  size: 3748041
+  isexec: false

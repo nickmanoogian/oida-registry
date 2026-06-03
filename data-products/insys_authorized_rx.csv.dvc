@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/insys_authorized_rx.csv
+  etag: 4eb36c854cbdf8e2d250458517910a86-287
+  size: 4925627086
+outs:
+- path: insys_authorized_rx.csv
+  hash: etag
+  etag: 4eb36c854cbdf8e2d250458517910a86-287
+  size: 4925627086
+  isexec: false

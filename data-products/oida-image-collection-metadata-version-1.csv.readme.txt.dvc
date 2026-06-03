@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/oida-image-collection-metadata-version-1.csv.readme.txt
+  etag: 19de7daf993f52036e0892257d865d38
+  size: 223
+outs:
+- path: oida-image-collection-metadata-version-1.csv.readme.txt
+  hash: etag
+  etag: 19de7daf993f52036e0892257d865d38
+  size: 223
+  isexec: false

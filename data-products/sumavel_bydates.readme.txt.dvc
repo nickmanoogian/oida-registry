@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/sumavel_bydates.readme.txt
+  etag: 9e8071980f15bff8335e47664521a1cc
+  size: 200
+outs:
+- path: sumavel_bydates.readme.txt
+  hash: etag
+  etag: 9e8071980f15bff8335e47664521a1cc
+  size: 200
+  isexec: false

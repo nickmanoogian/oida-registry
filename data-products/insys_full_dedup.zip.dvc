@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/insys_full_dedup.zip
+  etag: fe82c635adc41cda01b1b10ffe4ddece-166
+  size: 2847899042
+outs:
+- path: insys_full_dedup.zip
+  hash: etag
+  etag: fe82c635adc41cda01b1b10ffe4ddece-166
+  size: 2847899042
+  isexec: false

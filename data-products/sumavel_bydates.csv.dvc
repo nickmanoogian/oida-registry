@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/sumavel_bydates.csv
+  etag: 09f17b517c30de76b6d6f8b037b2b474-6
+  size: 86697876
+outs:
+- path: sumavel_bydates.csv
+  hash: etag
+  etag: 09f17b517c30de76b6d6f8b037b2b474-6
+  size: 86697876
+  isexec: false

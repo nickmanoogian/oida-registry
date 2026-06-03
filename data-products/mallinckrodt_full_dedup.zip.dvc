@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/mallinckrodt_full_dedup.zip
+  etag: 7f863f3912eedd2f224d19e90e92f791-3823
+  size: 65677698529
+outs:
+- path: mallinckrodt_full_dedup.zip
+  hash: etag
+  etag: 7f863f3912eedd2f224d19e90e92f791-3823
+  size: 65677698529
+  isexec: false

@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/prescribers.csv
+  etag: 3cbd205e9286dc93122e8dba3220bcbb-2
+  size: 30878462
+outs:
+- path: prescribers.csv
+  hash: etag
+  etag: 3cbd205e9286dc93122e8dba3220bcbb-2
+  size: 30878462
+  isexec: false

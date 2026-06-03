@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/image_collection_version_1.zip
+  etag: 3f4fe9587986e02fa6978208d210da09-85
+  size: 1453563446
+outs:
+- path: image_collection_version_1.zip
+  hash: etag
+  etag: 3f4fe9587986e02fa6978208d210da09-85
+  size: 1453563446
+  isexec: false

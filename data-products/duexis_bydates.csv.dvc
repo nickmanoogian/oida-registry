@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/duexis_bydates.csv
+  etag: f9d28703c0f0ec6eadd2235e01bcebb6-7
+  size: 104867213
+outs:
+- path: duexis_bydates.csv
+  hash: etag
+  etag: f9d28703c0f0ec6eadd2235e01bcebb6-7
+  size: 104867213
+  isexec: false

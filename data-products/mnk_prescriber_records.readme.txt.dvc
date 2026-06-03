@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/mnk_prescriber_records.readme.txt
+  etag: 1edf0ea143cfd63841784ea465eae8ea
+  size: 267
+outs:
+- path: mnk_prescriber_records.readme.txt
+  hash: etag
+  etag: 1edf0ea143cfd63841784ea465eae8ea
+  size: 267
+  isexec: false

@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/xartemis_bydates.csv
+  etag: 47de0d21a21f30a7fc84705cf7991d61-10
+  size: 168545925
+outs:
+- path: xartemis_bydates.csv
+  hash: etag
+  etag: 47de0d21a21f30a7fc84705cf7991d61-10
+  size: 168545925
+  isexec: false
