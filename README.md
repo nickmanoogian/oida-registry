@@ -115,19 +115,41 @@ fetch_oida("mnk_customer_orders.csv")
 
 ---
 
-## Generating the full manifest
+## Full archive manifest
 
-To get a TSV listing of all ~7M files in the archive (keys, sizes, ETags):
+A pre-built manifest of all **22,307,281 files** (581 MB compressed) is available as a release artifact:
 
 ```bash
-# writes manifest.tsv.gz to the current directory (~200 MB compressed)
-python scripts/fetch_manifest.py
+# download via DVC
+dvc get https://github.com/nickmanoogian/oioda-registry manifest.tsv.gz
 
-# subset — just the document archive for a specific prefix
-python scripts/fetch_manifest.py --prefix f/f/b/ --out fb_manifest.tsv.gz
+# or direct download
+curl -L -O https://github.com/nickmanoogian/oioda-registry/releases/download/v1.0.0/manifest.tsv.gz
 ```
 
-The manifest is not committed to this repo (too large for git) but can be regenerated at any time from the public S3 bucket.
+Columns: `key`, `size`, `etag`
+
+```python
+import pandas as pd
+
+df = pd.read_csv("manifest.tsv.gz", sep="\t")
+
+# browse the raw document archive for a specific prefix
+raw_f = df[df["key"].str.startswith("f/")]
+
+# filter by file type
+pdfs = df[df["key"].str.endswith(".pdf")]
+```
+
+To regenerate from scratch (e.g. if the bucket is updated):
+
+```bash
+# rewrites manifest.tsv.gz locally — takes ~30 min for 22M files
+python scripts/fetch_manifest.py
+
+# or just a subset
+python scripts/fetch_manifest.py --prefix f/f/b/ --out fb_manifest.tsv.gz
+```
 
 ---
 
