@@ -3,8 +3,12 @@
 /data-products/*.zip
 /data-products/*.gz
 /data-products/*.txt
+/metadata/*.parquet
+/samples/*.zip
 /manifest.tsv.gz
-/f/
+
+# raw document archive (16 single-letter prefix directories)
+/[a-z]/
 
 # DVC internals
 .dvc/cache

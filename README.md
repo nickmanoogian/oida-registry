@@ -8,28 +8,45 @@ A [DVC data registry](https://dvc.org/doc/use-cases/data-registry) providing rep
 
 ## Available datasets
 
+### `data-products/` — Structured datasets (analysis-ready)
+
 | File | Size | Description |
 |------|------|-------------|
-| `duexis_bydates.csv` | 100 MB | Duexis prescriptions by date |
-| `exalgo_bydates.csv` | 1.2 GB | Exalgo prescriptions by date |
-| `image_collection_version_1.zip` | 1.4 GB | Document image collection v1 |
-| `insys_authorized_rx.csv` | 4.6 GB | Insys authorized prescriptions (full CSV) |
-| `insys_authorized_rx.csv.zip` | 693 MB | Insys authorized prescriptions (compressed) |
-| `insys_full_dedup.zip` | 2.7 GB | Insys full deduplicated dataset |
-| `mallinckrodt_full_dedup.zip` | 61 GB | Mallinckrodt full deduplicated dataset |
-| `mckinsey_full_dedup.zip` | 4.0 GB | McKinsey full deduplicated dataset |
-| `mnk_customer_orders.csv` | 38 MB | Mallinckrodt customer orders |
+| `prescribers.csv` | 29 MB | Master prescriber list — joins to all bydates files |
+| `mnk_customer_orders.csv` | 38 MB | Mallinckrodt customer order records |
 | `mnk_customer_orders.csv.zip` | 3.6 MB | Mallinckrodt customer orders (compressed) |
-| `mnk_prescriber_records.zip` | 301 MB | Mallinckrodt prescriber records |
 | `oida-image-collection-metadata-version-1.csv.gz` | 1.7 MB | Image collection metadata |
-| `pennsaid_bydates.csv` | 1.8 GB | Pennsaid prescriptions by date |
-| `prescribers.csv` | 29 MB | Prescriber records |
+| `duexis_bydates.csv` | 100 MB | Duexis prescriptions by date |
 | `sumavel_bydates.csv` | 83 MB | Sumavel prescriptions by date |
 | `xartemis_bydates.csv` | 161 MB | Xartemis prescriptions by date |
+| `mnk_prescriber_records.zip` | 301 MB | Mallinckrodt prescriber records |
+| `insys_authorized_rx.csv.zip` | 693 MB | Insys authorized prescriptions (compressed) |
+| `exalgo_bydates.csv` | 1.2 GB | Exalgo prescriptions by date |
+| `image_collection_version_1.zip` | 1.4 GB | Document image collection v1 |
+| `pennsaid_bydates.csv` | 1.8 GB | Pennsaid prescriptions by date |
+| `insys_full_dedup.zip` | 2.7 GB | Insys full deduplicated dataset |
+| `mckinsey_full_dedup.zip` | 4.0 GB | McKinsey full deduplicated dataset |
+| `insys_authorized_rx.csv` | 4.6 GB | Insys authorized prescriptions (full CSV) |
+| `mallinckrodt_full_dedup.zip` | 61 GB | Mallinckrodt full deduplicated dataset |
 
-Each dataset also has a corresponding `.readme.txt` with source notes.
+Each dataset has a corresponding `.readme.txt` with source notes. See [`data-products/SCHEMA.md`](data-products/SCHEMA.md) for full column descriptions.
 
-The raw document archive contains ~7 million individual PDFs, TIFFs, and OCR files (~2.4 TB). See [Generating the full manifest](#generating-the-full-manifest) below.
+### `metadata/` — Archive indexes (Parquet)
+
+| File | Size | Description |
+|------|------|-------------|
+| `metadata/oida-index.parquet` | 2.2 GB | Full document index |
+| `metadata/oida-index-by-artifact.parquet` | 2.6 GB | Document index grouped by artifact |
+
+### `samples/` — Sample data
+
+| File | Size | Description |
+|------|------|-------------|
+| `samples/oida-bulk-download-sample.zip` | 2.4 MB | Small sample of the bulk archive |
+
+### Raw document archive — 22.3 million files, 7.5 TB
+
+The full archive is split across 16 single-letter prefix directories (`f/`, `g/`, `h/`, ...), each containing ~1.4 million individual PDFs, TIFFs, and OCR files (~460 GB each). See [Generating the full manifest](#generating-the-full-manifest) to browse or selectively download from the raw archive.
 
 ---
 

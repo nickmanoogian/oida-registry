@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/metadata/oida-index-by-artifact.parquet
+  etag: ce89ba78b1d60a6f38bccfc2c330c631-330
+  size: 2766092215
+outs:
+- path: oida-index-by-artifact.parquet
+  hash: etag
+  etag: ce89ba78b1d60a6f38bccfc2c330c631-330
+  size: 2766092215
+  isexec: false

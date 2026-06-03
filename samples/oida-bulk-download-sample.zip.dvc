@@ -1,0 +1,10 @@
+deps:
+- path: https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/samples/oida-bulk-download-sample.zip
+  etag: f3d1851cddb7157f13ea38d0ceaa3ed4
+  size: 2524005
+outs:
+- path: oida-bulk-download-sample.zip
+  hash: etag
+  etag: f3d1851cddb7157f13ea38d0ceaa3ed4
+  size: 2524005
+  isexec: false
