@@ -1,102 +1,143 @@
-# Opioid Industry Documents Archive — DVC Data Registry
+# Opioid Industry Documents Archive — Data Registry
 
-A [DVC data registry](https://dvc.org/doc/use-cases/data-registry) providing reproducible, versioned access to the [Opioid Industry Documents Archive (OIDA)](https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/index.html) — a public dataset of internal documents from opioid manufacturers and distributors.
+This repository gives you access to the **Opioid Industry Documents Archive (OIDA)** — a public dataset of internal documents from opioid manufacturers and distributors, released as part of litigation and public health research.
 
-**No data is stored here.** This repo contains only `.dvc` pointer files that let you pull exactly the files you need from the original public S3 bucket — no AWS credentials required.
+You can use this data for research, analysis, mock/test data in projects, or to understand patterns in how opioid products were marketed and prescribed.
 
 ---
 
-## Available datasets
+## What is this repo?
 
-### `data-products/` — Structured datasets (analysis-ready)
+Think of this as a **card catalog**, not a library shelf. The actual data files live in a public storage bucket on Amazon S3 — this repo just contains a map of what's there and tools to pull exactly what you need into your project. Nothing is re-hosted here, and you don't need an Amazon account or any credentials to access the data.
 
-| File | Size | Description |
-|------|------|-------------|
-| `prescribers.csv` | 29 MB | Master prescriber list — joins to all bydates files |
-| `mnk_customer_orders.csv` | 38 MB | Mallinckrodt customer order records |
-| `mnk_customer_orders.csv.zip` | 3.6 MB | Mallinckrodt customer orders (compressed) |
-| `oida-image-collection-metadata-version-1.csv.gz` | 1.7 MB | Image collection metadata |
-| `duexis_bydates.csv` | 100 MB | Duexis prescriptions by date |
-| `sumavel_bydates.csv` | 83 MB | Sumavel prescriptions by date |
-| `xartemis_bydates.csv` | 161 MB | Xartemis prescriptions by date |
+When you use this repo, you're downloading directly from the original public source. That means:
+- The data is always the authoritative version
+- You only download what you actually need
+- Anyone can reproduce your exact dataset by referencing this repo
+
+---
+
+## What's in the dataset?
+
+The archive has two main parts:
+
+### Structured data (analysis-ready spreadsheets)
+These are the files most useful for research and mock data. They're in CSV or ZIP format and can be opened in Excel, Python, R, or any data tool.
+
+| File | Size | What it contains |
+|------|------|-----------------|
+| `prescribers.csv` | 29 MB | Master list of prescribers — links to all other datasets. **Start here.** |
+| `mnk_customer_orders.csv` | 38 MB | Mallinckrodt customer orders, including suspicious order flags |
+| `oida-image-collection-metadata-version-1.csv.gz` | 1.7 MB | Index of the document image collection |
+| `duexis_bydates.csv` | 100 MB | Weekly Duexis prescription counts by prescriber (2012–2013) |
+| `sumavel_bydates.csv` | 83 MB | Weekly Sumavel prescription counts by prescriber (2012–2014) |
+| `xartemis_bydates.csv` | 161 MB | Weekly Xartemis XR prescription counts by prescriber (2014) |
 | `mnk_prescriber_records.zip` | 301 MB | Mallinckrodt prescriber records |
-| `insys_authorized_rx.csv.zip` | 693 MB | Insys authorized prescriptions (compressed) |
-| `exalgo_bydates.csv` | 1.2 GB | Exalgo prescriptions by date |
-| `image_collection_version_1.zip` | 1.4 GB | Document image collection v1 |
-| `pennsaid_bydates.csv` | 1.8 GB | Pennsaid prescriptions by date |
-| `insys_full_dedup.zip` | 2.7 GB | Insys full deduplicated dataset |
-| `mckinsey_full_dedup.zip` | 4.0 GB | McKinsey full deduplicated dataset |
-| `insys_authorized_rx.csv` | 4.6 GB | Insys authorized prescriptions (full CSV) |
-| `mallinckrodt_full_dedup.zip` | 61 GB | Mallinckrodt full deduplicated dataset |
+| `insys_authorized_rx.csv.zip` | 693 MB | Insys prescription transaction records (compressed) |
+| `exalgo_bydates.csv` | 1.2 GB | Weekly Exalgo prescription counts by prescriber (2012–2014) |
+| `image_collection_version_1.zip` | 1.4 GB | Document image collection |
+| `pennsaid_bydates.csv` | 1.8 GB | Weekly Pennsaid prescription counts by prescriber (2012–2014) |
+| `insys_full_dedup.zip` | 2.7 GB | Full Insys document collection |
+| `mckinsey_full_dedup.zip` | 4.0 GB | Full McKinsey document collection |
+| `insys_authorized_rx.csv` | 4.6 GB | Insys prescription transaction records (full, uncompressed) |
+| `mallinckrodt_full_dedup.zip` | 61 GB | Full Mallinckrodt document collection |
 
-Each dataset has a corresponding `.readme.txt` with source notes. See [`data-products/SCHEMA.md`](data-products/SCHEMA.md) for full column descriptions.
+> Each dataset also has a `.readme.txt` file with source notes. For detailed column descriptions, see [`data-products/SCHEMA.md`](data-products/SCHEMA.md).
 
-### `metadata/` — Archive indexes (Parquet)
+### Archive indexes (for browsing the raw document archive)
 
-| File | Size | Description |
-|------|------|-------------|
-| `metadata/oida-index.parquet` | 2.2 GB | Full document index |
-| `metadata/oida-index-by-artifact.parquet` | 2.6 GB | Document index grouped by artifact |
+| File | Size | What it contains |
+|------|------|-----------------|
+| `metadata/oida-index.parquet` | 2.2 GB | Index of every document in the archive |
+| `metadata/oida-index-by-artifact.parquet` | 2.6 GB | Same index, grouped by artifact/exhibit |
 
-### `samples/` — Sample data
+### Sample
 
-| File | Size | Description |
-|------|------|-------------|
-| `samples/oida-bulk-download-sample.zip` | 2.4 MB | Small sample of the bulk archive |
+| File | Size | What it contains |
+|------|------|-----------------|
+| `samples/oida-bulk-download-sample.zip` | 2.4 MB | A small sample of the raw archive — good for exploring the format |
 
-### Raw document archive — 22.3 million files, 7.5 TB
-
-The full archive is split across 16 single-letter prefix directories (`f/`, `g/`, `h/`, ...), each containing ~1.4 million individual PDFs, TIFFs, and OCR files (~460 GB each). See [Generating the full manifest](#generating-the-full-manifest) to browse or selectively download from the raw archive.
+### Raw document archive
+The full archive contains **22.3 million individual files** (PDFs, TIFFs, OCR text files) totalling **7.5 TB**. These are split across 16 folders. Use the [manifest](#full-archive-manifest) to browse and selectively download from this archive.
 
 ---
 
-## Quickstart
+## For non-engineers: how to get the data
 
-### Option A — DVC (recommended, reproducible)
+You don't need to be a programmer to download and use this data. Here's the simplest path:
 
-```bash
-pip install "dvc[s3]"
+### Option 1 — Download directly (no setup required)
 
-# pull a single file into the current directory
-dvc get https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+Every file in the `data-products/` folder can be downloaded directly from the public S3 bucket. Just construct the URL like this:
 
-# or import with lineage tracking into your own project
-dvc import https://github.com/nickmanoogian/oioda-registry data-products/pennsaid_bydates.csv
+```
+https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/FILENAME
 ```
 
-### Option B — Direct download (no DVC needed)
+For example, to download `prescribers.csv`, paste this into your browser or use curl:
+
+```
+https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/data-products/prescribers.csv
+```
+
+### Option 2 — Use the download script (requires Python)
+
+If you have Python installed (it comes pre-installed on Mac):
 
 ```bash
+# clone this repo
 git clone https://github.com/nickmanoogian/oioda-registry
 cd oioda-registry
 
-# list available files
+# see what's available
 python scripts/download.py --list
 
-# download one or more files
+# download a file
 python scripts/download.py prescribers.csv --out ./data/
-python scripts/download.py pennsaid_bydates.csv mnk_customer_orders.csv --out ./data/
 ```
 
 ---
 
-## Using in your project
+## For engineers: reproducible project integration
 
-### With DVC (full lineage tracking)
+### Setup
+
+```bash
+pip install "dvc[s3]"
+```
+
+### Pull a file into any project
+
+```bash
+# one-time download — file lands in current directory
+dvc get https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+
+# import with tracked lineage — creates a .dvc pointer file you commit to git
+dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+```
+
+### Adding to a project so teammates can reproduce it
 
 ```bash
 # in your project root
-dvc import https://github.com/nickmanoogian/oioda-registry data-products/insys_full_dedup.zip
+dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv --out data/prescribers.csv
 
-# this creates insys_full_dedup.zip.dvc — commit it to git
-git add insys_full_dedup.zip.dvc .gitignore
-git commit -m "add OIDA insys dataset"
+# commit the pointer (not the data)
+git add data/prescribers.csv.dvc .gitignore
+git commit -m "add OIDA prescribers dataset"
 
-# teammates reproduce it with
+# anyone who clones your project reproduces the exact same file with:
 dvc pull
 ```
 
 ### As mock/fixture data in tests
+
+```bash
+# pull only the small files — fast enough for CI
+make get-small
+```
+
+Or in Python:
 
 ```python
 import subprocess
@@ -109,15 +150,117 @@ def fetch_oida(filename, dest="tests/fixtures"):
         "--out", f"{dest}/{filename}",
     ], check=True)
 
-fetch_oida("prescribers.csv")   # 29 MB — fast enough for CI
-fetch_oida("mnk_customer_orders.csv")
+fetch_oida("prescribers.csv")        # 29 MB — good for CI
+fetch_oida("mnk_customer_orders.csv") # 38 MB — includes suspicious order flags
 ```
+
+---
+
+## Working with the data
+
+### Where to start
+
+If you're exploring this dataset for the first time:
+
+1. **Start with `prescribers.csv`** (29 MB) — it's the master list of prescribers and joins to every other dataset via the `prescriber_code` / `prescriber_number_code` column.
+2. **Pick one bydates file** for the drug you're interested in — these show weekly prescription counts by prescriber over time.
+3. **Use `mnk_customer_orders.csv`** if you're interested in distribution/ordering patterns rather than prescriptions.
+
+### Loading the data
+
+**Small files (under ~200 MB) — load directly:**
+```python
+import pandas as pd
+
+prescribers = pd.read_csv("prescribers.csv")
+orders = pd.read_csv("mnk_customer_orders.csv")
+```
+
+**Large CSVs (1 GB+) — read in chunks to avoid memory issues:**
+```python
+import pandas as pd
+
+chunks = []
+for chunk in pd.read_csv("pennsaid_bydates.csv", chunksize=10_000):
+    # filter or process before accumulating
+    chunks.append(chunk[chunk["Territory"] == "Northeast"])
+
+df = pd.concat(chunks)
+```
+
+**Parquet files (metadata index) — requires pyarrow:**
+```python
+pip install pyarrow
+
+import pandas as pd
+index = pd.read_parquet("oida-index.parquet")
+```
+
+**ZIP files — extract first:**
+```python
+import zipfile
+with zipfile.ZipFile("insys_full_dedup.zip") as z:
+    z.extractall("insys_data/")
+```
+
+### Joining datasets
+
+The bydates files (Duexis, Exalgo, Pennsaid, etc.) connect to `prescribers.csv` via a shared prescriber key:
+
+| In bydates files | In prescribers.csv |
+|---|---|
+| `prescriber_code` (last column) | `prescriber_number_code` |
+
+```python
+import pandas as pd
+
+prescribers = pd.read_csv("prescribers.csv")
+pennsaid    = pd.read_csv("pennsaid_bydates.csv")
+
+# merge to get prescriber details alongside prescription data
+merged = pennsaid.merge(
+    prescribers,
+    left_on="prescriber_code",
+    right_on="prescriber_number_code",
+    how="left"
+)
+```
+
+### Understanding the bydates format
+
+The bydates CSVs are in **wide format** — each row is one prescriber, and there are hundreds of columns, one per week. The columns follow the pattern `YYYY-MM-DD-{drug}` for prescription counts and `YYYY-MM-DD-{drug}-market` for the total market.
+
+To work with them in a more standard long format:
+
+```python
+import pandas as pd
+
+df = pd.read_csv("pennsaid_bydates.csv")
+
+# identify the weekly columns (they start with a year)
+id_cols = ["Prescriber Name", "Address", "Territory", "prescriber_code"]
+date_cols = [c for c in df.columns if c[0].isdigit()]
+
+# reshape to long format: one row per prescriber per week
+long = df.melt(id_vars=id_cols, value_vars=date_cols,
+               var_name="week_drug", value_name="scripts")
+```
+
+### Files to avoid loading fully into memory
+
+| File | Size | Recommendation |
+|------|------|----------------|
+| `insys_authorized_rx.csv` | 4.6 GB | Use chunked reading or filter on load |
+| `pennsaid_bydates.csv` | 1.8 GB | Use chunked reading or select columns |
+| `exalgo_bydates.csv` | 1.2 GB | Use chunked reading or select columns |
+| `mallinckrodt_full_dedup.zip` | 61 GB | Extract only needed files from ZIP |
+| `metadata/oida-index.parquet` | 2.2 GB | Use `filters=` param in `read_parquet` to push down predicates |
 
 ---
 
 ## Full archive manifest
 
-A pre-built manifest of all **22,307,281 files** (581 MB compressed) is available as a release artifact:
+A pre-built index of all **22,307,281 files** in the raw archive (581 MB compressed) is available as a release artifact. It's a gzipped TSV with columns: `key`, `size`, `etag`.
 
 ```bash
 # download via DVC
@@ -127,34 +270,50 @@ dvc get https://github.com/nickmanoogian/oioda-registry manifest.tsv.gz
 curl -L -O https://github.com/nickmanoogian/oioda-registry/releases/download/v1.0.0/manifest.tsv.gz
 ```
 
-Columns: `key`, `size`, `etag`
+**Browsing the manifest:**
 
 ```python
 import pandas as pd
 
 df = pd.read_csv("manifest.tsv.gz", sep="\t")
 
-# browse the raw document archive for a specific prefix
+print(f"{len(df):,} files, {df['size'].sum()/1e12:.1f} TB total")
+
+# filter to a specific archive prefix
 raw_f = df[df["key"].str.startswith("f/")]
 
-# filter by file type
+# find all PDFs
 pdfs = df[df["key"].str.endswith(".pdf")]
+
+# find all files for a specific document ID
+doc = df[df["key"].str.contains("ffbb0235")]
 ```
 
-To regenerate from scratch (e.g. if the bucket is updated):
+To regenerate the manifest if the bucket is updated:
 
 ```bash
-# rewrites manifest.tsv.gz locally — takes ~30 min for 22M files
-python scripts/fetch_manifest.py
-
-# or just a subset
-python scripts/fetch_manifest.py --prefix f/f/b/ --out fb_manifest.tsv.gz
+python scripts/fetch_manifest.py        # full rebuild (~30 min)
+python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz  # subset
 ```
 
 ---
 
-## Source
+## Makefile shortcuts
+
+```bash
+make list        # list all datasets with sizes
+make get-small   # download files under 100 MB (good for mock data / CI)
+make get-all     # download all structured datasets
+make manifest    # regenerate manifest.tsv.gz
+make verify      # check all S3 URLs are still reachable
+```
+
+---
+
+## Source and attribution
 
 - **Dataset:** [Opioid Industry Documents Archive](https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/index.html)
 - **S3 bucket:** `s3://opioid-industry-documents-archive-dataset-bucket` (public, no credentials required)
 - **Registry repo:** https://github.com/nickmanoogian/oioda-registry
+
+This registry was built to make the OIDA dataset easier to use reproducibly across projects. The underlying data is a public resource — if you use it, consider citing the original archive.
