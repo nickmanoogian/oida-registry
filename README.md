@@ -156,6 +156,113 @@ fetch_oida("mnk_customer_orders.csv") # 38 MB — includes suspicious order flag
 
 ---
 
+## Relativity mock data — pre-built workspace datasets
+
+If you're building Relativity features and need realistic test data, this repo includes
+pre-generated workspace datasets at three litigation scales. These are **not** raw OIDA files —
+they are structured CSVs with every Relativity field already populated: custodians, file types,
+workflow stages, batch assignments, TAR scores, Bates numbers, privilege flags, email threading,
+and more. Built to mirror a real matter, not synthetic random data.
+
+See [`mock-data/RULES.md`](mock-data/RULES.md) for the full specification of what makes these
+datasets realistic and how the distributions were chosen.
+
+### Choose your tier
+
+| | Small | Medium | Large |
+|---|---|---|---|
+| **Documents** | ~1,430 | ~9,800 | ~148,000 |
+| **Best for** | Quick tests, CI fixtures, component dev | Feature dev, analytics, full workflow | Scale testing, performance, TAR |
+| **Custodians** | 4 | 10 | 40 |
+| **File types** | 25 types | 30 types | 30+ types |
+| **Includes** | Emails, Office, PDF, Teams, Slack, images | + Google Workspace, Bloomberg, mobile chat | + full distribution across all types |
+| **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) |
+
+### Get the small tier (fastest — already in the repo)
+
+```bash
+# pull directly into your project — no release download needed
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/documents.csv
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/custodians.json
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/email-families.json
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/batches.json
+```
+
+Or clone and use directly:
+```bash
+git clone https://github.com/nickmanoogian/oioda-registry
+# files are already there at mock-data/small/
+```
+
+### Get the medium tier (recommended for most feature work)
+
+```bash
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/documents.csv
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/custodians.json
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/email-families.json
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/batches.json
+```
+
+### Get the large tier (scale and performance testing)
+
+```bash
+# documents.csv is compressed — decompress after download
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/documents.csv.gz
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/custodians.json
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/email-families.json.gz
+dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/batches.json
+
+gunzip documents.csv.gz
+gunzip email-families.json.gz
+```
+
+### Load in Python
+
+```python
+import pandas as pd, json
+
+docs = pd.read_csv("documents.csv")
+
+# filter by workflow stage
+review_pop = docs[docs["Workflow Stage"].str.startswith("Review")]
+responsive = docs[docs["Responsiveness"] == "Responsive"]
+privileged = docs[docs["Privilege"] == "Privileged"]
+produced   = docs[docs["Bates Begin"] != ""]
+
+# filter by file type
+emails = docs[docs["File Type Category"].isin(["Email - MSG", "Email - EML"])]
+rsmf   = docs[docs["File Type Category"].str.contains("RSMF")]
+pdfs   = docs[docs["File Type Category"].str.startswith("PDF")]
+
+# TAR score distribution
+import matplotlib.pyplot as plt
+review_pop["TAR Score"].astype(float).hist(bins=20)
+plt.title("TAR Score Distribution (bimodal)")
+
+# custodians
+with open("custodians.json") as f:
+    custodians = json.load(f)
+
+# email threading
+with open("email-families.json") as f:
+    families = json.load(f)
+```
+
+### Regenerate with different settings
+
+```bash
+# default seed (42) — always produces the same dataset
+python scripts/generate_mock_metadata.py --tier small
+
+# different seed — different but equally realistic dataset
+python scripts/generate_mock_metadata.py --tier medium --seed 99
+
+# custom output directory
+python scripts/generate_mock_metadata.py --tier large --out ./my-test-data/
+```
+
+---
+
 ## Common scenarios
 
 ### "I just want to explore the data before committing to a download"
