@@ -4,7 +4,8 @@ MOCK_OUT  := ./mock-data
 
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
-        mock-regen-small mock-regen-medium mock-regen-large
+        mock-regen-small mock-regen-medium mock-regen-large \
+        load-small load-small-synthetic load-medium load-large
 
 help:
 	@echo ""
@@ -23,6 +24,12 @@ help:
 	@echo "  make mock-regen-small   Regenerate small tier from the generator script"
 	@echo "  make mock-regen-medium  Regenerate medium tier"
 	@echo "  make mock-regen-large   Regenerate large tier"
+	@echo ""
+	@echo "  ── Native file load packages (Relativity import) ─────────────"
+	@echo "  make load-small          Build small tier: native files + .dat load file"
+	@echo "  make load-small-synthetic  Same, synthetic content (no S3, faster)"
+	@echo "  make load-medium         Build medium tier load package"
+	@echo "  make load-large          Build large tier load package"
 	@echo ""
 	@echo "  OUT=$(OUT)       — raw OIDA download dir"
 	@echo "  MOCK_OUT=$(MOCK_OUT)  — mock data dir"

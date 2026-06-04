@@ -4,6 +4,17 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [v1.4.1] — 2026-06-04
+
+### Changed — DRY cleanup across all scripts
+
+- `fetch_manifest.py`: pre-compute XML namespace tag names outside loop; `urlencode` for URL building; `PROGRESS_INTERVAL` constant
+- `validate_mock_data.py`: pre-filter doc slices once at top instead of 10+ full-list scans; dict-based JSON loading; `EMAIL_TYPES` / `CONTAINER_TYPES` sets; Rules 7 and 8 collapsed to loops; cleaner GPS predicate
+- `generate_mock_metadata.py`: `ORG_COMPANY_NAME` constant replaces inline dict literal; `bates_n` computed from `ORG_BATES_PREFIX.values()` (single source of truth); unused `n_redacted` removed; O(1) doc lookup in `find_or_stub` via pre-built dict
+- `build_load_package.py`: 50-branch `if/elif` in `doc_to_dat_row` replaced with declarative `_COLUMN_MAP` dict; `build_family_index` simplified
+
+---
+
 ## [v1.4.0] — 2026-06-04
 
 ### Added — Native file load package generator (Mode B)

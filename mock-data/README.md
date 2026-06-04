@@ -140,6 +140,33 @@ priv_lit = docs[(docs["Privilege"] == "Privileged") & (docs["Narrative Phase"] =
 
 ---
 
+## Loading into Relativity (Mode B — native files)
+
+To produce actual native files and a Relativity `.dat` load file ready for workspace import:
+
+```bash
+# install native file dependencies (one-time)
+pip install python-docx openpyxl python-pptx fpdf2
+
+# build with real OIDA OCR content
+make load-small
+
+# or synthetic content only (no network, faster)
+python scripts/build_load_package.py --tier small --no-oida
+```
+
+Output in `load-packages/small/`:
+
+| File | Description |
+|------|-------------|
+| `natives/` | ~1,400 actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files |
+| `load-file.dat` | Relativity Concordance load file — 53 fields, all metadata |
+| `IMPORT_README.txt` | Step-by-step Relativity import instructions |
+
+The 13 scripted HOT- documents get hand-crafted MDL 2804 content. All other documents use real OIDA OCR text from the S3 archive.
+
+---
+
 ## Regenerating
 
 ```bash
