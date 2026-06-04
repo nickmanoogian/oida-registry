@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.1.0/medium-documents.csv
+  size: 7952778
+outs:
+- path: documents.csv
+  size: 7952778
+  isexec: false

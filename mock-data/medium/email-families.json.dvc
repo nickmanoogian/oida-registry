@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.1.0/medium-email-families.json
+  size: 641045
+outs:
+- path: email-families.json
+  size: 641045
+  isexec: false

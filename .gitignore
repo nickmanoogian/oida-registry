@@ -1,3 +1,7 @@
+# generated mock data for medium/large tiers (too large for git — hosted as releases)
+/mock-data/medium/
+/mock-data/large/
+
 # actual data files — tracked by DVC, not git
 /data-products/*.csv
 /data-products/*.zip

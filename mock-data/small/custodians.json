@@ -1,0 +1,47 @@
+[
+  {
+    "id": "C001",
+    "name": "Michael Brennan",
+    "email": "michael.brennan@mallinckrodt.com",
+    "role": "VP, Sales & Marketing",
+    "dept": "Sales",
+    "doc_target": 700,
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-15",
+    "key": true,
+    "actual_doc_count": 700
+  },
+  {
+    "id": "C002",
+    "name": "Sarah Chen",
+    "email": "sarah.chen@mallinckrodt.com",
+    "role": "Regional Sales Director",
+    "dept": "Sales",
+    "doc_target": 350,
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-18",
+    "actual_doc_count": 350
+  },
+  {
+    "id": "C003",
+    "name": "David Park",
+    "email": "david.park@mallinckrodt.com",
+    "role": "District Manager",
+    "dept": "Sales",
+    "doc_target": 300,
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-20",
+    "actual_doc_count": 300
+  },
+  {
+    "id": "C004",
+    "name": "Lisa Torres",
+    "email": "lisa.torres@mallinckrodt.com",
+    "role": "Executive Assistant",
+    "dept": "Administration",
+    "doc_target": 150,
+    "hold": "Acknowledged",
+    "hold_date": "2018-07-02",
+    "actual_doc_count": 150
+  }
+]
