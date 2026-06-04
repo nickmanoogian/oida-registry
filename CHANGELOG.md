@@ -4,6 +4,31 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [v1.4.0] — 2026-06-04
+
+### Added — Native file load package generator (Mode B)
+
+`scripts/build_load_package.py` generates actual native files and a Relativity
+`.dat` / `.opt` load file ready for workspace import.
+
+```bash
+pip install python-docx openpyxl python-pptx fpdf2
+python scripts/build_load_package.py --tier small           # OIDA OCR content
+python scripts/build_load_package.py --tier small --no-oida # synthetic content
+make load-small
+```
+
+Output: `load-packages/{tier}/natives/` + `load-file.dat` + `IMPORT_README.txt`
+
+- Generates .eml, .docx, .xlsx, .pptx, .pdf, .rsmf, .txt native files
+- Scripted hot documents (HOT- prefix) get hand-crafted MDL 2804 content
+- All other documents use real OIDA OCR content from the S3 archive (or synthetic if `--no-oida`)
+- 53-field Relativity Concordance .dat with all metadata, Bates numbers, TAR scores, issue tags
+- `IMPORT_README.txt` with step-by-step Relativity import instructions
+- `make load-small`, `load-medium`, `load-large` targets in Makefile
+
+---
+
 ## [v1.3.0] — 2026-06-04
 
 ### Changed — MDL 2804 narrative rebuild (breaking for existing mock data users)

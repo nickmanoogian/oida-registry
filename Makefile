@@ -106,3 +106,21 @@ mock-regen-medium:
 mock-regen-large:
 	python3 scripts/generate_mock_metadata.py --tier large
 	python3 scripts/validate_mock_data.py --tier large
+
+# ── Native file load packages ──────────────────────────────────────────────
+
+load-small:
+	python3 scripts/build_load_package.py --tier small
+	@echo "Package ready at load-packages/small/"
+
+load-small-synthetic:
+	python3 scripts/build_load_package.py --tier small --no-oida
+	@echo "Package ready at load-packages/small/"
+
+load-medium:
+	python3 scripts/build_load_package.py --tier medium
+	@echo "Package ready at load-packages/medium/"
+
+load-large:
+	python3 scripts/build_load_package.py --tier large
+	@echo "Package ready at load-packages/large/"

@@ -250,6 +250,34 @@ with open("email-families.json") as f:
     families = json.load(f)
 ```
 
+---
+
+## Loading into a Relativity workspace
+
+To go from mock data to an actual loadable Relativity package with native files:
+
+```bash
+# install native file dependencies
+pip install python-docx openpyxl python-pptx fpdf2
+
+# build the package — uses real OIDA OCR content for document bodies
+make load-small
+
+# or synthetic content only (no network, faster)
+python scripts/build_load_package.py --tier small --no-oida
+```
+
+Output in `load-packages/small/`:
+- `natives/` — 1,400+ actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files
+- `load-file.dat` — Relativity Concordance load file (53 fields, all metadata)
+- `IMPORT_README.txt` — step-by-step Relativity import instructions
+
+The 13 scripted hot documents (HOT- prefix) get hand-crafted MDL 2804 content —
+the SOM override email, the McKinsey turbocharge deck, the IRC call guide, and more.
+All other documents use real OIDA OCR text pulled from the S3 archive.
+
+---
+
 ### Regenerate with different settings
 
 ```bash
