@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.1.0/medium-custodians.json
-  size: 2789
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.2.0/v12-medium-custodians.json
+  size: 2787
 outs:
 - path: custodians.json
-  size: 2789
+  size: 2787
   isexec: false

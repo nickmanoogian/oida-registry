@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.1.0/email-families.json.gz
-  size: 743692
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.2.0/v12-large-email-families.json.gz
+  size: 587092
 outs:
 - path: email-families.json.gz
-  size: 743692
+  size: 587092
   isexec: false

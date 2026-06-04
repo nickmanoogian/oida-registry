@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.1.0/documents.csv.gz
-  size: 27686043
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.2.0/v12-large-documents.csv.gz
+  size: 28406058
 outs:
 - path: documents.csv.gz
-  size: 27686043
+  size: 28406058
   isexec: false
