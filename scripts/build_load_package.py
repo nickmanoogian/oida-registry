@@ -657,65 +657,74 @@ def dat_row(values):
     return DAT_FIELD_SEP.join(DAT_QUOTE + clean(v) + DAT_QUOTE for v in values) + "\n"
 
 
+# Declarative mapping: .dat column name → (source key in doc dict, optional transform)
+# None transform = direct doc.get(key, ""); callable transform receives the full doc.
+_COLUMN_MAP = {
+    "BegDoc#":                   ("Control Number",          None),
+    "EndDoc#":                   ("Control Number",          None),
+    "Custodian":                 ("Custodian",               None),
+    "Custodian Email":           ("Custodian Email",         None),
+    "Custodian Org":             ("Custodian Org",           None),
+    "File Name":                 ("File Name",               None),
+    "File Type":                 ("File Extension",          None),
+    "File Size":                 ("File Size (bytes)",       None),
+    "Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
+    "From":                      ("Email From",              None),
+    "From (SMTP)":               ("Email From SMTP",         None),
+    "To":                        ("Email To",                None),
+    "To (SMTP)":                 ("Email To SMTP",           None),
+    "CC":                        ("Email CC",                None),
+    "Subject":                   ("Email Subject",           lambda d: d.get("Email Subject","") or d.get("Title","")),
+    "Date Sent":                 ("Date Sent",               lambda d: d.get("Date Sent","")[:10] if d.get("Date Sent") else ""),
+    "Date Received":             ("Date Received",           lambda d: d.get("Date Received","")[:10] if d.get("Date Received") else ""),
+    "Message ID":                ("Message ID",              None),
+    "Has Attachments":           ("Has Attachments",         None),
+    "Attachment Count":          ("Attachment Count",        None),
+    "Email Thread ID":           ("Email Thread ID",         None),
+    "Email Threading Inclusive": ("Email Threading Inclusive",None),
+    "Conversation Topic":        ("Conversation Topic",      None),
+    "Author":                    ("Author",                  None),
+    "Title":                     ("Title",                   None),
+    "Company":                   ("Company",                 None),
+    "Page Count":                ("Page Count",              None),
+    "Workflow Stage":            ("Workflow Stage",          None),
+    "Responsive":                ("Responsiveness",          None),
+    "Privileged":                ("Privilege",               None),
+    "Privilege Reason":          ("Privilege Reason",        None),
+    "Hot Doc":                   ("Hot Doc",                 None),
+    "Issue Tags":                ("Issue Tags",              None),
+    "BegBates":                  ("Bates Begin",             None),
+    "EndBates":                  ("Bates End",               None),
+    "Production Set":            ("Production Set",          None),
+    "Redacted":                  ("Redacted",                None),
+    "TAR Score":                 ("TAR Score",               None),
+    "AL Predicted Relevant":     ("AL Predicted Relevant",   None),
+    "Batch Name":                ("Batch Name",              None),
+    "Batch Status":              ("Batch Status",            None),
+    "Reviewer":                  ("Reviewer",                None),
+    "Narrative Phase":           ("Narrative Phase",         None),
+    "Narrative Phase Name":      ("Narrative Phase Name",    None),
+    "Dedup Method":              ("Dedup Method",            None),
+    "MD5 Hash":                  ("MD5 Hash",                None),
+    "OCR Flag":                  ("OCR Flag",                None),
+    "Rsmf Application":          ("Rsmf/Application",        None),
+    "Rsmf Participants":         ("Rsmf/Participants",       None),
+    "Rsmf Message Count":        ("Rsmf/MessageCount",       None),
+}
+
+
 def doc_to_dat_row(doc, native_rel_path, families_by_doc):
-    """Map a document dict to ordered .dat column values."""
-    fam = families_by_doc.get(doc.get("Control Number",""), {})
+    fam    = families_by_doc.get(doc.get("Control Number",""), {})
     values = []
     for col in DAT_COLUMNS:
-        if   col == "BegDoc#":               v = doc.get("Control Number","")
-        elif col == "EndDoc#":               v = doc.get("Control Number","")
-        elif col == "BegAttach":             v = fam.get("beg_attach","")
-        elif col == "EndAttach":             v = fam.get("end_attach","")
-        elif col == "Custodian":             v = doc.get("Custodian","")
-        elif col == "Custodian Email":       v = doc.get("Custodian Email","")
-        elif col == "Custodian Org":         v = doc.get("Custodian Org","")
-        elif col == "File Name":             v = doc.get("File Name","")
-        elif col == "File Type":             v = doc.get("File Extension","")
-        elif col == "File Size":             v = doc.get("File Size (bytes)","")
-        elif col == "Date":                  v = doc.get("Primary Date","")[:10]
-        elif col == "From":                  v = doc.get("Email From","")
-        elif col == "From (SMTP)":           v = doc.get("Email From SMTP","")
-        elif col == "To":                    v = doc.get("Email To","")
-        elif col == "To (SMTP)":             v = doc.get("Email To SMTP","")
-        elif col == "CC":                    v = doc.get("Email CC","")
-        elif col == "Subject":               v = doc.get("Email Subject","") or doc.get("Title","")
-        elif col == "Date Sent":             v = doc.get("Date Sent","")[:10] if doc.get("Date Sent") else ""
-        elif col == "Date Received":         v = doc.get("Date Received","")[:10] if doc.get("Date Received") else ""
-        elif col == "Message ID":            v = doc.get("Message ID","")
-        elif col == "Has Attachments":       v = doc.get("Has Attachments","")
-        elif col == "Attachment Count":      v = doc.get("Attachment Count","")
-        elif col == "Email Thread ID":       v = doc.get("Email Thread ID","")
-        elif col == "Email Threading Inclusive": v = doc.get("Email Threading Inclusive","")
-        elif col == "Conversation Topic":    v = doc.get("Conversation Topic","")
-        elif col == "Author":                v = doc.get("Author","")
-        elif col == "Title":                 v = doc.get("Title","")
-        elif col == "Company":               v = doc.get("Company","")
-        elif col == "Page Count":            v = doc.get("Page Count","")
-        elif col == "Workflow Stage":        v = doc.get("Workflow Stage","")
-        elif col == "Responsive":            v = doc.get("Responsiveness","")
-        elif col == "Privileged":            v = doc.get("Privilege","")
-        elif col == "Privilege Reason":      v = doc.get("Privilege Reason","")
-        elif col == "Hot Doc":               v = doc.get("Hot Doc","")
-        elif col == "Issue Tags":            v = doc.get("Issue Tags","")
-        elif col == "BegBates":              v = doc.get("Bates Begin","")
-        elif col == "EndBates":              v = doc.get("Bates End","")
-        elif col == "Production Set":        v = doc.get("Production Set","")
-        elif col == "Redacted":              v = doc.get("Redacted","")
-        elif col == "TAR Score":             v = doc.get("TAR Score","")
-        elif col == "AL Predicted Relevant": v = doc.get("AL Predicted Relevant","")
-        elif col == "Batch Name":            v = doc.get("Batch Name","")
-        elif col == "Batch Status":          v = doc.get("Batch Status","")
-        elif col == "Reviewer":              v = doc.get("Reviewer","")
-        elif col == "Narrative Phase":       v = doc.get("Narrative Phase","")
-        elif col == "Narrative Phase Name":  v = doc.get("Narrative Phase Name","")
-        elif col == "Dedup Method":          v = doc.get("Dedup Method","")
-        elif col == "MD5 Hash":              v = doc.get("MD5 Hash","")
-        elif col == "OCR Flag":              v = doc.get("OCR Flag","")
-        elif col == "Rsmf Application":      v = doc.get("Rsmf/Application","")
-        elif col == "Rsmf Participants":     v = doc.get("Rsmf/Participants","")
-        elif col == "Rsmf Message Count":    v = doc.get("Rsmf/MessageCount","")
-        elif col == "NativeFilePath":        v = native_rel_path or ""
-        else:                                v = ""
+        if col == "BegAttach":    v = fam.get("beg_attach","")
+        elif col == "EndAttach":  v = fam.get("end_attach","")
+        elif col == "NativeFilePath": v = native_rel_path or ""
+        elif col in _COLUMN_MAP:
+            src_key, transform = _COLUMN_MAP[col]
+            v = transform(doc) if transform else doc.get(src_key,"")
+        else:
+            v = ""
         values.append(v)
     return values
 
@@ -728,12 +737,10 @@ def build_family_index(families_path):
         families = json.load(f)
     index = {}
     for fam in families:
-        parent = fam.get("parent_doc_id","")
+        beg = fam.get("parent_doc_id","")
         children = fam.get("children",[])
-        all_ids = [parent] + children
-        beg = all_ids[0]
-        end = all_ids[-1]
-        for doc_id in all_ids:
+        end = children[-1] if children else beg
+        for doc_id in [beg] + children:
             index[doc_id] = {"beg_attach": beg, "end_attach": end}
     return index
 

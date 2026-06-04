@@ -46,10 +46,17 @@ PHASE_RESPONSIVE_PCT = {1: 0.12, 2: 0.40, 3: 0.55, 4: 0.35}
 PHASE_PRIVILEGE_PCT  = {1: 0.02, 2: 0.08, 3: 0.15, 4: 0.25}
 
 ORG_BATES_PREFIX = {
-    "Mallinckrodt":  "MNK",
-    "Insys":         "INSYS",
-    "McKinsey":      "MCK",
-    "Outside Counsel": "OC",
+    "Mallinckrodt":   "MNK",
+    "Insys":          "INSYS",
+    "McKinsey":       "MCK",
+    "Outside Counsel":"OC",
+}
+
+ORG_COMPANY_NAME = {
+    "Mallinckrodt":   "Mallinckrodt Inc.",
+    "Insys":          "Insys Therapeutics",
+    "McKinsey":       "McKinsey & Company",
+    "Outside Counsel":"Kirkland & Ellis LLP",
 }
 
 # ── Custodians ────────────────────────────────────────────────────────────
@@ -993,7 +1000,7 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
         "Date Created":            date_created,
         "Date Last Modified":      fmt_d(date + timedelta(days=random.randint(0,30))) if is_office else "",
         "Title":                   title,
-        "Company":                 {"Mallinckrodt":"Mallinckrodt Inc.","Insys":"Insys Therapeutics","McKinsey":"McKinsey & Company","Outside Counsel":"Kirkland & Ellis LLP"}.get(org,""),
+        "Company":                 ORG_COMPANY_NAME.get(org,""),
         "Word Count":              random.randint(200,8000) if "Word" in ft_name else "",
         "Slide Count":             random.randint(5,45) if "PowerPoint" in ft_name else "",
         "Sheet Names":             "Sheet1; Sheet2" if "Excel" in ft_name else "",
@@ -1150,8 +1157,7 @@ def generate(tier_name, out_dir, seed):
         d["Hot Doc"] = "Yes"
 
     # Bates + production
-    bates_n = {"MNK":1,"INSYS":1,"MCK":1,"OC":1}
-    n_redacted = {o: 0 for o in bates_n}
+    bates_n = {pfx: 1 for pfx in ORG_BATES_PREFIX.values()}
     produced_by_org = {}
     for d in reviewed:
         if d["Responsiveness"]=="Responsive" and d["Privilege"]!="Privileged":
@@ -1177,10 +1183,11 @@ def generate(tier_name, out_dir, seed):
     families = []
     fam_id = thr_id = 0
 
-    # Scripted threads first
-    scripted_ctrl_set = {m["ctrl"] for t in SCRIPTED_THREADS for m in t["messages"] if tier_name in t.get("tiers",["small","medium","large"])}
+    # Scripted threads first — build O(1) lookup to avoid scanning all_docs per call
+    doc_by_ctrl = {d["Control Number"]: d for d in all_docs}
+
     def find_or_stub(ctrl, msg, all_docs, custs, dr, wf, tier_name):
-        existing = next((d for d in all_docs if d["Control Number"]==ctrl), None)
+        existing = doc_by_ctrl.get(ctrl)
         if existing: return existing
         cust_name = msg["from_name_tier"].get(tier_name, custs[0]["name"])
         cust = next((c for c in custs if c["name"]==cust_name), custs[0])
@@ -1197,6 +1204,7 @@ def generate(tier_name, out_dir, seed):
             d["Privilege Reason"] = msg["privilege"]
             d["_force_privilege"] = True
         all_docs.append(d)
+        doc_by_ctrl[ctrl] = d
         return d
 
     for thread in SCRIPTED_THREADS:
