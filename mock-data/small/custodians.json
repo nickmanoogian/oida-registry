@@ -6,10 +6,18 @@
     "role": "VP, Sales & Marketing",
     "dept": "Sales",
     "doc_target": 700,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "narrative": "SOM override decision-maker; escalated Cardinal Health flags",
     "hold": "Acknowledged",
     "hold_date": "2018-06-15",
     "key": true,
-    "actual_doc_count": 371
+    "actual_doc_count": 370
   },
   {
     "id": "C002",
@@ -18,20 +26,34 @@
     "role": "Regional Sales Director",
     "dept": "Sales",
     "doc_target": 350,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      1,
+      2,
+      3
+    ],
+    "narrative": "Field-level orders; first to receive suspicious order alerts",
     "hold": "Acknowledged",
     "hold_date": "2018-06-18",
-    "actual_doc_count": 328
+    "actual_doc_count": 351
   },
   {
     "id": "C003",
-    "name": "David Park",
-    "email": "david.park@mallinckrodt.com",
-    "role": "District Manager",
-    "dept": "Sales",
+    "name": "Thomas Bradley",
+    "email": "thomas.bradley@mallinckrodt.com",
+    "role": "Chief Compliance Officer",
+    "dept": "Legal & Compliance",
     "doc_target": 300,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      2,
+      3,
+      4
+    ],
+    "narrative": "Internal compliance objector; legal hold coordinator; whistleblower escalation",
     "hold": "Acknowledged",
     "hold_date": "2018-06-20",
-    "actual_doc_count": 363
+    "actual_doc_count": 368
   },
   {
     "id": "C004",
@@ -40,8 +62,14 @@
     "role": "Executive Assistant",
     "dept": "Administration",
     "doc_target": 150,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      2,
+      3
+    ],
+    "narrative": "Calendar custodian; hold never acknowledged",
     "hold": "Outstanding",
     "hold_date": null,
-    "actual_doc_count": 368
+    "actual_doc_count": 350
   }
 ]
