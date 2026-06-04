@@ -9,7 +9,7 @@
     "hold": "Acknowledged",
     "hold_date": "2018-06-15",
     "key": true,
-    "actual_doc_count": 700
+    "actual_doc_count": 371
   },
   {
     "id": "C002",
@@ -20,7 +20,7 @@
     "doc_target": 350,
     "hold": "Acknowledged",
     "hold_date": "2018-06-18",
-    "actual_doc_count": 350
+    "actual_doc_count": 328
   },
   {
     "id": "C003",
@@ -31,7 +31,7 @@
     "doc_target": 300,
     "hold": "Acknowledged",
     "hold_date": "2018-06-20",
-    "actual_doc_count": 300
+    "actual_doc_count": 363
   },
   {
     "id": "C004",
@@ -40,8 +40,8 @@
     "role": "Executive Assistant",
     "dept": "Administration",
     "doc_target": 150,
-    "hold": "Acknowledged",
-    "hold_date": "2018-07-02",
-    "actual_doc_count": 150
+    "hold": "Outstanding",
+    "hold_date": null,
+    "actual_doc_count": 368
   }
 ]
