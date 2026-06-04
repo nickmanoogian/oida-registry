@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.2.0/v12-large-custodians.json
-  size: 11166
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-large-custodians.json
+  size: 15412
 outs:
 - path: custodians.json
-  size: 11166
+  size: 15412
   isexec: false

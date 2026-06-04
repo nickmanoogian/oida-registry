@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.2.0/v12-large-batches.json
-  size: 696149
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-large-batches.json
+  size: 782923
 outs:
 - path: batches.json
-  size: 696149
+  size: 782923
   isexec: false
