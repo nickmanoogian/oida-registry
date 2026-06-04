@@ -1,0 +1,82 @@
+# Changelog
+
+All notable changes to this repository are documented here.
+
+---
+
+## [v1.3.0] — 2026-06-04
+
+### Changed — MDL 2804 narrative rebuild (breaking for existing mock data users)
+
+The mock data generator was completely rebuilt around a real litigation narrative:
+**MDL 2804, the National Prescription Opiate Litigation**.
+
+If you pulled mock data from v1.1.0 or v1.2.0, re-pull. The datasets are substantially different.
+
+**What changed:**
+- Custodians now span three organizations: Mallinckrodt, Insys Therapeutics, and McKinsey & Co — the actual MDL defendants
+- 4 story phases with distinct document subjects, responsiveness rates, and issue tags: Growth (2010–12), Pressure (2013–14), Crisis (2015–16), Litigation (2017–18)
+- 13 scripted hot documents named after real evidentiary moments in the case (SOM override memo, McKinsey turbocharge deck, IRC call guide, whistleblower email, legal hold notice, SOM deletion log, AG subpoena draft)
+- 5 scripted email threads showing the decision chain (override chain, McKinsey engagement, Insys speaker bureau, whistleblower/hold thread, DEA response thread)
+- Phase-aware responsiveness: 12% → 40% → 55% → 35% across phases
+- Phase-aware privilege: 2% → 8% → 15% → 25% across phases
+- Issue tag matrix by (org, phase): SOM Override, Speaker Bureau Payments, DEA Correspondence, Prior Auth Fraud, McKinsey Strategy, Legal Hold, Whistleblower, State AG Investigation
+- Org-specific Bates prefixes: MNK (Mallinckrodt), INSYS, MCK, OC (Outside Counsel)
+
+**New columns in documents.csv:**
+- `Custodian Org` — Mallinckrodt / Insys / McKinsey / Outside Counsel
+- `Narrative Phase` — 1 / 2 / 3 / 4
+- `Narrative Phase Name` — Growth / Pressure / Crisis / Litigation
+- `Bates Prefix` — org-specific prefix
+
+**New files:**
+- `mock-data/DEMO_GUIDE.md` — how to walk through the dataset in a Relativity demo
+- `scripts/validate_mock_data.py` — verify a dataset conforms to RULES.md
+
+---
+
+## [v1.2.0] — 2026-06-03
+
+### Changed — File type rules enforcement
+
+Rebuilt generator to enforce all 10 rules in `mock-data/RULES.md`:
+- 30+ distinct file types (not just "Email" and "PDF")
+- ICS records with blank `Date Sent` / `Date Received`
+- HEIC/JPEG with GPS EXIF on 15% of mobile images
+- Google Workspace with `GoogleDrive/` fields
+- Bloomberg XML in large tier
+- RSMF `HasPlaceholders = Yes` on Teams records
+- Container records at `Level = 0`
+- Correct `Dedup Method` per file type (MD5 / SHA256 / EventCollectionId)
+- Workflow behavior flags on every row
+
+**New files:**
+- `mock-data/RULES.md` — canonical rules document (10 rules with rationale)
+
+---
+
+## [v1.1.0] — 2026-06-03
+
+### Added — Initial mock data tiers
+
+First version of pre-generated Relativity workspace metadata:
+- Small tier (~1,500 docs) committed to git
+- Medium (~10,000 docs) and large (~150,000 docs) as release artifacts
+- `scripts/generate_mock_metadata.py` — generator script
+- `mock-data/README.md` — usage documentation
+
+---
+
+## [v1.0.0] — 2026-06-03
+
+### Added — Initial registry
+
+- DVC pointer files for all 16 structured datasets in `data-products/`
+- `metadata/` Parquet index files
+- `samples/` bulk download sample
+- `manifest.tsv.gz` — full archive listing (22.3M files, 7.5 TB)
+- `scripts/download.py` — direct downloader (no DVC required)
+- `scripts/fetch_manifest.py` — manifest regeneration
+- `data-products/SCHEMA.md` — column descriptions for all CSVs
+- `.github/workflows/health-check.yml` — weekly S3 URL validation
+- `Makefile` — convenience targets

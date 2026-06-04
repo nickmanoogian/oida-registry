@@ -1,5 +1,7 @@
 # Opioid Industry Documents Archive — Data Registry
 
+[![S3 Health Check](https://github.com/nickmanoogian/oioda-registry/actions/workflows/health-check.yml/badge.svg)](https://github.com/nickmanoogian/oioda-registry/actions/workflows/health-check.yml)
+
 This repository gives you access to the **Opioid Industry Documents Archive (OIDA)** — a public dataset of internal documents from opioid manufacturers and distributors, released as part of litigation and public health research.
 
 You can use this data for research, analysis, mock/test data in projects, or to understand patterns in how opioid products were marketed and prescribed.
