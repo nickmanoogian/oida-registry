@@ -4,6 +4,21 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [v1.5.0] — 2026-06-05
+
+### Added — Pre-built small tier load package
+
+The small tier load package is now accessible via DVC without a build step:
+
+```bash
+dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
+unzip small.zip
+```
+
+`load-packages/small.zip.dvc` added as a pointer to the v1.5.0 release artifact (9 MB compressed). Contains ~1,423 native files + `load-file.dat` + `IMPORT_README.txt`.
+
+---
+
 ## [v1.4.1] — 2026-06-04
 
 ### Changed — DRY cleanup across all scripts

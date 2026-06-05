@@ -254,17 +254,26 @@ with open("email-families.json") as f:
 
 ## Loading into a Relativity workspace
 
-To go from mock data to an actual loadable Relativity package with native files:
+### Option A — Pull the pre-built package (no build step)
+
+```bash
+dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
+unzip small.zip
+```
+
+Contains ~1,423 native files + `load-file.dat` + `IMPORT_README.txt`. Ready to import immediately.
+
+### Option B — Build from scratch
 
 ```bash
 # install native file dependencies
 pip install python-docx openpyxl python-pptx fpdf2
 
-# build the package — uses real OIDA OCR content for document bodies
+# build with real OIDA OCR content
 make load-small
 
 # or synthetic content only (no network, faster)
-python scripts/build_load_package.py --tier small --no-oida
+make load-small-synthetic
 ```
 
 Output in `load-packages/small/`:
