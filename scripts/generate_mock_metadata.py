@@ -884,7 +884,7 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
     if is_rsmf:
         rsmf_app   = ft_meta.get("rsmf_application","")
         participants = [custodian["name"]] + [c["name"] for c in random.sample(all_custs, min(3,len(all_custs)))]
-        rsmf_parts = "; ".join(set(participants))
+        rsmf_parts = "; ".join(dict.fromkeys(participants))
         rsmf_msgs  = random.randint(5,120)
         rsmf_begin = fmt_dt(date)
         rsmf_end   = fmt_dt(date + timedelta(hours=random.randint(1,48)))

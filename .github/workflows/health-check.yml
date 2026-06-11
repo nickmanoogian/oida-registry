@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "0 9 * * 1"  # every Monday at 9am UTC
   workflow_dispatch:
+  pull_request:
+    paths:
+      - "**/*.dvc"
+      - "scripts/verify_urls.py"
+      - ".github/workflows/health-check.yml"
 
 jobs:
   check:
@@ -12,70 +17,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Check S3 dataset URLs
-        run: |
-          python3 << 'EOF'
-          import os, sys, urllib.request
-
-          failures = []
-
-          def head(url, label):
-              try:
-                  req = urllib.request.Request(url, method="HEAD",
-                        headers={"User-Agent": "oioda-registry-healthcheck"})
-                  with urllib.request.urlopen(req, timeout=15) as r:
-                      ok = r.status == 200
-                  symbol = "✓" if ok else "✗"
-                  print(f"  {symbol} {r.status}  {label}")
-                  if not ok: failures.append((label, r.status))
-              except Exception as e:
-                  print(f"  ✗ ERR  {label}  ({e})")
-                  failures.append((label, str(e)))
-
-          # Check all data-products .dvc URLs
-          print("── data-products/ S3 URLs ──")
-          for fname in sorted(os.listdir("data-products")):
-              if not fname.endswith(".dvc"): continue
-              with open(os.path.join("data-products", fname)) as f:
-                  content = f.read()
-              for line in content.splitlines():
-                  line = line.strip()
-                  if line.startswith("path: https://"):
-                      head(line.split("path: ", 1)[1], fname)
-
-          # Check metadata and samples
-          print("\n── metadata/ and samples/ URLs ──")
-          for folder in ("metadata", "samples"):
-              if not os.path.isdir(folder): continue
-              for fname in sorted(os.listdir(folder)):
-                  if not fname.endswith(".dvc"): continue
-                  with open(os.path.join(folder, fname)) as f:
-                      content = f.read()
-                  for line in content.splitlines():
-                      line = line.strip()
-                      if line.startswith("path: https://"):
-                          head(line.split("path: ", 1)[1], f"{folder}/{fname}")
-
-          # Check manifest release artifact
-          print("\n── Release artifact URLs ──")
-          RELEASE_URLS = [
-              ("manifest.tsv.gz (v1.0.0)", "https://github.com/nickmanoogian/oioda-registry/releases/download/v1.0.0/manifest.tsv.gz"),
-              ("mock-data/medium documents (v1.3.0)", "https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-medium-documents.csv"),
-              ("mock-data/large documents (v1.3.0)",  "https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-large-documents.csv.gz"),
-          ]
-          for label, url in RELEASE_URLS:
-              head(url, label)
-
-          if failures:
-              print(f"\n{len(failures)} failure(s):")
-              for name, err in failures:
-                  print(f"  {name}: {err}")
-              sys.exit(1)
-          else:
-              print(f"\nAll URLs reachable.")
-          EOF
+        run: python3 scripts/verify_urls.py
 
       - name: Open issue on failure
-        if: failure()
+        if: failure() && github.event_name != 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |

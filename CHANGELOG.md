@@ -4,6 +4,24 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **S3 health check was silently checking zero DVC-tracked URLs.** The workflow's parser matched lines starting with `path: https://`, but `.dvc` files write dependencies as YAML list items (`- path: https://...`), so only the three hardcoded release URLs were ever tested. All 37 URLs are now checked.
+- **Mock data regeneration is now deterministic.** RSMF participant lists were joined via `set()`, whose iteration order varies between Python runs, so every `make mock-regen-small` produced a spurious diff. Two consecutive regenerations are now byte-identical.
+
+### Changed
+
+- URL checking consolidated into `scripts/verify_urls.py`, shared by `make verify` and the health-check workflow. `make verify` now covers `metadata/`, `samples/`, `load-packages/`, and the root manifest in addition to `data-products/`.
+- The health check also runs on pull requests that touch `.dvc` files.
+
+### Added
+
+- `validate.yml` CI workflow: every PR runs small-tier validation against RULES.md and a regeneration-determinism check (regenerates the small tier and fails if the output differs from the committed files).
+
+---
+
 ## [v1.5.0] — 2026-06-05
 
 ### Added — Pre-built small tier load package
