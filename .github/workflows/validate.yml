@@ -1,0 +1,25 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  mock-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate small tier against RULES.md
+        run: python3 scripts/validate_mock_data.py --tier small
+
+      - name: Regenerate small tier and check determinism
+        run: |
+          python3 scripts/generate_mock_metadata.py --tier small
+          if ! git diff --exit-code mock-data/small/; then
+            echo "::error::Regenerating the small tier produced a diff against the committed files."
+            echo "Either the generator changed without regenerating mock-data/small/, or generation is non-deterministic."
+            echo "Run 'make mock-regen-small' and commit the result."
+            exit 1
+          fi
