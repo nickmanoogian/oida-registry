@@ -59,17 +59,7 @@ manifest:
 	@echo "Written to manifest.tsv.gz"
 
 verify:
-	@python3 -c " \
-	import os, urllib.request, sys; \
-	ok = 0; fail = 0; \
-	[setattr(sys.modules[__name__], '_', None) or \
-	 (print(f'  PASS  {f}') or setattr(sys.modules[__name__], 'ok', ok+1)) \
-	  if (lambda r: r == 200)(urllib.request.urlopen(urllib.request.Request( \
-	    [l.strip().split('path: ',1)[1] for l in open('data-products/'+f) if 'path: https://' in l][0], \
-	    method='HEAD', headers={'User-Agent':'oioda'}), timeout=10).status) \
-	  else (print(f'  FAIL  {f}') or setattr(sys.modules[__name__], 'fail', fail+1)) \
-	  for f in sorted(os.listdir('data-products')) if f.endswith('.dvc')] ; \
-	print(f'  {ok} OK, {fail} failed'); sys.exit(fail)"
+	@python3 scripts/verify_urls.py
 
 # ── Relativity mock data ───────────────────────────────────────────────────
 
