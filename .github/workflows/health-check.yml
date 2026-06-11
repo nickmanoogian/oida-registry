@@ -38,20 +38,20 @@ jobs:
               with open(os.path.join("data-products", fname)) as f:
                   content = f.read()
               for line in content.splitlines():
-                  line = line.strip()
+                  line = line.strip().lstrip("- ")
                   if line.startswith("path: https://"):
                       head(line.split("path: ", 1)[1], fname)
 
-          # Check metadata and samples
-          print("\n── metadata/ and samples/ URLs ──")
-          for folder in ("metadata", "samples"):
+          # Check metadata, samples, and load packages
+          print("\n── metadata/, samples/, and load-packages/ URLs ──")
+          for folder in ("metadata", "samples", "load-packages"):
               if not os.path.isdir(folder): continue
               for fname in sorted(os.listdir(folder)):
                   if not fname.endswith(".dvc"): continue
                   with open(os.path.join(folder, fname)) as f:
                       content = f.read()
                   for line in content.splitlines():
-                      line = line.strip()
+                      line = line.strip().lstrip("- ")
                       if line.startswith("path: https://"):
                           head(line.split("path: ", 1)[1], f"{folder}/{fname}")
 
