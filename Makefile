@@ -1,11 +1,13 @@
 REGISTRY := https://github.com/nickmanoogian/oioda-registry
 OUT       := ./data
 MOCK_OUT  := ./mock-data
+ECI_OUT   := /tmp/oioda-large
 
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large \
-        load-small load-small-synthetic load-medium load-large
+        load-small load-small-synthetic load-medium load-large \
+        export-insys
 
 help:
 	@echo ""
@@ -30,6 +32,10 @@ help:
 	@echo "  make load-small-synthetic  Same, synthetic content (no S3, faster)"
 	@echo "  make load-medium         Build medium tier load package"
 	@echo "  make load-large          Build large tier load package"
+	@echo ""
+	@echo "  ── ECI real-data export (real OIDA processing fields) ────────"
+	@echo "  make export-insys    Export ALL real Insys docs + custodians.json -> $(ECI_OUT)/"
+	@echo "                       (real metadata only; needs pip install -r requirements.txt)"
 	@echo ""
 	@echo "  OUT=$(OUT)       — raw OIDA download dir"
 	@echo "  MOCK_OUT=$(MOCK_OUT)  — mock data dir"
@@ -91,6 +97,13 @@ mock-large:
 
 mock-validate:
 	python3 scripts/validate_mock_data.py --tier small
+
+# ── ECI real-data export ────────────────────────────────────────────────────
+
+export-insys:
+	@mkdir -p $(ECI_OUT)
+	python3 scripts/export_insys_documents.py --out $(ECI_OUT)
+	@echo "Real Insys export ready at $(ECI_OUT)/ (documents.csv.gz + custodians.json)"
 
 mock-regen-small:
 	python3 scripts/generate_mock_metadata.py --tier small

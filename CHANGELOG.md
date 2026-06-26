@@ -6,6 +6,8 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+## [v1.6.0] — 2026-06-26
+
 ### Fixed
 
 - **S3 health check was silently checking zero DVC-tracked URLs.** The workflow's parser matched lines starting with `path: https://`, but `.dvc` files write dependencies as YAML list items (`- path: https://...`), so only the three hardcoded release URLs were ever tested. All 37 URLs are now checked.
@@ -18,6 +20,7 @@ All notable changes to this repository are documented here.
 
 ### Added
 
+- **Real OIDA export for ECI** — `scripts/export_insys_documents.py` reads `oida-index.parquet` (`collection = 'Insys Litigation Documents'`) and emits **all 1,633,778 docs** with real Relativity *processing*-field metadata only (custodian, email `From/To/CC` from `au`/`rc`/`cc`, dates, file type/size/MD5/media type, page count, redaction, Bates, mentioned) plus a deterministic **`OCR Text URL`** per doc (`id`→`…/t/h/k/d/<id>/<id>.ocr`, verified) so real Extracted Text is fetched on demand rather than baking ~112 GB into the file. `custodians.json` = every real collected custodian (111) + real doc count. No cap, no sampling, no synthetic values — unlike `generate_mock_metadata.py`, which fabricates everything. Review/analytics fields (Responsiveness, Privilege, Issue Tags, Batches, TAR/AL) are intentionally omitted: they're created in Relativity during review, not present in a raw archive.
 - `validate.yml` CI workflow: every PR runs small-tier validation against RULES.md and a regeneration-determinism check (regenerates the small tier and fails if the output differs from the committed files).
 
 ---

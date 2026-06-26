@@ -158,6 +158,32 @@ fetch_oida("mnk_customer_orders.csv") # 38 MB — includes suspicious order flag
 
 ---
 
+## ECI real-data export (real OIDA processing fields)
+
+`scripts/export_insys_documents.py` exports the **real** Insys Litigation
+Documents straight from the public OIDA index parquet — every document, every
+Relativity *processing* field present in the archive (custodian, email
+From/To/CC, dates, file type/size/MD5/media type, page count, redaction, Bates,
+mentioned), plus a deterministic `OCR Text URL` per document so the real
+extracted text can be fetched on demand. No cap, no sampling, no synthetic
+values. Review/analytics fields (Responsiveness/Relevance, Privilege, Issue
+Tags, Batches, TAR/AL) are intentionally omitted — they are created during
+review *inside Relativity* and do not exist in a raw produced archive.
+
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt        # installs duckdb (no separate CLI needed)
+make export-insys                      # -> /tmp/oioda-large/{documents.csv.gz, custodians.json}
+# or: python3 scripts/export_insys_documents.py --out DIR
+```
+
+Output: an ~1.63M-row `documents.csv.gz` (~163 MB) plus `custodians.json` (every
+real collected custodian + real doc count). The OIDA parquet is public S3;
+DuckDB's `httpfs` loads automatically. This is the real dataset ECI consumes for
+its dashboard (aggregated downstream; the 1.6M rows are not loaded in-browser).
+
+---
+
 ## Relativity mock data — pre-built workspace datasets
 
 If you're building Relativity features and need realistic test data, this repo includes
