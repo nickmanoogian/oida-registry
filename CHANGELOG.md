@@ -6,6 +6,8 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+## [v1.6.0] — 2026-06-26
+
 ### Fixed
 
 - **S3 health check was silently checking zero DVC-tracked URLs.** The workflow's parser matched lines starting with `path: https://`, but `.dvc` files write dependencies as YAML list items (`- path: https://...`), so only the three hardcoded release URLs were ever tested. All 37 URLs are now checked.
