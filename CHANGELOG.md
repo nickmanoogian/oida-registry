@@ -6,6 +6,18 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.10.0 packages
+
+Both packages republished, which closes the two loose ends left by the rename and the oversized
+text work:
+
+- the errored package now carries the three oversized documents, and its encrypted artefacts use
+  the post-rename password (`oida`), so the published artifact and the code finally agree
+- the clean package is rebuilt from the same code
+
+The published dataset now matches the catalogue completely: import failures, processing
+failures, and documents that process cleanly with something missing.
+
 ### Added — documents with more text than a model context holds
 
 The last item from the original catalogue. Three documents carrying 300,000, 800,000 and
