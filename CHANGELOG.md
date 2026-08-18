@@ -19,6 +19,13 @@ All notable changes to this repository are documented here.
 
 ### Fixed
 
+- **The health check failed on every release-prep PR.** A PR that repoints a `.dvc` file at a
+  new release tag always 404s during review, because the assets only exist once the release is
+  published. `verify_urls.py` now distinguishes the two cases: if the release tag itself does
+  not resolve, the pointer is reported as PENDING; if the tag exists and the asset is missing,
+  that is still a hard failure. Pending is tolerated on `pull_request` runs and on
+  `--allow-pending`, and fails everywhere else, so a pointer that reaches main without its
+  release being published is still caught by the weekly run.
 - `make load-small-errors` wrote into `load-packages/small/`, overwriting the clean package with
   an errored build. It now writes to `load-packages/small-errors/`. `make load-validate` checks
   both when both exist.
