@@ -64,8 +64,12 @@ def apply(all_docs, families, custodians, seed=42):
     total = len(all_docs)
     report = {}
 
-    # Scripted hot documents carry the narrative; leave them intact.
-    pool = [d for d in all_docs if not d["Control Number"].startswith("HOT-")]
+    # Scripted hot documents carry the narrative; leave them intact. Container
+    # records are excluded too: rewriting one's file type or custodian would leave
+    # its children pointing at something that is no longer a container (Rule 3).
+    pool = [d for d in all_docs
+            if not d["Control Number"].startswith("HOT-")
+            and str(d.get("Level","")) != "0"]
     rng.shuffle(pool)
 
     def count(key):
@@ -148,7 +152,10 @@ def apply(all_docs, families, custodians, seed=42):
         kids = fam.get("children", [])
         if len(kids) < 2:
             continue
-        lost = kids.pop()                     # the family record still references it
+        lost = kids[-1]
+        if lost.startswith("HOT-"):           # scripted documents are never removed
+            continue
+        kids.pop()                            # the family record still references it
         broken.append({"parent": fam.get("parent_doc_id",""), "missing_child": lost})
     ids = {b["missing_child"] for b in broken}
     all_docs[:] = [d for d in all_docs if d["Control Number"] not in ids]
@@ -181,6 +188,9 @@ def apply(all_docs, families, custodians, seed=42):
         d["Supported by Viewer"]    = "No"
         d["Analytics Eligible?"]    = "No"
         d["OCR Required?"]          = "No"
+        d["Images?"]                = "No"        # RULES.md Rule 2, Audio/Video row
+        d["Redactable?"]            = "No"
+        d["Dedup Method"]           = "SHA256"
     report["media_no_text"] = [d["Control Number"] for d in docs]
 
     return report

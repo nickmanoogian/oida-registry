@@ -14,6 +14,18 @@ jobs:
       - name: Validate small tier against RULES.md
         run: python3 scripts/validate_mock_data.py --tier small
 
+      - name: Error scenarios work on every file extension
+        # Two scenarios write real PDFs (encrypted, and text-free). The rest need
+        # nothing beyond the standard library.
+        run: |
+          pip install --quiet "fpdf2>=2.8"
+          python3 scripts/test_error_scenarios.py
+
+      - name: Edge case tier generates and validates
+        run: |
+          python3 scripts/generate_mock_metadata.py --tier small --edge-cases --out /tmp/small-edge
+          python3 scripts/validate_mock_data.py --tier small --dir /tmp/small-edge
+
       - name: Regenerate small tier and check determinism
         run: |
           python3 scripts/generate_mock_metadata.py --tier small

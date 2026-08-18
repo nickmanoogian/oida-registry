@@ -6,6 +6,51 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — Rules that were not being enforced
+
+An audit of `validate_mock_data.py` against RULES.md found most rules were checking far less
+than they claimed. The validator went from **28 checks to 62**, and two real data problems fell
+out of it.
+
+- **Containers referenced nothing.** RULES.md Rule 3 requires children to carry `Container Name`
+  and `Container ID`. All 1,439 small-tier documents had both fields **empty**, so the 16
+  container records were isolated rows nothing pointed at. The validator only ever checked the
+  parents. The generator now links 3–8 children per container from the same custodian, and Rule
+  3 checks that every `Container ID` resolves, every container has a child, and children carry
+  the name and Level 1.
+
+- **Rule 6's error counts were fiction.** The table specified 15 errored documents for the small
+  tier; the generator produces 118, with types the table lists as zero. Nothing enforced it
+  because the check only asked for "2 or more distinct types". The 1% the table implied is also
+  low for a real matter. Rule 6 is now a **rate band, 5–12%, with at least 6 distinct types**,
+  plus a requirement that 75% of error documents actually reach
+  `Workflow Stage = Pre-Review: Processing Error`.
+
+- **Rule 1** checked only that email was 45–65% and that containers and ICS existed. It now
+  checks the share of every file type family and the count of distinct categories.
+- **Rule 2** checked that the flag *columns* existed, and two dedup values. It now asserts 13
+  values from the Rule 2 table across file type families.
+- **Rule 9** never checked that documents named in `email-families.json` exist. Family records
+  can now be caught pointing at absent documents; deliberate ones declared in `edge-cases.json`
+  are excused.
+- **Rule 10** checked that privileged documents have no Bates. It now also checks that only
+  Responsive documents have them, that redacted documents carry them, and that they are unique.
+
+### Fixed — bugs found while doing the above
+
+- `password_zip` staged its payload beside the output file, so on a `.txt` row the payload and
+  the archive resolved to the same path and `zip` exited 12, failing the build.
+  `scripts/test_error_scenarios.py` now drives all 315 scenario/extension combinations and runs
+  in CI, so that class of bug fails in a test rather than mid-build.
+- Edge cases could rewrite a container's file type, leaving its children pointing at a record
+  that was no longer a container. Container records are now excluded from the edge-case pool.
+- Edge cases could delete a scripted HOT document via `broken_family`. They are now protected.
+
+### Changed
+
+- CI also runs the error scenario matrix and generates plus validates an edge-case tier.
+- `mock-data/small/` regenerated with container linkage.
+
 ### Added — Edge cases: documents that starve a feature
 
 - **`--edge-cases` on `generate_mock_metadata.py`.** Rule 12 covers files that fail processing.
