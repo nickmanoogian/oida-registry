@@ -48,13 +48,13 @@ See [`RULES.md`](RULES.md) for the full specification behind the distributions a
 
 ```bash
 # small — already in git, instant
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/documents.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/documents.csv
 
 # medium
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/documents.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/documents.csv
 
 # large (compressed)
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/documents.csv.gz
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/large/documents.csv.gz
 gunzip documents.csv.gz
 ```
 

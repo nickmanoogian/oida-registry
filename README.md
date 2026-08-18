@@ -1,6 +1,6 @@
 # Opioid Industry Documents Archive — Data Registry
 
-[![S3 Health Check](https://github.com/nickmanoogian/oioda-registry/actions/workflows/health-check.yml/badge.svg)](https://github.com/nickmanoogian/oioda-registry/actions/workflows/health-check.yml)
+[![S3 Health Check](https://github.com/nickmanoogian/oida-registry/actions/workflows/health-check.yml/badge.svg)](https://github.com/nickmanoogian/oida-registry/actions/workflows/health-check.yml)
 
 This repository gives you access to the **Opioid Industry Documents Archive (OIDA)** — a public dataset of internal documents from opioid manufacturers and distributors, released as part of litigation and public health research.
 
@@ -88,8 +88,8 @@ If you have Python installed (it comes pre-installed on Mac):
 
 ```bash
 # clone this repo
-git clone https://github.com/nickmanoogian/oioda-registry
-cd oioda-registry
+git clone https://github.com/nickmanoogian/oida-registry
+cd oida-registry
 
 # see what's available
 python scripts/download.py --list
@@ -112,17 +112,17 @@ pip install "dvc[s3]"
 
 ```bash
 # one-time download — file lands in current directory
-dvc get https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+dvc get https://github.com/nickmanoogian/oida-registry data-products/prescribers.csv
 
 # import with tracked lineage — creates a .dvc pointer file you commit to git
-dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+dvc import https://github.com/nickmanoogian/oida-registry data-products/prescribers.csv
 ```
 
 ### Adding to a project so teammates can reproduce it
 
 ```bash
 # in your project root
-dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv --out data/prescribers.csv
+dvc import https://github.com/nickmanoogian/oida-registry data-products/prescribers.csv --out data/prescribers.csv
 
 # commit the pointer (not the data)
 git add data/prescribers.csv.dvc .gitignore
@@ -147,7 +147,7 @@ import subprocess
 def fetch_oida(filename, dest="tests/fixtures"):
     subprocess.run([
         "dvc", "get",
-        "https://github.com/nickmanoogian/oioda-registry",
+        "https://github.com/nickmanoogian/oida-registry",
         f"data-products/{filename}",
         "--out", f"{dest}/{filename}",
     ], check=True)
@@ -173,7 +173,7 @@ review *inside Relativity* and do not exist in a raw produced archive.
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt        # installs duckdb (no separate CLI needed)
-make export-insys                      # -> /tmp/oioda-large/{documents.csv.gz, custodians.json}
+make export-insys                      # -> /tmp/oida-large/{documents.csv.gz, custodians.json}
 # or: python3 scripts/export_insys_documents.py --out DIR
 ```
 
@@ -210,35 +210,35 @@ datasets realistic and how the distributions were chosen.
 
 ```bash
 # pull directly into your project — no release download needed
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/documents.csv
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/custodians.json
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/email-families.json
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/batches.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/documents.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/custodians.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/email-families.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/batches.json
 ```
 
 Or clone and use directly:
 ```bash
-git clone https://github.com/nickmanoogian/oioda-registry
+git clone https://github.com/nickmanoogian/oida-registry
 # files are already there at mock-data/small/
 ```
 
 ### Get the medium tier (recommended for most feature work)
 
 ```bash
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/documents.csv
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/custodians.json
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/email-families.json
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/medium/batches.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/documents.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/custodians.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/email-families.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/batches.json
 ```
 
 ### Get the large tier (scale and performance testing)
 
 ```bash
 # documents.csv is compressed — decompress after download
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/documents.csv.gz
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/custodians.json
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/email-families.json.gz
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/large/batches.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/large/documents.csv.gz
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/large/custodians.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/large/email-families.json.gz
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/large/batches.json
 
 gunzip documents.csv.gz
 gunzip email-families.json.gz
@@ -293,11 +293,11 @@ exist only for failure path testing:
 
 ```bash
 # clean package: every native processes successfully
-dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
+dvc get https://github.com/nickmanoogian/oida-registry load-packages/small.zip
 unzip small.zip
 
 # errored package: same documents, 106 natives that genuinely fail processing
-dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+dvc get https://github.com/nickmanoogian/oida-registry load-packages/small-errors.zip
 unzip small-errors.zip
 ```
 
@@ -421,7 +421,7 @@ bug bashing, where the interesting question is what the product does with docume
 
 ```bash
 # pull the pre-built one
-dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+dvc get https://github.com/nickmanoogian/oida-registry load-packages/small-errors.zip
 
 # or build it yourself
 make load-small-errors
@@ -446,7 +446,7 @@ python scripts/build_load_package.py --tier small --with-errors --error-rate 0.2
 The package gains `EXPECTED_ERRORS.csv`, one row per broken document with how it was built, the
 error Relativity is expected to report, and whether that outcome is guaranteed. Rows marked
 `Guaranteed = no` depend on engine or worker configuration rather than on the file. Encrypted
-artefacts use the password `oioda`, so you can test the password bank path or the failure path.
+artefacts use the password `oida`, so you can test the password bank path or the failure path.
 
 Two things are deliberately **not** fabricated. MIP protected rows need a real Microsoft 365
 tenant to apply the sensitivity label, so their natives stay healthy and the build says so.
@@ -483,7 +483,7 @@ python scripts/generate_mock_metadata.py --tier large --out ./my-test-data/
 Start with the 2.4 MB sample — it's a small slice of the raw archive to help you understand the format:
 
 ```bash
-dvc get https://github.com/nickmanoogian/oioda-registry samples/oida-bulk-download-sample.zip
+dvc get https://github.com/nickmanoogian/oida-registry samples/oida-bulk-download-sample.zip
 ```
 
 For the structured CSVs, you can preview just the first few rows without downloading the whole file:
@@ -526,7 +526,7 @@ make get-small
 Or just one:
 
 ```bash
-dvc get https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+dvc get https://github.com/nickmanoogian/oida-registry data-products/prescribers.csv
 ```
 
 ### "I want to browse what's in the raw archive without downloading 7.5 TB"
@@ -557,7 +557,7 @@ Open `prescribers.csv` in Excel or Google Sheets — it's small enough to open d
 Use `dvc import` instead of `dvc get`. It creates a small pointer file you commit to git — when teammates clone the project and run `dvc pull`, they get the exact same file you used:
 
 ```bash
-dvc import https://github.com/nickmanoogian/oioda-registry data-products/prescribers.csv
+dvc import https://github.com/nickmanoogian/oida-registry data-products/prescribers.csv
 git add prescribers.csv.dvc .gitignore
 git commit -m "add prescribers dataset from OIDA registry"
 # teammates run: dvc pull
@@ -673,10 +673,10 @@ A pre-built index of all **22,307,281 files** in the raw archive (581 MB compres
 
 ```bash
 # download via DVC
-dvc get https://github.com/nickmanoogian/oioda-registry manifest.tsv.gz
+dvc get https://github.com/nickmanoogian/oida-registry manifest.tsv.gz
 
 # or direct download
-curl -L -O https://github.com/nickmanoogian/oioda-registry/releases/download/v1.0.0/manifest.tsv.gz
+curl -L -O https://github.com/nickmanoogian/oida-registry/releases/download/v1.0.0/manifest.tsv.gz
 ```
 
 **Browsing the manifest:**
@@ -723,6 +723,6 @@ make verify      # check all S3 URLs are still reachable
 
 - **Dataset:** [Opioid Industry Documents Archive](https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/index.html)
 - **S3 bucket:** `s3://opioid-industry-documents-archive-dataset-bucket` (public, no credentials required)
-- **Registry repo:** https://github.com/nickmanoogian/oioda-registry
+- **Registry repo:** https://github.com/nickmanoogian/oida-registry
 
 This registry was built to make the OIDA dataset easier to use reproducibly across projects. The underlying data is a public resource — if you use it, consider citing the original archive.

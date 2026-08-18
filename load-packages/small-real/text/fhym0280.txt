@@ -1,0 +1,61 @@
+Message
+X-Priority:
+3 X-MSMail-Priority:
+Normal Thread-Index:
+Ac7Dp0VwMAViLrDqSsilu3KzopsPkg== X-Location:
+Out of Office X-Start:
+Wed, 9 Oct 2013 07:00:00 -0700 From:
+"Laura Rivera" <lrivera@insysrx.com> To:
+"Laura Rivera" <lrivera@insysrx.com> Subject:
+Time Off Request Date:
+Mon, 7 Oct 2013 14:51:31 -0700 MIME-Version:
+1.0 Content-type:
+[||REDACTED-||] method=REQUEST; charset=iso-8859-1 Content-Transfer-Encoding:
+7bit [||REDACTED-NAME||]-||]
+[||REDACTED-||]
+Redemption//EN [||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||] [||REDACTED-NAME||]-||] Time [||REDACTED-NAME||]-||]
+RRULE:FREQ=YEARLY;BYMONTH=0;BYDAY=+10SU
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-||]
+Arizona [||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-||]
+ORGANIZER;CN="Laura
+Rivera":mailto:lrivera@insysrx.com CREATED:
+20131007T214738Z CLASS:PUBLIC
+[||REDACTED-||]
+LAST-MODIFIED:
+20131007T215146Z [||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||] [||REDACTED-NAME||]-||] Time":20131009T070000 [||REDACTED-||]
+[||REDACTED-NAME||]-||] [||REDACTED-NAME||]-||] Time":20131010T030000 CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010944082 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION LOCATION:Out
+of Office [||REDACTED-NAME||]-||]
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+UID:040000008200E00074C5B7101A82E0080000000050CF15B66CC3CE0100000000000000
+0010000000FBOA2BF221EA6045BES24756A29E6B22
+X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE
+HTML PUBLIC "-//W3C//DTD HTML 3.2// EN">\n<HTML>\n<HEAD>\n<META
+HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">\n<META
+NAME="Generator" CONTENT="MS Exchange Server [||REDACTED-NAME||]-||]
+14.01.0438.000">\n<TITLE>Time Off Request</TITLE>\n</HEAD>\n<BOD Y>\n<!--
+Converted from [||REDACTED-NAME||]-||] format -->\n\n<P DIR=LTR><SPAN LANG="en- us"></SPAN></P>\n\n</BODY>\n</HTML>
+SUMMARY:Time
+Off Request LOCATION:Out
+of office PRIORITY:3
+[||REDACTED-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-||]
+DESCRIPTION:Reminder
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+[||REDACTED-NAME||]-||]
+CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010944083 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION

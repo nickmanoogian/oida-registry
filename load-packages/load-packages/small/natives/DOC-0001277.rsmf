@@ -1,0 +1,22 @@
+{
+  "Version": "1.0",
+  "Application": "Teams",
+  "EventCollectionId": "1ba7a61117c402b1",
+  "Participants": [
+    "Lisa Torres",
+    "Thomas Bradley",
+    "Michael Brennan"
+  ],
+  "BeginDate": "2015-01-26 00:00:00",
+  "EndDate": "2015-01-26 06:00:00",
+  "MessageCount": "81",
+  "HasPlaceholders": false,
+  "Messages": [
+    {
+      "Sender": "Thomas Bradley",
+      "Timestamp": "2015-01-26 00:00:00",
+      "Content": "[Teams conversation \u2014 Thomas Bradley]",
+      "Channel": ""
+    }
+  ]
+}

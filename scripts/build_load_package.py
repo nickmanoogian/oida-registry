@@ -346,7 +346,7 @@ def load_or_fetch_ocr_cache(use_oida, manifest_path):
         if all(len(v) >= OCR_SAMPLES_PER_TYPE for v in cache.values()):
             break
         try:
-            req = urllib.request.Request(f"{BUCKET_BASE}/{key}", headers={"User-Agent": "oioda-registry"})
+            req = urllib.request.Request(f"{BUCKET_BASE}/{key}", headers={"User-Agent": "oida-registry"})
             with urllib.request.urlopen(req, timeout=10) as r:
                 text = r.read(2000).decode("utf-8", errors="replace").strip()
             if not text or len(text) < 50:
@@ -941,7 +941,7 @@ VERIFYING
 
 QUESTIONS
   See CONTRIBUTING.md or open a GitHub issue at:
-  https://github.com/nickmanoogian/oioda-registry
+  https://github.com/nickmanoogian/oida-registry
 """
 
 

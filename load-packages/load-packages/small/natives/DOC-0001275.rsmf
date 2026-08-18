@@ -1,0 +1,22 @@
+{
+  "Version": "1.0",
+  "Application": "Teams",
+  "EventCollectionId": "c2356af85b2ac524",
+  "Participants": [
+    "Lisa Torres",
+    "Sarah Chen",
+    "Michael Brennan"
+  ],
+  "BeginDate": "2014-11-05 00:00:00",
+  "EndDate": "2014-11-06 16:00:00",
+  "MessageCount": "76",
+  "HasPlaceholders": true,
+  "Messages": [
+    {
+      "Sender": "Sarah Chen",
+      "Timestamp": "2014-11-05 00:00:00",
+      "Content": "[Teams conversation \u2014 Sarah Chen]",
+      "Channel": ""
+    }
+  ]
+}

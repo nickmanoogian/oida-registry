@@ -6,6 +6,21 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — repository renamed to `oida-registry`
+
+The archive is the **O**pioid **I**ndustry **D**ocuments **A**rchive, OIDA. The repository carried
+an extra `o` from the start. Renamed to `nickmanoogian/oida-registry`, and every reference swept:
+55 URLs across the README, CHANGELOG, Makefile, docs and the `.dvc` pointers, plus the
+`/tmp/oida-large` export path and the health-check user agent, which carried the same typo.
+
+GitHub redirects the old name indefinitely, so existing clones, `dvc get` calls and release asset
+URLs keep working. All 38 URLs verify at the new name.
+
+**One behaviour change came with it.** `PACKAGE_PASSWORD`, used for the encrypted artefacts in an
+errored package, was `oioda` and is now `oida`. Every package documents its own password in
+`IMPORT_README.txt`, so a tester reads it from the package rather than from the repo. The
+published v1.9.1 artifact still uses `oioda`; anything built after this uses `oida`.
+
 ### Added — Load files that fail at import
 
 The last gap from the 2026-08-18 standup. Everything in the repo broke during or after
@@ -143,7 +158,7 @@ stays byte-identical and the committed tiers plus the CI determinism check are u
   gets broken files by accident.
 
   ```bash
-  dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+  dvc get https://github.com/nickmanoogian/oida-registry load-packages/small-errors.zip
   ```
 
 ### Fixed
@@ -263,7 +278,7 @@ stays byte-identical and the committed tiers plus the CI determinism check are u
 The small tier load package is now accessible via DVC without a build step:
 
 ```bash
-dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
+dvc get https://github.com/nickmanoogian/oida-registry load-packages/small.zip
 unzip small.zip
 ```
 

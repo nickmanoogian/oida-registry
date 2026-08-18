@@ -1,0 +1,85 @@
+Message
+X-Priority:
+3 X-MSMail-Priority:
+Normal Thread-Index:
+Ac39gWA2cDnz0ebgQiCgjYdgVmu4+w== From:
+"Liz Gurrieri" <lgurrieri@insysrx.com> Subject:
+Ted Freeman Date:
+Mon, 28 Jan 2013 11:00:40 -0700 MIME-Version:
+1.0 Content-type:
+[||REDACTED-NAME||]-||] charset=iso-8859-1; boundary="00BOFF6B_message_boundary"
+Content-Description:
+[||REDACTED-NAME||]-||] message --00BOFF6B_message_boundary
+Content-type:
+[||REDACTED-NAME||]-||] charset=iso-8859-1 Content-Transfer-Encoding:
+7bit Content-Disposition:
+inline Content-Description:
+Message [||REDACTED-NAME||]-||] Thursday,
+February 07, 2013 4:29 PM: Rep:
+Nanette Alonzo Contact
+: [||REDACTED-NAME||]-||] or [||REDACTED-NAME||]-||] [||REDACTED-||]-PHONE_NUMBER||]
+[||REDACTED-NAME||]-||] back line NPI
+# [||REDACTED-||]-PHONE_NUMBER||] DEA
+# BF5323679 Tax
+ID: [||REDACTED-MEDICAL_RECORD_NUMBER||]-INVOICE_NUMBER||]-||] Wednesday,
+February 06, 2013 11:51 AM: Rep:
+Nanette Alonzo Contact
+: [||REDACTED-NAME||]-||] NPI
+# [||REDACTED-||]-PHONE_NUMBER||] DEA
+# BF5323679 Tax
+ID: [||REDACTED-MEDICAL_RECORD_NUMBER||]-INVOICE_NUMBER||]-||] Rep:
+Nanette Alonzo Contact
+: [||REDACTED-NAME||]-||] CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010938606 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION NPI
+# [||REDACTED-||]-PHONE_NUMBER||] DEA
+# BF5323679 --00BOFF6B_message_boundary
+Content-type:
+[||REDACTED-NAME||]-||] Content-Transfer-Encoding:
+Quoted-printable Content-Disposition:
+inline Content-Description:
+HTML [||REDACTED-NAME||]-||] <!DOCTYPE
+HTML PUBLIC "-//W3C//DTD HTML 3.2//EN"> <HTML>
+<HEAD>
+<META
+HTTP-EQUIV=3D"Content-Type" [||REDACTED-PATIENT_ID_NUMBER||]-||] charset= =3Diso-8859-1">
+<META
+NAME=3D"Generator" CONTENT=3D"MS Exchange Server version= 14.01.0438.000">
+<TITLE>Ted
+Freeman</TITLE> </HEAD>
+<BODY>
+<!--
+Converted from [||REDACTED-NAME||]-||] format --> <P><FONT
+COLOR=3D"#BEBEBE" FACE=3D"Calibri">Thursday, February 07, 2013= 4:29
+PM:</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Rep: Nanette [||REDACTED-NAME||]-||] <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Contact : [||REDACTED-NAME||]-||] or Gina</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">732-785-7701 [||REDACTED-NAME||]-||] back line</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">NPI # 1881762029</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">DEA # BF5323679</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Tax ID: [||REDACTED-INVOICE_NUMBER||]-PATIENT_ID_NUMBER||]-||] <BR><FONT
+COLOR=3D"#BEBEBE" FACE= CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010938607 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION =3D"Calibri">
+- -
+---</FONT> <BR><FONT
+COLOR=3D"#BEBEBE" FACE=3D"Calibri">Wednesday, February 06, 2013= 11:51
+AM:</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Rep: Nanette [||REDACTED-NAME||]-||] <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Contact : Mariah</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">NPI # 1881762029</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">DEA # BF5323679</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Tax ID: [||REDACTED-INVOICE_NUMBER||]-PATIENT_ID_NUMBER||]-||] <BR><FONT
+COLOR=3D"#BEBEBE" FACE= =3D"Calibri">
+- -
+---</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Rep: Nanette [||REDACTED-NAME||]-||] <BR><FONT
+SIZE=3D2 FACE=3D"Arial">Contact : Mariah</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">NPI # 1881762029</FONT> <BR><FONT
+SIZE=3D2 FACE=3D"Arial">DEA # BF5323679</FONT> </P>
+</BODY>
+</HTML>
+-
+-00B0FF6B_message_boundary-- CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010938608 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION

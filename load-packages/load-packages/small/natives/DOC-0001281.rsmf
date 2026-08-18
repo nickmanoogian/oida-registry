@@ -1,0 +1,22 @@
+{
+  "Version": "1.0",
+  "Application": "Teams",
+  "EventCollectionId": "722427be86c708c1",
+  "Participants": [
+    "Sarah Chen",
+    "Thomas Bradley",
+    "Michael Brennan"
+  ],
+  "BeginDate": "2016-11-30 00:00:00",
+  "EndDate": "2016-12-01 01:00:00",
+  "MessageCount": "44",
+  "HasPlaceholders": false,
+  "Messages": [
+    {
+      "Sender": "Thomas Bradley",
+      "Timestamp": "2016-11-30 00:00:00",
+      "Content": "[Teams conversation \u2014 Thomas Bradley]",
+      "Channel": ""
+    }
+  ]
+}

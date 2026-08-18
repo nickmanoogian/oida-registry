@@ -1,7 +1,7 @@
-# OIODA Mock Data — Canonical Reference
+# OIDA Mock Data — Canonical Reference
 
 This is the single source of truth for the mock and real data published by the
-`nickmanoogian/oioda-registry` repository. It describes what the registry is, the
+`nickmanoogian/oida-registry` repository. It describes what the registry is, the
 litigation narrative the data is built around, every data tier and its contents,
 the key custodians, how the data feeds the ECI (Early Case Intelligence) demo, and
 how to regenerate everything from scratch.
@@ -113,7 +113,7 @@ Each tier contains four files:
 **Pull the small tier (already in git, instant):**
 
 ```bash
-dvc get https://github.com/nickmanoogian/oioda-registry mock-data/small/documents.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/small/documents.csv
 # or, via Makefile
 make mock-small
 ```
@@ -176,7 +176,7 @@ Batches, TAR/AL) are **intentionally omitted**: those are created during review
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt        # installs duckdb (no separate CLI)
-make export-insys                      # -> /tmp/oioda-large/{documents.csv.gz, custodians.json}
+make export-insys                      # -> /tmp/oida-large/{documents.csv.gz, custodians.json}
 ```
 
 Output: an ~1.63M-row `documents.csv.gz` (~163 MB) plus `custodians.json`. The
@@ -276,7 +276,7 @@ files plus a Relativity Concordance `.dat` load file, ready for workspace import
 pip install python-docx openpyxl python-pptx fpdf2
 make load-small                # real OIDA OCR content
 make load-small-synthetic      # synthetic content only, no network
-# pre-built package: dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
+# pre-built package: dvc get https://github.com/nickmanoogian/oida-registry load-packages/small.zip
 ```
 
 The scripted HOT- documents get hand-crafted MDL 2804 content; all other documents

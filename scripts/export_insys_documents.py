@@ -18,7 +18,7 @@ each row carries a deterministic `OCR Text URL` so the real text can be fetched
 on demand. Language is a processing field derived from that OCR text (separate,
 bounded pass — the full per-doc run is the ~112 GB OCR job).
 
-Output (default /tmp/oioda-large/):
+Output (default /tmp/oida-large/):
   documents.csv.gz   — all Insys docs, real processing metadata
   custodians.json    — every real collected custodian + real doc count
 
@@ -149,7 +149,7 @@ def summarize(out_csv: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Export real Insys OIDA docs (processing fields) for ECI.")
-    ap.add_argument("--out", default="/tmp/oioda-large", type=Path)
+    ap.add_argument("--out", default="/tmp/oida-large", type=Path)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 

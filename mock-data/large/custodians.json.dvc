@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-large-custodians.json
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-large-custodians.json
   size: 15412
 outs:
 - path: custodians.json

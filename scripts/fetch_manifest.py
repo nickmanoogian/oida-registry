@@ -37,7 +37,7 @@ def fetch_manifest(prefix: str = "", outfile: str = "manifest.tsv.gz") -> None:
             if token:  params["continuation-token"] = token
             url = f"{BUCKET_URL}/?{urllib.parse.urlencode(params)}"
 
-            req = urllib.request.Request(url, headers={"User-Agent": "python/oioda-registry"})
+            req = urllib.request.Request(url, headers={"User-Agent": "python/oida-registry"})
             with urllib.request.urlopen(req, timeout=30) as r:
                 root = ET.fromstring(r.read())
 
