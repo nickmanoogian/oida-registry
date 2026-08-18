@@ -303,13 +303,53 @@ make load-small-synthetic
 ```
 
 Output in `load-packages/small/`:
-- `natives/` — 1,400+ actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files
+- `natives/` — 1,400+ actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files, in one folder per custodian
 - `load-file.dat` — Relativity Concordance load file (53 fields, all metadata)
-- `IMPORT_README.txt` — step-by-step Relativity import instructions
+- `custodian-sources.csv` — one row per custodian: the processing data source setup sheet
+- `IMPORT_README.txt` — step-by-step Relativity processing and import instructions
 
 The 13 scripted hot documents (HOT- prefix) get hand-crafted MDL 2804 content —
 the SOM override email, the McKinsey turbocharge deck, the IRC call guide, and more.
 All other documents use real OIDA OCR text pulled from the S3 archive.
+
+### Custodian folders
+
+Natives are written into the folder structure the metadata describes, mirroring the
+`Processing Folder Path` column:
+
+```
+natives/
+  Michael_Brennan/2014/01/DOC-0000318.docx
+  Sarah_Chen/2016/09/DOC-0000722.eml
+  Thomas_Bradley/2013/11/DOC-0000229.eml
+  Lisa_Torres/...
+```
+
+This is what makes the package usable as **raw data**. A Relativity processing set assigns
+custodians per data source, so with one folder per custodian you add a data source for each
+row in `custodian-sources.csv`, pick the custodian on it, and custodian assignment comes out
+of the folder structure. With a single flat folder you would get one custodian for the whole
+collection, or you would sort the files by hand.
+
+`custodian-sources.csv` carries name, email, org, department, data source folder, document
+count, natives written and total bytes:
+
+| Custodian | Data Source Folder | Documents | Native Bytes |
+|---|---|---|---|
+| Michael Brennan | `natives\Michael_Brennan` | 370 | 2,614,388 |
+| Thomas Bradley | `natives\Thomas_Bradley` | 368 | 2,162,254 |
+| Sarah Chen | `natives\Sarah_Chen` | 351 | 2,375,388 |
+| Lisa Torres | `natives\Lisa_Torres` | 350 | 3,080,278 |
+
+If you want the old single-directory layout, pass `--flat`. It cannot support per-custodian
+data sources, and the generated `IMPORT_README.txt` says so.
+
+Verify a built package against [`mock-data/RULES.md`](mock-data/RULES.md) Rule 11:
+
+```bash
+make load-validate
+# or: python scripts/validate_load_package.py load-packages/small
+```
 
 ---
 
