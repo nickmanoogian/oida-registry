@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.7.0/small-load-package.zip
-  size: 10397970
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.8.0/small-load-package.zip
+  size: 10363849
 outs:
 - path: small.zip
-  size: 10397970
+  size: 10363849
   isexec: false

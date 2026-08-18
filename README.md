@@ -283,11 +283,18 @@ with open("email-families.json") as f:
 ### Option A — Pull the pre-built package (no build step)
 
 ```bash
+# clean package: every native processes successfully
 dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
 unzip small.zip
+
+# errored package: same documents, 106 natives that genuinely fail processing
+dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+unzip small-errors.zip
 ```
 
-Contains ~1,423 native files + `load-file.dat` + `IMPORT_README.txt`. Ready to import immediately.
+Each contains ~1,423 native files in per-custodian folders, `load-file.dat`,
+`custodian-sources.csv` and `IMPORT_README.txt`. Ready to import immediately. The errored
+package adds `EXPECTED_ERRORS.csv`.
 
 ### Option B — Build from scratch
 
@@ -350,9 +357,16 @@ The default package is clean: every native processes successfully. That is the w
 bug bashing, where the interesting question is what the product does with documents that fail.
 
 ```bash
+# pull the pre-built one
+dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+
+# or build it yourself
 make load-small-errors
 # or: python scripts/build_load_package.py --tier small --with-errors
 ```
+
+The errored package is a **separate artifact**. `load-packages/small.zip` stays clean, so
+nobody gets broken files by accident.
 
 Every document already flagged `Processing Status = Error` in `documents.csv` gets a native
 that genuinely fails in the way its `Processing Error Type` describes. In the small tier that

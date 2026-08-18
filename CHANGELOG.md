@@ -6,6 +6,30 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Pre-built errored package
+
+- **`load-packages/small-errors.zip`**, published alongside the clean package rather than
+  replacing it. Same 1,439 documents, 106 natives that genuinely fail processing, plus
+  `EXPECTED_ERRORS.csv`. `load-packages/small.zip` stays clean, so nobody pulling fixture data
+  gets broken files by accident.
+
+  ```bash
+  dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small-errors.zip
+  ```
+
+### Fixed
+
+- **The health check failed on every release-prep PR.** A PR that repoints a `.dvc` file at a
+  new release tag always 404s during review, because the assets only exist once the release is
+  published. `verify_urls.py` now distinguishes the two cases: if the release tag itself does
+  not resolve, the pointer is reported as PENDING; if the tag exists and the asset is missing,
+  that is still a hard failure. Pending is tolerated on `pull_request` runs and on
+  `--allow-pending`, and fails everywhere else, so a pointer that reaches main without its
+  release being published is still caught by the weekly run.
+- `make load-small-errors` wrote into `load-packages/small/`, overwriting the clean package with
+  an errored build. It now writes to `load-packages/small-errors/`. `make load-validate` checks
+  both when both exist.
+
 ### Added — Errored files for failure path testing
 
 - **`--with-errors` fabricates natives that genuinely fail processing.** Rule 6 has always
