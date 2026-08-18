@@ -294,6 +294,48 @@ unreviewed docs — that's the realistic scenario where TAR is used to prioritiz
 
 ---
 
+## Rule 11 — Custodian Folder Structure
+
+Rules 1 through 10 govern the *metadata*. This rule governs the *package on disk*.
+
+`Processing Folder Path` is a contract, not a label. When a load package writes native files,
+the directory tree must match that column exactly:
+
+```
+natives/
+  Michael_Brennan/2014/01/DOC-0000318.docx
+  Thomas_Bradley/2013/11/DOC-0000229.eml
+  ...
+```
+
+The reason is Relativity Processing: a processing set assigns custodians **per data source**.
+One flat folder means one data source, and therefore one custodian for the entire collection,
+or manual sorting. One folder per custodian means one data source each, with custodian
+assignment falling out of the structure.
+
+Requirements:
+
+- Every native lives under the path its `Processing Folder Path` describes. No files at the
+  root of `natives/`.
+- `NativeFilePath` in the load file is the package-relative path in backslash form, e.g.
+  `natives\Michael_Brennan\2014\01\DOC-0000318.docx`.
+- Every package ships `custodian-sources.csv`: one row per custodian with name, email, org,
+  department, data source folder, document count, natives written and total bytes. This is the
+  sheet whoever builds the processing set works down.
+- Documents with no custodian go under `_Unassigned/`, and only when a build deliberately asks
+  for them. The default build assigns every document to a custodian.
+
+A flat layout is available via `--flat` for anyone who wants the old shape, but it cannot
+support per-custodian data sources and the generated `IMPORT_README.txt` says so.
+
+Verify a built package with:
+
+```bash
+python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:

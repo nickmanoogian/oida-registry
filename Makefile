@@ -6,7 +6,7 @@ ECI_OUT   := /tmp/oioda-large
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large \
-        load-small load-small-synthetic load-medium load-large \
+        load-small load-small-synthetic load-medium load-large load-validate \
         export-insys
 
 help:
@@ -32,6 +32,7 @@ help:
 	@echo "  make load-small-synthetic  Same, synthetic content (no S3, faster)"
 	@echo "  make load-medium         Build medium tier load package"
 	@echo "  make load-large          Build large tier load package"
+	@echo "  make load-validate       Check a built package against RULES.md Rule 11"
 	@echo ""
 	@echo "  ── ECI real-data export (real OIDA processing fields) ────────"
 	@echo "  make export-insys    Export ALL real Insys docs + custodians.json -> $(ECI_OUT)/"
@@ -134,3 +135,6 @@ load-medium:
 load-large:
 	python3 scripts/build_load_package.py --tier large
 	@echo "Package ready at load-packages/large/"
+
+load-validate:
+	python3 scripts/validate_load_package.py load-packages/small

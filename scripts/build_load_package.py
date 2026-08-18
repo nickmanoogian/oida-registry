@@ -26,7 +26,7 @@ Requirements:
 """
 
 import argparse, csv, email.mime.multipart, email.mime.text, email.utils
-import gzip, json, os, random, sys, time, urllib.request
+import gzip, json, os, random, re, sys, time, urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -523,9 +523,46 @@ def make_rsmf(doc):
 def make_txt(doc, body):
     return f"Control Number: {doc.get('Control Number','')}\nDate: {doc.get('Primary Date','')[:10]}\n\n{body}"
 
+# ── Custodian folder mapping ──────────────────────────────────────────────
+
+_FOLDER_SAFE      = re.compile(r"[^A-Za-z0-9._-]+")
+UNASSIGNED_FOLDER = "_Unassigned"
+
+
+def custodian_slug(name):
+    """Michael Brennan -> Michael_Brennan. Blank -> _Unassigned."""
+    slug = _FOLDER_SAFE.sub("_", (name or "").strip().replace(" ", "_")).strip("_")
+    return slug or UNASSIGNED_FOLDER
+
+
+def native_subdir(doc):
+    r"""Native directory for a document, mirroring its Processing Folder Path.
+
+    \\Collection\Michael_Brennan\2014\01  ->  Michael_Brennan/2014/01
+
+    The metadata column is the contract (RULES.md Rule 12): whatever it says is what
+    gets built on disk, so the CSV and the package cannot drift apart. A document with
+    no usable path falls back to its custodian folder; one with no custodian at all
+    lands in _Unassigned.
+    """
+    raw   = (doc.get("Processing Folder Path") or "").replace("\\", "/")
+    parts = [p for p in raw.split("/") if p and p not in (".", "..")]
+    if parts and parts[0].lower() == "collection":
+        parts = parts[1:]
+    parts = [_FOLDER_SAFE.sub("_", p) for p in parts]
+    if not parts:
+        parts = [custodian_slug(doc.get("Custodian", ""))]
+    return os.path.join(*parts)
+
+
+def dat_native_path(abs_path, out_dir):
+    """Package-relative path in the backslash form a Relativity load file expects."""
+    return os.path.relpath(abs_path, out_dir).replace(os.sep, "\\")
+
+
 # ── Native file dispatcher ────────────────────────────────────────────────
 
-def generate_native(doc, cache, out_dir):
+def generate_native(doc, cache, out_dir, flat=False):
     ctrl = doc["Control Number"]
     ft   = doc.get("File Type Category","")
     ext  = doc.get("File Extension","txt")
@@ -537,44 +574,74 @@ def generate_native(doc, cache, out_dir):
     else:
         body = get_ocr_content(doc, cache)
 
-    native_path = os.path.join(out_dir, "natives", f"{ctrl}.{ext}")
-    os.makedirs(os.path.dirname(native_path), exist_ok=True)
+    nat_dir = os.path.join(out_dir, "natives")
+    if not flat:
+        nat_dir = os.path.join(nat_dir, native_subdir(doc))
+    os.makedirs(nat_dir, exist_ok=True)
+
+    def dest(extension):
+        return os.path.join(nat_dir, f"{ctrl}.{extension}")
+
+    native_path = dest(ext)
 
     try:
         if ft in ("Email - MSG","Email - EML","Calendar - ICS") or (hot and hot.get("type")=="email"):
             content = make_eml(doc, body).encode("utf-8","replace")
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.eml")
+            native_path = dest("eml")
         elif ("Word" in ft or (hot and hot.get("type")=="docx")) and "Container" not in ft:
             content = make_docx(doc, body)
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.docx")
+            native_path = dest("docx")
         elif "Excel" in ft or "Spreadsheet" in ft or (hot and hot.get("type")=="xlsx"):
             content = make_xlsx(doc, hot)
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.xlsx")
+            native_path = dest("xlsx")
         elif "PowerPoint" in ft or "Presentation" in ft or (hot and hot.get("type")=="pptx"):
             content = make_pptx(doc, hot)
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.pptx")
+            native_path = dest("pptx")
         elif "PDF" in ft or (hot and hot.get("type")=="pdf"):
             content = bytes(make_pdf(doc, body))
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.pdf")
+            native_path = dest("pdf")
         elif "RSMF" in ft or "Bloomberg" in ft:
             content = make_rsmf(doc).encode("utf-8")
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.rsmf")
+            native_path = dest("rsmf")
         elif "Container" in ft or doc.get("Has Natives","") == "No":
             return None  # containers don't have natives
         else:
             content = make_txt(doc, body).encode("utf-8","replace")
-            native_path = os.path.join(out_dir, "natives", f"{ctrl}.txt")
+            native_path = dest("txt")
 
         with open(native_path, "wb") as f:
             f.write(content if isinstance(content, bytes) else content.encode("utf-8","replace"))
-        return os.path.relpath(native_path, out_dir)
+        return dat_native_path(native_path, out_dir)
 
     except Exception as e:
         # Fallback: write a txt placeholder
-        fallback = os.path.join(out_dir, "natives", f"{ctrl}.txt")
+        fallback = dest("txt")
         with open(fallback, "w", encoding="utf-8") as f:
             f.write(f"[{ft}]\n\n{body[:500]}")
-        return os.path.relpath(fallback, out_dir)
+        return dat_native_path(fallback, out_dir)
+
+
+# ── Custodian data source sheet ───────────────────────────────────────────
+
+CUSTODIAN_SOURCE_COLUMNS = [
+    "Custodian","Custodian Email","Custodian Org","Custodian Department",
+    "Data Source Folder","Documents","Natives Written","Native Bytes",
+]
+
+
+def write_custodian_sources(stats, out_dir, flat):
+    """One row per custodian: the setup sheet for Relativity processing data sources."""
+    path = os.path.join(out_dir, "custodian-sources.csv")
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(CUSTODIAN_SOURCE_COLUMNS)
+        for name in sorted(stats):
+            st = stats[name]
+            folder = "natives" if flat else "natives\\" + st["folder"]
+            w.writerow([name, st["email"], st["org"], st["dept"], folder,
+                        st["docs"], st["natives"], st["bytes"]])
+    return path
+
 
 # ── Relativity .dat load file writer ─────────────────────────────────────
 
@@ -746,25 +813,76 @@ def build_family_index(families_path):
 
 # ── Import readme ─────────────────────────────────────────────────────────
 
+def custodian_readme_block(stats, flat):
+    """The custodian folder listing embedded in IMPORT_README.txt."""
+    if flat:
+        total = sum(st["docs"] for st in stats.values())
+        return ("  natives\\   all {:,} documents in one folder (--flat).\n"
+                "            Custodian is NOT derivable from the folder structure here;\n"
+                "            use PATH B, or rebuild without --flat.".format(total))
+    lines = []
+    for name in sorted(stats):
+        st = stats[name]
+        lines.append("  natives\\{:<20} {:>7,} docs   {:>8.1f} MB   {}".format(
+            st["folder"], st["docs"], st["bytes"]/1e6, name))
+    lines.append("")
+    lines.append("Each custodian folder is further split by year and month, mirroring the")
+    lines.append("Processing Folder Path column in documents.csv. The folder structure and")
+    lines.append("that column always agree, so either can be treated as the source of truth.")
+    return "\n".join(lines)
+
+
 IMPORT_README = """RELATIVITY IMPORT INSTRUCTIONS
 ====================================
 
 This package contains:
-  natives/         — native files (.eml, .docx, .xlsx, .pptx, .pdf, .rsmf)
-  load-file.dat    — Relativity Concordance load file (metadata + native paths)
-  load-file.opt    — image load file placeholder (native-only import)
+  natives/               native files, organised into one folder per custodian
+  load-file.dat          Relativity Concordance load file (metadata + native paths)
+  load-file.opt          image load file placeholder (native-only import)
+  custodian-sources.csv  one row per custodian: the data source setup sheet
 
-STEP 1 — Copy the package to your Relativity file server
+CUSTODIAN FOLDERS
+{custodian_block}
+
+Pick ONE of the two paths below. PATH A exercises Processing and is the right
+choice for testing the raw data workflow. PATH B skips Processing and loads the
+metadata as-is.
+
+
+PATH A — PROCESS AS RAW DATA (recommended for workflow testing)
+---------------------------------------------------------------
+
+STEP A1 — Copy the package to your Relativity file server
   Place this entire folder on the server at a path Relativity can access.
   Example: \\\\fileserver\\LoadFiles\\MDL2804-{tier}\\
 
-STEP 2 — Create a Relativity Processing Set (OR use Import)
-  Option A (Processing): Use Relativity Processing to create workspace fields
-    that match the columns in load-file.dat (see field list below).
-  Option B (Import): Use the Relativity Import module:
-    Workspace → Import → Relativity Load File → select load-file.dat
+STEP A2 — Create a processing profile
+  Processing → Profiles → New. Default settings are fine to start.
 
-STEP 3 — Field mapping
+STEP A3 — Create a processing set with ONE DATA SOURCE PER CUSTODIAN
+  Processing → Processing Sets → New, then add a data source for each row in
+  custodian-sources.csv:
+
+    Data Source Folder  →  the folder in the "Data Source Folder" column
+    Custodian           →  the "Custodian" column, create the entity if needed
+    Document numbering  →  your choice
+
+  This is the whole point of the folder layout: custodian assignment comes from
+  the folder structure, so you never hand-sort files or hand-map custodians.
+
+STEP A4 — Run discovery, then publish
+  Check the errors tab before publishing. In a default package every file is
+  expected to process cleanly.
+
+
+PATH B — IMPORT THE LOAD FILE (metadata already populated)
+-----------------------------------------------------------
+
+STEP B1 — Copy the package to a location Relativity can reach (as in A1).
+
+STEP B2 — Workspace → Import → Relativity Load File → select load-file.dat
+
+STEP B3 — Field mapping
   The .dat file uses Concordance delimiters:
     Column separator: þ (ASCII 254)
     Text qualifier:   ÿ (ASCII 255)
@@ -783,17 +901,21 @@ STEP 3 — Field mapping
     TAR Score            → TAR Score (decimal)
     NativeFilePath       → (mapped to native file upload)
 
-STEP 4 — Set the native file path base
-  When prompted for the native file path, set the base path to the
-  location of this package on the file server. The NativeFilePath
-  column contains relative paths like: natives\\DOC-0000001.eml
+STEP B4 — Set the native file path base
+  When prompted for the native file path, set the base path to the location of
+  this package on the file server. NativeFilePath holds package-relative paths
+  like: natives\\Michael_Brennan\\2014\\01\\DOC-0000318.docx
 
-VERIFYING THE IMPORT
-  After import, run this search in Relativity to find the scripted hot docs:
+
+VERIFYING
+  After loading, run this search to find the scripted hot docs:
     Control Number StartsWith "HOT-"
 
   These 8–13 documents are the key evidentiary moments in the MDL 2804 story.
   See mock-data/DEMO_GUIDE.md for a full walkthrough.
+
+  To confirm custodian assignment worked, group the document list by Custodian
+  and compare the counts against custodian-sources.csv.
 
 QUESTIONS
   See CONTRIBUTING.md or open a GitHub issue at:
@@ -802,7 +924,7 @@ QUESTIONS
 
 # ── Main ──────────────────────────────────────────────────────────────────
 
-def build(tier_name, tier_dir, out_dir, use_oida, limit, seed):
+def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
     random.seed(seed)
 
     docs_path    = os.path.join(tier_dir, "documents.csv")
@@ -824,6 +946,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed):
     print(f"  Documents:  {len(all_docs):,}")
     print(f"  Output:     {out_dir}")
     print(f"  OIDA OCR:   {'yes' if use_oida else 'no (synthetic)'}")
+    print(f"  Layout:     {'flat natives/' if flat else 'natives/{custodian}/{year}/{month}'}")
     print(f"{'='*60}\n")
 
     Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -838,16 +961,35 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed):
     # Generate natives + build .dat rows
     dat_rows = []
     skipped  = 0
+    natives_written = 0
+    cust_stats = {}
     t0 = time.time()
 
     for i, doc in enumerate(all_docs):
-        native_path = generate_native(doc, cache, out_dir)
+        native_path = generate_native(doc, cache, out_dir, flat=flat)
         values      = doc_to_dat_row(doc, native_path, families_by_doc)
         dat_rows.append(values)
+
+        cust = (doc.get("Custodian") or "").strip() or "(unassigned)"
+        st   = cust_stats.setdefault(cust, {
+            "email":  doc.get("Custodian Email",""),
+            "org":    doc.get("Custodian Org",""),
+            "dept":   doc.get("Custodian Department",""),
+            "folder": native_subdir(doc).split(os.sep)[0],
+            "docs": 0, "natives": 0, "bytes": 0,
+        })
+        st["docs"] += 1
+        if native_path:
+            natives_written += 1
+            st["natives"] += 1
+            st["bytes"]   += os.path.getsize(os.path.join(out_dir, native_path.replace("\\", os.sep)))
+        else:
+            skipped += 1
+
         if (i+1) % 100 == 0:
             elapsed = time.time() - t0
             rate    = (i+1) / elapsed
-            print(f"  {i+1:,}/{len(all_docs):,} docs  ({rate:.0f}/s)  {len(os.listdir(os.path.join(out_dir,'natives'))):,} natives written")
+            print(f"  {i+1:,}/{len(all_docs):,} docs  ({rate:.0f}/s)  {natives_written:,} natives written")
 
     # Write .dat
     dat_path = os.path.join(out_dir, "load-file.dat")
@@ -864,14 +1006,23 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed):
         f.write("# This package uses native-only import — no TIFF images included.\n")
         f.write("# Import using load-file.dat for native file loading.\n")
 
+    # Write the custodian data source sheet
+    write_custodian_sources(cust_stats, out_dir, flat)
+
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
-        f.write(IMPORT_README.replace("{tier}", tier_name))
+        f.write(IMPORT_README.replace("{tier}", tier_name)
+                             .replace("{custodian_block}", custodian_readme_block(cust_stats, flat)))
 
     print(f"\n  Done in {time.time()-t0:.0f}s")
-    print(f"  Natives:    {len(os.listdir(os.path.join(out_dir,'natives'))):,} files")
+    print(f"  Natives:    {natives_written:,} files ({skipped:,} documents have no native)")
     print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(DAT_COLUMNS)} fields)")
+    print(f"  Custodians: {len(cust_stats)} -> custodian-sources.csv")
+    for name in sorted(cust_stats):
+        st = cust_stats[name]
+        folder = "natives" if flat else os.path.join("natives", st["folder"])
+        print(f"    {name:<22} {st['docs']:>7,} docs  {st['bytes']/1e6:>7.1f} MB  {folder}")
     print(f"  Package:    {out_dir}")
 
 
@@ -883,11 +1034,14 @@ def main():
     p.add_argument("--no-oida",  action="store_true", help="Use synthetic content instead of OIDA OCR")
     p.add_argument("--limit",    type=int, default=None, help="Only process first N documents (useful for testing)")
     p.add_argument("--seed",     type=int, default=DEFAULT_SEED)
+    p.add_argument("--flat",     action="store_true",
+                   help="Write every native into one natives/ directory instead of "
+                        "natives/{custodian}/{year}/{month}/")
     args = p.parse_args()
 
     tier_dir = args.dir or os.path.join("mock-data", args.tier)
     out_dir  = args.out or os.path.join("load-packages", args.tier)
-    build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed)
+    build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed, args.flat)
 
 if __name__ == "__main__":
     main()

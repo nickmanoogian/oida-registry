@@ -6,6 +6,40 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Custodian folders in load packages
+
+- **Natives are written into one folder per custodian**, mirroring the `Processing Folder Path`
+  column instead of landing flat in a single directory. `natives/Michael_Brennan/2014/01/DOC-0000318.docx`
+  rather than `natives/DOC-0000318.docx`. The metadata described this hierarchy all along (191
+  distinct paths in the small tier); only the CSV knew about it.
+
+  This is what makes a package consumable as raw data. A Relativity processing set assigns
+  custodians per data source, so a flat folder yields one custodian for the whole collection or
+  a manual sort. One folder per custodian yields a data source each.
+
+- **`custodian-sources.csv`** in every package: name, email, org, department, data source
+  folder, document count, natives written, total bytes. The setup sheet for building the
+  processing set.
+
+- **`scripts/validate_load_package.py`** and `make load-validate`: checks a built package
+  against the new RULES.md Rule 11. Every `NativeFilePath` resolves, paths use backslashes,
+  nothing loose at the root of `natives/`, folder matches the row's custodian, and
+  `custodian-sources.csv` agrees with what is on disk.
+
+- **RULES.md Rule 11 — Custodian Folder Structure.** Rules 1 through 10 govern the metadata;
+  Rule 11 governs the package on disk.
+
+- `--flat` on `build_load_package.py` preserves the old single-directory layout. The generated
+  `IMPORT_README.txt` states that it cannot support per-custodian data sources.
+
+### Changed
+
+- `IMPORT_README.txt` now documents two paths: **PATH A** processes the package as raw data with
+  one data source per custodian, **PATH B** is the existing load file import. It also lists the
+  custodian folders and their document counts.
+- `NativeFilePath` in `load-file.dat` now uses backslash separators, which is what the load file
+  format and the README always claimed. It was emitting forward slashes on macOS builds.
+
 ## [v1.6.0] — 2026-06-26
 
 ### Fixed
