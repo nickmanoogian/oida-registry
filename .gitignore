@@ -1,6 +1,7 @@
 # generated load packages (too large for git — use .dvc pointers instead)
 /load-packages/small/
 /load-packages/small-errors/
+/load-packages/broken-load-files/
 /load-packages/medium/
 /load-packages/large/
 /load-packages/*.zip

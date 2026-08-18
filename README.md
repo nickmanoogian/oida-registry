@@ -282,6 +282,15 @@ with open("email-families.json") as f:
 
 ### Option A — Pull the pre-built package (no build step)
 
+There are three packages, and **the clean one is the default**. The other two are opt in and
+exist only for failure path testing:
+
+| | What it is |
+|---|---|
+| `small.zip` | Clean. Everything imports and processes. Use it as fixture data or for a happy path run. |
+| `small-errors.zip` | Natives that fail processing, plus documents that process cleanly with an input missing. |
+| `broken-load-files/` | Load files that fail at import. Built locally, `.dat` only. |
+
 ```bash
 # clean package: every native processes successfully
 dvc get https://github.com/nickmanoogian/oioda-registry load-packages/small.zip
@@ -381,6 +390,29 @@ is unaffected.
 
 The errored load package is built from an edge-case tier, so `small-errors.zip` carries both:
 files that fail processing, and documents that process cleanly with a hole in them.
+
+### Load files that fail at import
+
+The two scenarios above break during or after processing. This one breaks before it: a load file
+Relativity will not cleanly ingest.
+
+```bash
+make load-broken
+# or: python scripts/build_broken_load_files.py
+```
+
+Seven variants, one fault each: a `NativeFilePath` pointing at a file that is not in the package,
+a duplicated Control Number, unparseable dates, a raw column separator inside a field value,
+Latin-1 bytes in a file read as UTF-8, a row with fewer fields than the header, and a blank
+Control Number.
+
+Only the `.dat` is written. Natives are not duplicated, and every variant points at the same
+relative paths as the clean package, so you unzip `small.zip` and drop one `.dat` in beside its
+`natives/` folder. `manifest.csv` lists each variant, the rows it affects by control number, and
+the failure to expect.
+
+`--verify` checks that every variant actually carries the fault it claims, because a broken load
+file that parses cleanly is the same trap as a healthy native behind an error flag.
 
 ### Errored files for failure path testing
 
