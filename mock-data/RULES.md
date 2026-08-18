@@ -131,6 +131,9 @@ Rules for container records:
 - `File Type Category` = the container type (e.g. "PST", "ZIP")
 - `Level` = 0 (the container itself is level 0)
 - Children have `Level` = 1, `Container Name` and `Container ID` populated
+- **Every container has at least one child, and every `Container ID` resolves to a container
+  record that exists.** A container nothing points at is not a container. Children come from the
+  same custodian as their container, 3–8 per container
 - `Has Natives` = No for PST/MBOX containers themselves
 - Password-protected containers get `Processing Status` = "Error", `Processing Error Type` = "Password Protected"
 - ZIP children have unreliable date fields — `Date Created`/`Date Modified` may be blank or wrong due to missing time zone info in ZIP format
@@ -231,17 +234,28 @@ Deduplication method must match the file type exactly. This is used to populate 
 
 Every tier must include a realistic spread of error types, not just "Password Protected."
 
-| Error Type | Small | Medium | Large |
-|------------|-------|--------|-------|
-| Password Protected (PST/ZIP) | 2 | 8 | 80 |
-| Password Protected (Office doc) | 3 | 15 | 150 |
-| Corrupt / Unreadable | 3 | 20 | 200 |
-| Unsupported File Type | 4 | 30 | 400 |
-| MIP Protected | 1 | 5 | 40 |
-| OCR Failure (scanned PDF) | 1 | 10 | 200 |
-| Container Extraction Timeout | 1 | 5 | 80 |
-| Teams/Slack Conversion Error | 0 | 7 | 150 |
-| Extraction Failure (large container) | 0 | 5 | 200 |
+**Rate: 5–12% of documents carry a processing error, with at least 6 distinct error types.**
+
+Real matters run exceptions in that range; the per-tier counts this table used to specify
+totalled 1% and never matched what the generator produced. The band is the rule, and the mix
+below is the shape it should take, not an exact quota:
+
+| Error Type | Relative weight |
+|------------|-----------------|
+| Unsupported File Type | heaviest |
+| OCR Failure (scanned PDF) | heavy |
+| Container Extraction Timeout | moderate |
+| Corrupt / Unreadable | moderate |
+| Extraction Failure | moderate |
+| Teams/Slack Conversion Error | moderate |
+| MIP Protected | light |
+| Password Protected (PST/ZIP and Office) | light |
+
+Error documents must also **reach the error queue**: at least 75% carry
+`Workflow Stage` = "Pre-Review: Processing Error". An error that is labelled but never staged
+is not modelled, it is decorated.
+
+See Rule 12 for the requirement that these documents have natives that actually fail.
 
 ---
 

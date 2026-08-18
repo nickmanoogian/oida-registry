@@ -19,6 +19,67 @@ PASS = "\033[32mPASS\033[0m"
 FAIL = "\033[31mFAIL\033[0m"
 WARN = "\033[33mWARN\033[0m"
 
+# RULES.md Rule 1: expected share of the tier per file type family, with the
+# tolerance a seeded generator needs. Checking only "email exists" let a tier
+# drift arbitrarily far from the table and still pass.
+FAMILY_SHARE = {
+    "email":       (0.45, 0.65),
+    "word":        (0.08, 0.20),
+    "excel":       (0.03, 0.12),
+    "powerpoint":  (0.01, 0.08),
+    "pdf":         (0.03, 0.12),
+    "rsmf":        (0.005, 0.06),
+    "image":       (0.01, 0.08),
+    "text":        (0.01, 0.08),
+    "unsupported": (0.002, 0.03),
+}
+
+MIN_FILE_TYPES = {"small": 20, "medium": 25, "large": 25}
+
+# Rule 6: the table's per-type counts (15 documents in the small tier) have never
+# matched what the generator produces, and 1% is low for a real matter. The rule
+# now states a rate band; see RULES.md Rule 6.
+ERROR_RATE = (0.05, 0.12)
+
+# RULES.md Rule 2, expressed as assertions. The old check only proved the columns
+# existed, not that any value in them was right.
+RULE2_TABLE = [
+    ("email",       "Dedup Method",        "MD5"),
+    ("email",       "Analytics Eligible?", "Yes"),
+    ("container",   "Has Natives",         "No"),
+    ("container",   "Analytics Eligible?", "No"),
+    ("rsmf",        "Native Produced?",    "No"),
+    ("rsmf",        "Dedup Method",        "EventCollectionId"),
+    ("scanned pdf", "OCR Required?",       "Yes"),
+    ("image",       "OCR Required?",       "Yes"),
+    ("audio/video", "Images?",             "No"),
+    ("audio/video", "Analytics Eligible?", "No"),
+    ("audio/video", "Redactable?",         "No"),
+    ("unsupported", "Analytics Eligible?", "No"),
+    ("mip pdf",     "Analytics Eligible?", "No"),
+]
+
+_FAMILY_MATCH = {
+    "email":       lambda c: c in ("Email - MSG", "Email - EML"),
+    "word":        lambda c: "Word" in c,
+    "excel":       lambda c: "Excel" in c,
+    "powerpoint":  lambda c: "PowerPoint" in c,
+    "pdf":         lambda c: c.startswith("PDF"),
+    "scanned pdf": lambda c: c == "PDF - Scanned",
+    "mip pdf":     lambda c: "MIP" in c,
+    "rsmf":        lambda c: "RSMF" in c,
+    "image":       lambda c: c.startswith("Image"),
+    "text":        lambda c: c.startswith("Text"),
+    "unsupported": lambda c: c == "Unsupported",
+    "container":   lambda c: c in ("Email Container - PST", "Email Container - MBOX", "Container - ZIP"),
+    "audio/video": lambda c: c.startswith(("Audio", "Video", "Media")),
+}
+
+
+def in_family(category, family):
+    return _FAMILY_MATCH[family](category)
+
+
 EMAIL_TYPES     = {"Email - MSG", "Email - EML"}
 CONTAINER_TYPES = {"Email Container - PST", "Email Container - MBOX", "Container - ZIP"}
 RSMF_SUBSTR     = "RSMF"
@@ -81,6 +142,21 @@ def run(tier_name, tier_dir, verbose):
     ok = "Calendar - ICS" in ft_counts
     if not check("ICS calendar records present", ok, "", verbose): failures += 1
 
+    # The point of Rule 1 is the spread. Checking only "email exists" let a tier
+    # drift arbitrarily far from the table and still pass.
+    ok = len(ft_counts) >= MIN_FILE_TYPES[tier_name]
+    if not check(f"At least {MIN_FILE_TYPES[tier_name]} distinct file type categories", ok,
+                 f"got {len(ft_counts)}", verbose): failures += 1
+
+    for family, (lo, hi) in FAMILY_SHARE.items():
+        share = sum(n for cat, n in ft_counts.items() if in_family(cat, family)) / total
+        ok = lo <= share <= hi
+        if not check(f"{family} is {lo:.0%}–{hi:.0%} of the tier", ok,
+                     f"got {share:.1%}", verbose): failures += 1
+
+    ok = any(in_family(cat, "audio/video") for cat in ft_counts)
+    if not check("Audio/Video present (no extractable text at all)", ok, "", verbose): failures += 1
+
     # ── Rule 2: Workflow behavior flags ───────────────────────────────────
     print("\nRule 2 — Workflow behavior flags")
     required_flags = ["Images?","OCR Required?","Native Produced?","Redactable?","Analytics Eligible?","Dedup Method"]
@@ -97,6 +173,17 @@ def run(tier_name, tier_dir, verbose):
         ok  = not bad
         if not check("RSMF docs use EventCollectionId dedup method", ok, f"{len(bad)} violations: {bad[:3]}", verbose): failures += 1
 
+    # The presence check above only proves the columns exist. These assert the
+    # values the Rule 2 table actually specifies, per file type family.
+    for family, field, expected in RULE2_TABLE:
+        sel = [d for d in docs if in_family(d.get("File Type Category",""), family)]
+        if not sel:
+            continue
+        bad = [d["Control Number"] for d in sel if d.get(field,"") != expected]
+        ok  = not bad
+        if not check(f"{family}: {field} = {expected}", ok,
+                     f"{len(bad)} of {len(sel)} violations: {bad[:3]}", verbose): failures += 1
+
     # ── Rule 3: Container records ─────────────────────────────────────────
     print("\nRule 3 — Container records")
     if container_docs:
@@ -106,6 +193,32 @@ def run(tier_name, tier_dir, verbose):
         if not check("Container records have Level = 0", ok, f"{len(bad_level)} violations: {bad_level[:3]}", verbose): failures += 1
         ok = not bad_natives
         if not check("Container records have Has Natives = No", ok, f"{len(bad_natives)} violations: {bad_natives[:3]}", verbose): failures += 1
+        # A container nothing points at is not a container. This was the gap:
+        # only the 16 parents were checked, never whether any child referenced them.
+        container_ids = {d["Control Number"] for d in container_docs}
+        children      = [d for d in docs if d.get("Container ID","").strip()]
+
+        dangling = [d["Control Number"] for d in children
+                    if d["Container ID"] not in container_ids]
+        ok = not dangling
+        if not check("Container ID references an existing container record", ok,
+                     f"{len(dangling)} dangling: {dangling[:3]}", verbose): failures += 1
+
+        childless = [c["Control Number"] for c in container_docs
+                     if c["Control Number"] not in {d["Container ID"] for d in children}]
+        ok = not childless
+        if not check("Every container has at least one child", ok,
+                     f"{len(childless)} empty: {childless[:3]}", verbose): failures += 1
+
+        no_name = [d["Control Number"] for d in children if not d.get("Container Name","").strip()]
+        ok = not no_name
+        if not check("Container children carry Container Name", ok,
+                     f"{len(no_name)} missing: {no_name[:3]}", verbose): failures += 1
+
+        bad_level = [d["Control Number"] for d in children if str(d.get("Level","")) != "1"]
+        ok = not bad_level
+        if not check("Container children are Level 1", ok,
+                     f"{len(bad_level)} violations: {bad_level[:3]}", verbose): failures += 1
     else:
         print(f"  {WARN}  No container records found — skipping Rule 3 checks")
 
@@ -137,8 +250,20 @@ def run(tier_name, tier_dir, verbose):
     if not check("Processing error documents present", ok, "", verbose): failures += 1
     if error_docs:
         error_types = Counter(d.get("Processing Error Type","") for d in error_docs)
-        ok = len(error_types) >= 2
-        if not check("Multiple distinct processing error types", ok, f"found: {dict(error_types)}", verbose): failures += 1
+        ok = len(error_types) >= 6
+        if not check("At least 6 distinct processing error types", ok, f"found {len(error_types)}: {dict(error_types)}", verbose): failures += 1
+
+        rate = len(error_docs) / total
+        ok = ERROR_RATE[0] <= rate <= ERROR_RATE[1]
+        if not check(f"Processing errors are {ERROR_RATE[0]:.0%}–{ERROR_RATE[1]:.0%} of the tier", ok,
+                     f"got {rate:.1%} ({len(error_docs)}/{total})", verbose): failures += 1
+
+        # An error that never reaches the error queue is not modelled, just labelled.
+        staged = sum(1 for d in error_docs
+                     if d.get("Workflow Stage","") == "Pre-Review: Processing Error")
+        ok = staged / len(error_docs) >= 0.75
+        if not check("Most error documents sit in Pre-Review: Processing Error", ok,
+                     f"{staged}/{len(error_docs)}", verbose): failures += 1
 
     # ── Rule 7: TAR score bimodality ──────────────────────────────────────
     print("\nRule 7 — TAR score distribution (bimodal)")
@@ -184,6 +309,21 @@ def run(tier_name, tier_dir, verbose):
 
         ok = any(f.get("scripted") for f in families)
         if not check("Scripted story threads present (SFAM- prefix)", ok, "", verbose): failures += 1
+
+        # A family record naming a document that is not in the set is a broken
+        # rollup. Deliberate ones are declared in edge-cases.json and excused.
+        declared = set()
+        edge_file = os.path.join(tier_dir, "edge-cases.json")
+        if os.path.exists(edge_file):
+            for b in json.load(open(edge_file))["scenarios"].get("broken_family", {}).get("documents", []):
+                declared.add(b.get("missing_child"))
+        present = {d["Control Number"] for d in docs}
+        ghosts  = sorted({m for f in families
+                          for m in [f.get("parent_doc_id","")] + f.get("children", [])
+                          if m and m not in present and m not in declared})
+        ok = not ghosts
+        if not check("Every document named in email-families.json exists", ok,
+                     f"{len(ghosts)} missing: {ghosts[:3]}", verbose): failures += 1
     else:
         print(f"  {WARN}  email-families.json not found — skipping Rule 9")
 
@@ -198,6 +338,25 @@ def run(tier_name, tier_dir, verbose):
 
         ok = any(d.get("Redacted","") == "Yes" for d in produced)
         if not check("Redacted documents exist in production", ok, "", verbose): failures += 1
+
+        # RULES.md: only Responsive, non-privileged documents get Bates numbers.
+        # Only the privileged half of that sentence was being checked.
+        non_resp = [d["Control Number"] for d in produced
+                    if d.get("Responsiveness","") != "Responsive"]
+        ok = not non_resp
+        if not check("Only Responsive documents have Bates numbers", ok,
+                     f"{len(non_resp)} violations: {non_resp[:3]}", verbose): failures += 1
+
+        orphan_redactions = [d["Control Number"] for d in docs
+                             if d.get("Redacted","") == "Yes" and not d.get("Bates Begin","").strip()]
+        ok = not orphan_redactions
+        if not check("Redacted documents carry Bates numbers", ok,
+                     f"{len(orphan_redactions)} violations: {orphan_redactions[:3]}", verbose): failures += 1
+
+        dupes = [b for b, n in Counter(d["Bates Begin"] for d in produced).items() if n > 1]
+        ok = not dupes
+        if not check("Bates Begin values are unique", ok,
+                     f"{len(dupes)} duplicated: {dupes[:3]}", verbose): failures += 1
 
     # ── Narrative checks (MDL 2804 story) ─────────────────────────────────
     print("\nNarrative — MDL 2804 story integrity")

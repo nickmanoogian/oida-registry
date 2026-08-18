@@ -1055,6 +1055,24 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
             d = make_doc(f"DOC-{doc_num:07d}", cust, ft_name, ft_meta, dr, custs, wf, phase, org)
             all_docs.append(d)
 
+    # ── Link container children to their parents (RULES.md Rule 3) ──
+    # Containers were being written as isolated records: Level 0 parents that no
+    # document pointed at, and 1,423 children with blank Container ID / Name. A
+    # container nothing references is not a container.
+    containers = [d for d in all_docs if d.get("Level") == "0"]
+    for container in containers:
+        cust     = container.get("Custodian", "")
+        siblings = [d for d in all_docs
+                    if d.get("Level") == "1"
+                    and d.get("Custodian") == cust
+                    and not d.get("Container ID")]
+        if not siblings:
+            continue
+        take = random.sample(siblings, min(len(siblings), random.randint(3, 8)))
+        for child in take:
+            child["Container ID"]   = container["Control Number"]
+            child["Container Name"] = container["File Name"]
+
     # ── Inject scripted hot documents ──
     scripted_hot_ids = set()
     for hd in SCRIPTED_HOT_DOCS:

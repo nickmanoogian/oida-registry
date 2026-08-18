@@ -20,6 +20,7 @@ import io
 import json
 import os
 import subprocess
+import tempfile
 import zipfile
 
 # Password applied to every encrypted artefact in a package. Documented in
@@ -106,20 +107,21 @@ def password_pdf(path, doc, **_):
 
 
 def password_zip(path, doc, healthy_bytes, **_):
-    """Password protected container, built with Info-ZIP so the encryption is real."""
-    work    = path + ".payload"
-    inner   = f"{doc.get('Control Number','DOC')}.txt"
-    payload = os.path.join(os.path.dirname(path), inner)
-    with open(payload, "wb") as f:
-        f.write(healthy_bytes[:4000] or b"payload")
-    if os.path.exists(path):
-        os.remove(path)
-    try:
+    """Password protected container, built with Info-ZIP so the encryption is real.
+
+    The payload is staged in a temp directory rather than beside the output: when the
+    row's extension is .txt the two paths would otherwise be the same file, and zip
+    exits 12 rather than archiving something into itself.
+    """
+    inner = f"{doc.get('Control Number','DOC')}-content.txt"
+    with tempfile.TemporaryDirectory() as tmp:
+        payload = os.path.join(tmp, inner)
+        with open(payload, "wb") as f:
+            f.write(healthy_bytes[:4000] or b"payload")
+        if os.path.exists(path):
+            os.remove(path)
         subprocess.run(["zip", "-q", "-j", "-P", PACKAGE_PASSWORD, path, payload],
                        check=True, capture_output=True)
-    finally:
-        os.path.exists(payload) and os.remove(payload)
-        os.path.exists(work) and os.remove(work)
     return f"password protected container, password '{PACKAGE_PASSWORD}', 1 child"
 
 
