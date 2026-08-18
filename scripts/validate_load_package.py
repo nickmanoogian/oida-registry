@@ -224,6 +224,38 @@ def main():
             check("File Size in the load file matches bytes on disk", not bad,
                   f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
 
+    # ── Edge-case manifest, when the package carries starved documents ────
+    edge_file = os.path.join(pkg, "edge-cases.json")
+    unassigned = [r for r in rows if not r[i_cust].strip()]
+    if unassigned and not os.path.exists(edge_file):
+        # The package has documents with no custodian and no map saying which are
+        # deliberate. v1.9.0 shipped exactly like this.
+        check("packages with starved documents ship edge-cases.json", False,
+              f"{len(unassigned)} rows have no custodian but there is no manifest")
+    elif os.path.exists(edge_file):
+        print("\n  Edge-case manifest\n")
+        scenarios = json.load(open(edge_file, encoding="utf-8"))["scenarios"]
+        present   = {r[i_ctrl] for r in rows}
+        listed, ghosts = 0, []
+        for name, body in scenarios.items():
+            if name == "broken_family":
+                continue                       # these name documents that are meant to be absent
+            for entry in body.get("documents", []):
+                # duplicate_md5 records a mapping rather than a bare control number.
+                ctrl = entry.get("control_number") if isinstance(entry, dict) else entry
+                if not ctrl:
+                    continue
+                listed += 1
+                if ctrl not in present:
+                    ghosts.append(ctrl)
+        check("every document in edge-cases.json is in the load file", not ghosts,
+              f"{len(ghosts)} missing: {ghosts[:3]}" if ghosts else f"{listed:,} listed")
+
+        no_cust = scenarios.get("no_custodian", {}).get("documents", [])
+        check("no_custodian documents really have no custodian in the load file",
+              all(not r[i_cust].strip() for r in rows if r[i_ctrl] in set(no_cust)),
+              f"{len(no_cust)} listed")
+
     print()
     if failures:
         print(f"  {len(failures)} check(s) failed\n")

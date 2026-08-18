@@ -6,6 +6,20 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — the edge-case manifest never shipped
+
+`edge-cases.json` was written into the metadata tier and never copied into the load package, so
+v1.9.0 shipped 190 starved documents with no map of which ones were deliberate. That is the same
+hole `EXPECTED_ERRORS.csv` exists to close, and it made the starved documents nearly useless to a
+tester: a missing custodian looks identical to a bug.
+
+- `build_load_package.py` copies `edge-cases.json` into the package and adds a section to
+  `IMPORT_README.txt` listing each scenario, its count, and what it starves.
+- `validate_load_package.py` fails a package that has documents with no custodian but no
+  manifest, and cross-checks the manifest against the load file when it is present. Confirmed
+  against the v1.9.0 artifact, which fails.
+- Republished as v1.9.1.
+
 ### Changed — v1.9.0 packages
 
 Both published packages rebuilt so the downloadable artifacts match the code:

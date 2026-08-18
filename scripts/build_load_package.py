@@ -26,7 +26,7 @@ Requirements:
 """
 
 import argparse, csv, email.mime.multipart, email.mime.text, email.utils
-import gzip, json, os, random, re, sys, time, urllib.request
+import gzip, json, os, random, re, shutil, sys, time, urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -988,6 +988,32 @@ def write_expected_errors(error_rows, out_dir):
     return path
 
 
+def edge_cases_readme_block(edge_path):
+    """The starved-documents section appended to IMPORT_README.txt."""
+    if not edge_path:
+        return ""
+    with open(edge_path) as f:
+        scenarios = json.load(f)["scenarios"]
+    total = sum(v.get("count", 0) for v in scenarios.values())
+    lines = ["", "", "DOCUMENTS THAT PROCESS CLEANLY AND ARE STILL INCOMPLETE",
+             "=" * 54, "",
+             f"{total} documents in this package are missing something a feature",
+             "depends on. They are not processing errors: they will import and",
+             "process without complaint. That is the point.", ""]
+    for name in sorted(scenarios):
+        v = scenarios[name]
+        lines.append(f"  {v.get('count',0):>4}  {name:<22} starves {v.get('starves','')}")
+    lines += ["",
+              "edge-cases.json lists every one by control number.",
+              "",
+              "WHAT TO LOOK FOR",
+              "  Are these documents counted, excluded, or silently dropped? Does a",
+              "  per-custodian view acknowledge the ones with no custodian? Does a",
+              "  timeline survive a 1601 date? Does a language summary survive a",
+              "  document in three languages?", ""]
+    return "\n".join(lines)
+
+
 def expected_errors_readme_block(error_rows):
     """The intentionally-broken-files section appended to IMPORT_README.txt."""
     if not error_rows:
@@ -1128,18 +1154,31 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     if with_errors:
         write_expected_errors(error_rows, out_dir)
 
+    # Carry the edge-case manifest across from the metadata tier. Without it the
+    # package has the starved documents but no map of which ones are deliberate,
+    # which is the same hole EXPECTED_ERRORS.csv exists to close.
+    edge_src = os.path.join(tier_dir, "edge-cases.json")
+    edge_count = 0
+    if os.path.exists(edge_src):
+        shutil.copyfile(edge_src, os.path.join(out_dir, "edge-cases.json"))
+        with open(edge_src) as f:
+            edge_count = sum(v.get("count", 0) for v in json.load(f)["scenarios"].values())
+
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
-                + expected_errors_readme_block(error_rows))
+                + expected_errors_readme_block(error_rows)
+                + edge_cases_readme_block(edge_src if edge_count else None))
 
     print(f"\n  Done in {time.time()-t0:.0f}s")
     print(f"  Natives:    {natives_written:,} files ({skipped:,} documents have no native)")
     print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(DAT_COLUMNS)} fields)")
     if with_errors:
         guaranteed = sum(1 for r in error_rows if r["Guaranteed"] == "yes")
+        if edge_count:
+            print(f"  Starved:    {edge_count:,} documents missing an input -> edge-cases.json")
         print(f"  Broken:     {len(error_rows):,} natives fabricated "
               f"({guaranteed:,} guaranteed) -> EXPECTED_ERRORS.csv")
         skipped_kinds = {(d.get("Processing Error Type") or "").strip()
