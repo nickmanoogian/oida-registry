@@ -251,6 +251,25 @@ def main():
         check("every document in edge-cases.json is in the load file", not ghosts,
               f"{len(ghosts)} missing: {ghosts[:3]}" if ghosts else f"{listed:,} listed")
 
+        # oversized_text is only real if the native holds the words it claims.
+        oversized = scenarios.get("oversized_text", {}).get("documents", [])
+        if oversized:
+            claims, short = 0, []
+            paths = {r[i_ctrl]: r[i_nat] for r in rows if r[i_nat]}
+            for entry in oversized:
+                ctrl, want = entry["control_number"], entry["word_count"]
+                rel = paths.get(ctrl)
+                if not rel:
+                    short.append(f"{ctrl}: no native"); continue
+                target = os.path.join(pkg, rel.replace("\\", os.sep))
+                with open(target, encoding="utf-8", errors="replace") as f:
+                    got = len(f.read().split())
+                claims += 1
+                if got < want * 0.95:
+                    short.append(f"{ctrl}: {got:,} words, claimed {want:,}")
+            check("oversized_text natives hold the words they claim", not short,
+                  "; ".join(short[:2]) if short else f"{claims} documents")
+
         no_cust = scenarios.get("no_custodian", {}).get("documents", [])
         check("no_custodian documents really have no custodian in the load file",
               all(not r[i_cust].strip() for r in rows if r[i_ctrl] in set(no_cust)),

@@ -31,7 +31,13 @@ RATES = {
     "broken_family":       0.004,
     "duplicate_md5":       0.008,
     "media_no_text":       0.010,
+    "oversized_text":      0.002,
 }
+
+# Word counts for the oversized documents, roughly 2 MB, 5 MB and 10 MB of text.
+# A 200k token context is somewhere near 150k words, so all three are past it and
+# the largest is an order of magnitude past.
+OVERSIZED_WORD_COUNTS = [300_000, 800_000, 1_500_000]
 
 SENTINEL_DATES = ["1601-01-01 00:00:00", "2099-12-31 23:59:59", "1970-01-01 00:00:00"]
 
@@ -176,6 +182,21 @@ def apply(all_docs, families, custodians, seed=42):
                       "md5": donor["MD5 Hash"]})
     report["duplicate_md5"] = dupes
 
+    # ── more text than anything downstream expects to read ────────────────
+    # Word Count is the contract: build_load_package writes a native with this
+    # much text, so the metadata and the file agree without a second lookup.
+    docs = _take(pool, max(len(OVERSIZED_WORD_COUNTS), count("oversized_text")))
+    oversized = []
+    for n, d in enumerate(docs):
+        words = OVERSIZED_WORD_COUNTS[n % len(OVERSIZED_WORD_COUNTS)]
+        d["Word Count"] = str(words)
+        d["File Type Category"] = "Text / Markup"
+        d["File Extension"]     = "txt"
+        d["File Name"]          = f"{d['Control Number']}.txt"
+        d["Dedup Method"]       = "SHA256"
+        oversized.append({"control_number": d["Control Number"], "word_count": words})
+    report["oversized_text"] = oversized
+
     # ── files with no text to extract, ever ───────────────────────────────
     docs = _take(pool, count("media_no_text"))
     for d in docs:
@@ -210,4 +231,5 @@ STARVES = {
     "broken_family":        "family rollups: a family record naming a document that is absent",
     "duplicate_md5":        "dedup and Collection Coverage",
     "media_no_text":        "Topics, Summaries, Document Categories: no text, ever",
+    "oversized_text":       "summarisation and topic extraction: more text than a model context holds",
 }

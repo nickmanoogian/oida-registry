@@ -427,6 +427,7 @@ no document carries two faults:
 | `broken_family` | family rollups: a family record naming a document that is absent |
 | `duplicate_md5` | dedup and Collection Coverage |
 | `media_no_text` | Topics, Summaries, Document Categories: no text, ever |
+| `oversized_text` | summarisation and topic extraction: more text than a model context holds |
 
 Requirements:
 
@@ -436,6 +437,11 @@ Requirements:
 - **Scripted hot documents are never touched.** They carry the narrative.
 - **Every tier that has them ships `edge-cases.json`**: per scenario, what it starves, the count,
   and the document list. It is the counterpart to `EXPECTED_ERRORS.csv`.
+- **`Word Count` is the contract for `oversized_text`.** The builder writes a native holding the
+  number of words the metadata claims (300k, 800k and 1.5M, roughly 2 MB, 5 MB and 10 MB), so a
+  document claiming a million words really has them. The text is a cycled seed, which is fine for
+  exercising a token limit and unrealistic for topic modelling; it also compresses to nothing, so
+  16.7 MB of raw text adds nothing to the download.
 - **Documents with no custodian go to `_Unassigned/`** in a load package, and get their own row
   in `custodian-sources.csv` (Rule 11).
 - **The report must be true.** `validate_mock_data.py` probes each listed document and fails if

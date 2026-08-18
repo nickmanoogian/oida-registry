@@ -6,6 +6,24 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — documents with more text than a model context holds
+
+The last item from the original catalogue. Three documents carrying 300,000, 800,000 and
+1,500,000 words, roughly 2 MB, 5 MB and 10 MB of extracted text. A 200k token context is
+somewhere near 150k words, so all three are past it and the largest by an order of magnitude.
+
+`Word Count` in the metadata is the contract: `build_load_package.py` writes a native holding
+the number of words the row claims, so the two cannot disagree, and `validate_load_package.py`
+counts the words on disk and fails if a native is short.
+
+Two honest notes. The text is a cycled seed, which exercises a token limit properly and is
+useless for topic modelling realism. And it compresses to nothing, so 16.7 MB of raw text leaves
+the published zip at 9.8 MB.
+
+This closes the "what is not in the dataset yet" list. Everything on it, no custodian, broken
+families, orphan attachments, blank recipients, sentinel and missing dates, non-English, audio
+and video, shipped in v1.9.1; oversized text was the only one outstanding.
+
 ### Changed — repository renamed to `oida-registry`
 
 The archive is the **O**pioid **I**ndustry **D**ocuments **A**rchive, OIDA. The repository carried
