@@ -21,9 +21,11 @@ Usage:
   python scripts/generate_mock_metadata.py --tier small --seed 99 --out ./custom/
 """
 
-import argparse, csv, json, os, random
+import argparse, csv, json, os, random, sys
 from datetime import datetime, timedelta
 from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 DEFAULT_SEED = 42
 
@@ -1031,7 +1033,7 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
 # ── Main Generator ────────────────────────────────────────────────────────
 
-def generate(tier_name, out_dir, seed):
+def generate(tier_name, out_dir, seed, edge_cases_on=False):
     random.seed(seed)
     wf     = WORKFLOW[tier_name]
     custs  = CUSTODIANS[tier_name]
@@ -1289,6 +1291,17 @@ def generate(tier_name, out_dir, seed):
                             "doc_count":len(batch),"date_assigned":fmt_d(adate),"date_completed":fmt_d(cdate),
                             "document_ids":[d["Control Number"] for d in batch]})
 
+    # ── Edge cases (opt in) ──
+    # Applied last, on its own RNG stream, so the default output is byte-identical
+    # and the committed tiers plus the CI determinism check are unaffected.
+    edge_report = None
+    if edge_cases_on:
+        import edge_cases as edge
+        edge_report = edge.apply(all_docs, families, custs, seed)
+        affected = sum(len(v) for v in edge_report.values())
+        print(f"\n  Edge cases applied: {affected:,} documents across "
+              f"{len(edge_report)} scenarios")
+
     # ── Write outputs ──
     Path(out_dir).mkdir(parents=True, exist_ok=True)
 
@@ -1302,11 +1315,20 @@ def generate(tier_name, out_dir, seed):
         writer.writeheader(); writer.writerows(all_docs)
     print(f"  Written {docs_path} ({os.path.getsize(docs_path)/1e6:.1f} MB, {len(all_docs):,} docs)")
 
-    for fname, data in [
+    outputs = [
         ("custodians.json",     [{**c,"actual_doc_count":sum(1 for d in all_docs if d["Custodian"]==c["name"])} for c in custs]),
         ("email-families.json", families),
         ("batches.json",        batches),
-    ]:
+    ]
+    if edge_report is not None:
+        import edge_cases as edge
+        outputs.append(("edge-cases.json", {
+            "note": "Documents deliberately starved of an input. They process cleanly; "
+                    "the question is what a feature does with them.",
+            "scenarios": {k: {"starves": edge.STARVES.get(k,""), "count": len(v), "documents": v}
+                          for k, v in edge_report.items()},
+        }))
+    for fname, data in outputs:
         path = os.path.join(out_dir, fname)
         with open(path,"w") as f: json.dump(data, f, indent=2)
         print(f"  Written {path}")
@@ -1328,8 +1350,13 @@ def main():
     p.add_argument("--tier",  required=True, choices=["small","medium","large"])
     p.add_argument("--out",   default=None)
     p.add_argument("--seed",  type=int, default=DEFAULT_SEED)
+    p.add_argument("--edge-cases", action="store_true",
+                   help="Starve a slice of documents of custodian, date, text, or family "
+                        "so the failure paths of aggregating features can be tested. "
+                        "Off by default; the default output is byte-identical without it.")
     args = p.parse_args()
-    generate(args.tier, args.out or os.path.join("mock-data", args.tier), args.seed)
+    generate(args.tier, args.out or os.path.join("mock-data", args.tier), args.seed,
+             args.edge_cases)
 
 if __name__ == "__main__":
     main()

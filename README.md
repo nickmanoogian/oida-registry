@@ -351,6 +351,37 @@ count, natives written and total bytes:
 If you want the old single-directory layout, pass `--flat`. It cannot support per-custodian
 data sources, and the generated `IMPORT_README.txt` says so.
 
+### Edge cases: documents that starve a feature
+
+Broken files are the obvious failure mode. The subtler one is a document that processes
+perfectly and still leaves a feature with nothing to work with.
+
+The generated tiers are uniform to a fault: every document has a custodian, a date, extracted
+text, and `Language = English`. No real matter looks like that, so any feature that aggregates
+over a collection has only ever been tested against a complete input.
+
+```bash
+make mock-small-edge
+# or: python scripts/generate_mock_metadata.py --tier small --edge-cases --out mock-data/small-edge
+```
+
+Twelve scenarios, each from a disjoint pool so no document carries two faults: documents with no
+custodian, no date, sentinel dates (1601, 2099), no extracted text, non-English and mixed
+language, emails with blank or distribution-list-only recipients, orphan attachments, families
+naming a document that is absent, the same MD5 under two custodians, and audio/video with no
+text at all.
+
+The tier ships `edge-cases.json`: per scenario, what it starves, the count, and the document
+list. `validate_mock_data.py` probes every listed document and fails if one is not actually
+starved, so the report cannot drift from the data.
+
+**Off by default.** Edge cases are applied after generation on their own RNG stream, so default
+output is byte-identical. Committed tiers stay clean, and anything using a tier as fixture data
+is unaffected.
+
+The errored load package is built from an edge-case tier, so `small-errors.zip` carries both:
+files that fail processing, and documents that process cleanly with a hole in them.
+
 ### Errored files for failure path testing
 
 The default package is clean: every native processes successfully. That is the wrong shape for

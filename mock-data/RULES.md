@@ -387,6 +387,54 @@ python scripts/validate_load_package.py load-packages/small
 
 ---
 
+## Rule 13 — Edge Cases: Documents That Starve a Feature
+
+Rule 12 covers files that fail processing. This covers the more dangerous case: documents that
+process **perfectly** and still leave a feature with nothing to work with.
+
+The generated tiers are uniform to a fault. Every document has a custodian, a date, extracted
+text, and `Language = English`. Any feature that aggregates over a collection has therefore only
+ever been exercised against a complete input, which is not a state any real matter reaches.
+
+`--edge-cases` starves a slice of the tier. Twelve scenarios, each drawn from a disjoint pool so
+no document carries two faults:
+
+| Scenario | What it starves |
+|---|---|
+| `no_custodian` | Key Relationships, Collection Coverage, any per-custodian rollup |
+| `missing_date` | timelines and date range filters |
+| `sentinel_date` | timelines: an axis stretched to 1601 or 2099 |
+| `no_extracted_text` | Topics, Summaries, PI Detect, anything reading document text |
+| `non_english` | Primary Language, and any English-only text analysis |
+| `mixed_language` | Primary Language: no single right answer |
+| `blank_recipients` | Key Relationships: an email with no edge to draw |
+| `list_only_recipients` | Key Relationships: an edge to a list rather than a person |
+| `orphan_attachment` | family rollups: a child whose parent is not in the set |
+| `broken_family` | family rollups: a family record naming a document that is absent |
+| `duplicate_md5` | dedup and Collection Coverage |
+| `media_no_text` | Topics, Summaries, Document Categories: no text, ever |
+
+Requirements:
+
+- **Off by default.** Edge cases run on their own RNG stream and are applied after generation,
+  so default output stays byte-identical. The committed tiers and the CI determinism check are
+  unaffected, and anyone using a tier as clean fixture data keeps clean fixture data.
+- **Scripted hot documents are never touched.** They carry the narrative.
+- **Every tier that has them ships `edge-cases.json`**: per scenario, what it starves, the count,
+  and the document list. It is the counterpart to `EXPECTED_ERRORS.csv`.
+- **Documents with no custodian go to `_Unassigned/`** in a load package, and get their own row
+  in `custodian-sources.csv` (Rule 11).
+- **The report must be true.** `validate_mock_data.py` probes each listed document and fails if
+  one is not actually starved, so the report cannot drift from the data.
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier small --dir mock-data/small-edge
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
