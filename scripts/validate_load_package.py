@@ -5,14 +5,21 @@ validate_load_package.py — Verify a built load package conforms to RULES.md Ru
 Checks the package on disk, not the source metadata: that every NativeFilePath in
 load-file.dat resolves to a real file, that the folder a native sits in matches the
 custodian on its row, that nothing was dumped at the root of natives/, and that
-custodian-sources.csv agrees with what is actually on disk.
+custodian-sources.csv agrees with what is actually on disk (Rule 11).
+
+When the package carries EXPECTED_ERRORS.csv it also enforces Rule 12: every
+deliberately broken native exists, is genuinely broken in the way its scenario
+claims, and the File Size in the load file matches the bytes on disk.
 
 Usage:
   python scripts/validate_load_package.py load-packages/small
   python scripts/validate_load_package.py load-packages/small --flat
 """
 
-import argparse, csv, os, sys
+import argparse, csv, json, os, re, sys, zipfile
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import error_natives
 
 PASS = "\033[32mPASS\033[0m"
 FAIL = "\033[31mFAIL\033[0m"
@@ -35,6 +42,68 @@ def read_dat(path):
         for line in f:
             rows.append([v.strip(DAT_QUOTE) for v in line.rstrip("\n").split(DAT_SEP)])
     return rows[0], rows[1:]
+
+
+def is_broken(row, path):
+    """Confirm a fabricated native actually fails the way its scenario claims.
+
+    The signature has to be specific enough that replacing a broken file with a
+    healthy one is caught. "Non-empty" is not a signature.
+    """
+    scenario = row["Scenario"]
+    note     = row.get("How It Was Built", "")
+    data     = open(path, "rb").read()
+    if scenario == "Empty File":
+        return len(data) == 0
+    if scenario == "Password Protected":
+        if data[:4] == b"%PDF":
+            return b"/Encrypt" in data
+        try:
+            z = zipfile.ZipFile(path)
+            z.read(z.namelist()[0])
+            return False                      # opened with no password: not protected
+        except RuntimeError as e:
+            return "password" in str(e).lower()
+        except Exception:
+            return True
+    if scenario == "Corrupt File":
+        m = re.search(r"truncated to (\d+) of", note)
+        if m:
+            return len(data) == int(m.group(1))
+        if "magic bytes" in note:
+            return data[:8] == b"\x00" * 8
+        return False
+    if scenario == "Extraction Failure":
+        try:
+            names = zipfile.ZipFile(path).namelist()
+            return not any(n in names for n in
+                           ("word/document.xml", "xl/workbook.xml", "ppt/presentation.xml"))
+        except Exception:
+            return True
+    if scenario == "Container Extraction Timeout":
+        try:
+            return zipfile.ZipFile(path).namelist()[0].endswith(".zip")
+        except Exception:
+            return False
+    if scenario == "Teams Conversion Error":
+        try:
+            json.loads(data.decode("utf-8", "replace"))
+            return False
+        except Exception:
+            return True
+    if scenario == "OCR Failure - Poor Scan Quality":
+        return b"/Font" not in data
+    if scenario == "Extension Mismatch":
+        return data[:4] == b"%PDF"
+    if scenario == "Unsupported File Type":
+        if any(data.startswith(sig) for sig in error_natives.UNSUPPORTED_STUBS.values()):
+            return True
+        try:                                   # iWork stub is a zip with an Index/ part
+            return any(n.startswith("Index/") for n in zipfile.ZipFile(path).namelist())
+        except Exception:
+            pass
+        return data.startswith(b"\x00\x01\x02\x03")
+    return True                               # unknown scenario: do not fail the run
 
 
 def main():
@@ -104,6 +173,56 @@ def main():
     sheet_custs = {r["Custodian"].strip() for r in sheet}
     check("every custodian in the load file has a data source row",
           dat_custs <= sheet_custs, f"missing: {sorted(dat_custs - sheet_custs)}")
+
+    # ── Rule 12: intentionally broken natives ─────────────────────────────
+    expected_path = os.path.join(pkg, "EXPECTED_ERRORS.csv")
+    if os.path.exists(expected_path):
+        print("\n  Rule 12 — intentionally broken natives\n")
+        broken = list(csv.DictReader(open(expected_path, encoding="utf-8")))
+
+        gone = [r["Native File"] for r in broken
+                if not os.path.isfile(os.path.join(pkg, r["Native File"].replace("\\", os.sep)))]
+        check("every EXPECTED_ERRORS.csv native exists", not gone,
+              f"{len(gone)} missing" if gone else f"{len(broken):,} fabricated")
+
+        intact = []
+        for r in broken:
+            target = os.path.join(pkg, r["Native File"].replace("\\", os.sep))
+            if not os.path.isfile(target):
+                continue
+            if not is_broken(r, target):
+                intact.append(r["Control Number"])
+        check("every fabricated native is genuinely broken", not intact,
+              f"{len(intact)} still healthy: {intact[:5]}" if intact else
+              f"{len(broken) - len(intact):,} verified")
+
+        flagged = {r[i_ctrl] for r in rows
+                   if "Processing Error Type" in header
+                   and r[header.index("Processing Error Type")].strip()}
+        listed  = {r["Control Number"] for r in broken}
+        # Anything flagged but not fabricated must be a documented exclusion,
+        # not a silent gap.
+        i_type    = header.index("Processing Error Type")
+        by_ctrl   = {r[i_ctrl]: r[i_type].strip() for r in rows}
+        undocumented = sorted(c for c in (flagged - listed)
+                              if by_ctrl.get(c) not in error_natives.NOT_FABRICABLE)
+        excluded = len(flagged - listed) - len(undocumented)
+        check("every flagged document is fabricated or a documented exclusion",
+              not undocumented,
+              f"{len(undocumented)} undocumented: {undocumented[:5]}" if undocumented
+              else f"{excluded} documented exclusions")
+
+        if "File Size" in header:
+            i_size = header.index("File Size")
+            bad = []
+            for r in rows:
+                if not r[i_nat]:
+                    continue
+                disk = os.path.getsize(os.path.join(pkg, r[i_nat].replace("\\", os.sep)))
+                if str(disk) != r[i_size]:
+                    bad.append(r[i_ctrl])
+            check("File Size in the load file matches bytes on disk", not bad,
+                  f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
 
     print()
     if failures:

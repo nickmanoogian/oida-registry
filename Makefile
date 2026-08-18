@@ -6,7 +6,7 @@ ECI_OUT   := /tmp/oioda-large
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large \
-        load-small load-small-synthetic load-medium load-large load-validate \
+        load-small load-small-synthetic load-small-errors load-medium load-large load-validate \
         export-insys
 
 help:
@@ -31,6 +31,7 @@ help:
 	@echo "  make load-small          Build small tier: native files + .dat load file"
 	@echo "  make load-small-synthetic  Same, synthetic content (no S3, faster)"
 	@echo "  make load-medium         Build medium tier load package"
+	@echo "  make load-small-errors   Build small tier with natives that genuinely fail processing"
 	@echo "  make load-large          Build large tier load package"
 	@echo "  make load-validate       Check a built package against RULES.md Rule 11"
 	@echo ""
@@ -127,6 +128,10 @@ load-small:
 load-small-synthetic:
 	python3 scripts/build_load_package.py --tier small --no-oida
 	@echo "Package ready at load-packages/small/"
+
+load-small-errors:
+	python3 scripts/build_load_package.py --tier small --with-errors
+	@echo "Package ready at load-packages/small/ (see EXPECTED_ERRORS.csv)"
 
 load-medium:
 	python3 scripts/build_load_package.py --tier medium

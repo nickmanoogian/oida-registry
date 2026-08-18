@@ -6,6 +6,50 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Errored files for failure path testing
+
+- **`--with-errors` fabricates natives that genuinely fail processing.** Rule 6 has always
+  specified a processing error distribution and the generator has always honoured it: 118 of
+  the 1,439 small-tier documents carry `Processing Status = Error`. The natives behind those
+  rows were healthy files, so importing the package and running Processing produced zero
+  errors. A row flagged "Password Protected" sat on a 672-byte plain `.eml`.
+
+  Nine scenarios, keyed off `Processing Error Type` so the metadata drives the fabrication:
+  encrypted PDF, password protected container, truncation, header corruption, OOXML with its
+  main part removed, nested containers, malformed RSMF JSON, text-free PDF, unsupported format
+  stubs with real magic bytes, and zero-byte files. 106 files in the small tier.
+
+- **`--error-rate`** promotes extra documents to errors using the mix already present, for
+  exercising the failure paths harder than production ever would.
+
+- **`EXPECTED_ERRORS.csv`** in every errored package: control number, custodian, native file,
+  scenario, how it was built, expected Relativity error, whether that outcome is guaranteed,
+  and the caveat when it is not. Testers diff it against the processing error report.
+
+- **RULES.md Rule 12 — Native Layer Error Fidelity.** A document flagged as an error must have
+  a file that actually errors.
+
+- Rule 12 checks in `scripts/validate_load_package.py`: every fabricated native exists and
+  matches its scenario's signature, `File Size` in the load file matches bytes on disk, and
+  anything flagged but not fabricated is a documented exclusion rather than a silent gap.
+
+### Changed
+
+- `Processing Status` and `Processing Error Type` are now columns in `load-file.dat`. They were
+  modelled in `documents.csv` and dropped entirely at the load file boundary.
+- `File Size` in the load file is written from the bytes actually on disk. It previously carried
+  the metadata's figure, which described a file that was never created.
+- The generator's exception fallback no longer rescues a deliberately broken file by writing a
+  valid `.txt` in its place.
+
+### Not covered
+
+- MIP protected rows are not fabricated: applying a sensitivity label needs a real Microsoft 365
+  tenant. Their natives stay healthy and the build reports it.
+- Malware, EICAR strings and zip bombs are out of scope.
+- OCR failure, container timeout and conversion errors depend on engine and worker
+  configuration. Those rows are marked `Guaranteed = no`.
+
 ### Added — Custodian folders in load packages
 
 - **Natives are written into one folder per custodian**, mirroring the `Processing Folder Path`

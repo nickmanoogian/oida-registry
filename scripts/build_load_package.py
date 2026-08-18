@@ -30,6 +30,9 @@ import gzip, json, os, random, re, sys, time, urllib.request
 from datetime import datetime
 from pathlib import Path
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import error_natives
+
 try:
     from docx import Document as DocxDocument
     from docx.shared import Pt
@@ -562,7 +565,7 @@ def dat_native_path(abs_path, out_dir):
 
 # ── Native file dispatcher ────────────────────────────────────────────────
 
-def generate_native(doc, cache, out_dir, flat=False):
+def generate_native(doc, cache, out_dir, flat=False, with_errors=False, error_rows=None):
     ctrl = doc["Control Number"]
     ft   = doc.get("File Type Category","")
     ext  = doc.get("File Extension","txt")
@@ -573,6 +576,8 @@ def generate_native(doc, cache, out_dir, flat=False):
         body = hot.get("body","")
     else:
         body = get_ocr_content(doc, cache)
+
+    error_rows = error_rows if error_rows is not None else []
 
     nat_dir = os.path.join(out_dir, "natives")
     if not flat:
@@ -609,12 +614,24 @@ def generate_native(doc, cache, out_dir, flat=False):
             content = make_txt(doc, body).encode("utf-8","replace")
             native_path = dest("txt")
 
+        blob = content if isinstance(content, bytes) else content.encode("utf-8","replace")
         with open(native_path, "wb") as f:
-            f.write(content if isinstance(content, bytes) else content.encode("utf-8","replace"))
+            f.write(blob)
+
+        # Rule 12: a document the metadata flags as an error gets a native that
+        # actually fails that way. Fabricated in place, over the healthy file.
+        record = error_natives.fabricate(doc, native_path, blob) if with_errors else None
+        if record is not None:
+            record["Native File"] = dat_native_path(native_path, out_dir)
+            error_rows.append(record)
+
         return dat_native_path(native_path, out_dir)
 
     except Exception as e:
-        # Fallback: write a txt placeholder
+        # Fallback: write a txt placeholder. Never rescue a deliberately broken
+        # file — if fabrication failed, that is a bug worth seeing.
+        if with_errors and error_natives.scenario_for(doc) is not None:
+            raise
         fallback = dest("txt")
         with open(fallback, "w", encoding="utf-8") as f:
             f.write(f"[{ft}]\n\n{body[:500]}")
@@ -712,7 +729,7 @@ DAT_COLUMNS = [
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
-    "Rsmf Message Count","NativeFilePath",
+    "Rsmf Message Count","Processing Status","Processing Error Type","NativeFilePath",
 ]
 
 
@@ -777,16 +794,21 @@ _COLUMN_MAP = {
     "Rsmf Application":          ("Rsmf/Application",        None),
     "Rsmf Participants":         ("Rsmf/Participants",       None),
     "Rsmf Message Count":        ("Rsmf/MessageCount",       None),
+    "Processing Status":         ("Processing Status",       None),
+    "Processing Error Type":     ("Processing Error Type",   None),
 }
 
 
-def doc_to_dat_row(doc, native_rel_path, families_by_doc):
+def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
     fam    = families_by_doc.get(doc.get("Control Number",""), {})
     values = []
     for col in DAT_COLUMNS:
         if col == "BegAttach":    v = fam.get("beg_attach","")
         elif col == "EndAttach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
+        # The size on disk is the truth; the metadata describes a file that was
+        # never written, and every size-based check downstream needs the real one.
+        elif col == "File Size" and native_bytes is not None: v = native_bytes
         elif col in _COLUMN_MAP:
             src_key, transform = _COLUMN_MAP[col]
             v = transform(doc) if transform else doc.get(src_key,"")
@@ -922,9 +944,93 @@ QUESTIONS
   https://github.com/nickmanoogian/oioda-registry
 """
 
+
+def apply_error_rate(all_docs, error_rate, seed):
+    """Promote extra clean documents to errors until the target rate is reached.
+
+    Rule 6 sets the baseline distribution (~8% in every tier). A bug bash may want
+    the failure paths hit far harder than production ever would, so extra documents
+    are promoted using the same mix of error types already present, and the metadata
+    is mutated so the load file and the natives agree.
+    """
+    if error_rate is None:
+        return 0
+    errored = [d for d in all_docs if (d.get("Processing Error Type") or "").strip()]
+    target  = int(len(all_docs) * error_rate)
+    if target <= len(errored):
+        return 0
+
+    types = [(d.get("Processing Error Type") or "").strip() for d in errored]
+    types = [t for t in types if t and t not in error_natives.NOT_FABRICABLE] or ["Corrupt File"]
+
+    rng   = random.Random(seed)
+    clean = [d for d in all_docs
+             if not (d.get("Processing Error Type") or "").strip()
+             and d.get("Has Natives","") != "No"]
+    rng.shuffle(clean)
+
+    promoted = 0
+    for doc in clean[: target - len(errored)]:
+        doc["Processing Error Type"] = rng.choice(types)
+        doc["Processing Status"]     = "Error"
+        doc["Workflow Stage"]        = "Pre-Review: Processing Error"
+        promoted += 1
+    return promoted
+
+
+def write_expected_errors(error_rows, out_dir):
+    path = os.path.join(out_dir, "EXPECTED_ERRORS.csv")
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=error_natives.EXPECTED_ERROR_COLUMNS)
+        w.writeheader()
+        for row in sorted(error_rows, key=lambda r: r["Control Number"]):
+            w.writerow(row)
+    return path
+
+
+def expected_errors_readme_block(error_rows):
+    """The intentionally-broken-files section appended to IMPORT_README.txt."""
+    if not error_rows:
+        return ""
+    by_scenario = {}
+    for r in error_rows:
+        by_scenario.setdefault(r["Scenario"], []).append(r)
+    lines = ["", "", "INTENTIONALLY BROKEN FILES IN THIS PACKAGE",
+             "=" * 42, "",
+             f"This package was built with --with-errors. {len(error_rows)} documents contain",
+             "natives designed to fail processing. This is deliberate.", ""]
+    for scenario in sorted(by_scenario):
+        rows = by_scenario[scenario]
+        flag = "" if rows[0]["Guaranteed"] == "yes" else "   (not guaranteed)"
+        lines.append(f"  {len(rows):>4}  {scenario}{flag}")
+    lines += ["",
+              f"Encrypted files use the password: {error_natives.PACKAGE_PASSWORD}",
+              "Add it to the Relativity password bank to test the recovery path,",
+              "or leave it out to test the failure path.",
+              "",
+              "EXPECTED_ERRORS.csv lists every one: control number, custodian, native",
+              "file, how it was built, the error Relativity is expected to report, and",
+              "whether that outcome is guaranteed. Rows marked Guaranteed = no depend on",
+              "engine or worker configuration rather than on the file.",
+              "",
+              "AFTER PROCESSING",
+              "  1. Open the Processing Set error report.",
+              "  2. Compare it against EXPECTED_ERRORS.csv.",
+              "  3. Record anything that differs. Two kinds of finding matter:",
+              "       - a file expected to fail that processed cleanly",
+              "       - a file that failed with a different error than expected",
+              "  4. Then look at what the downstream feature does with the failed set:",
+              "     are those documents counted, excluded, or silently dropped?",
+              "",
+              "DO NOT report the processing errors themselves as bugs. They are the",
+              "point. Report what the product does with them.", ""]
+    return "\n".join(lines)
+
+
 # ── Main ──────────────────────────────────────────────────────────────────
 
-def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
+def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
+          with_errors=False, error_rate=None):
     random.seed(seed)
 
     docs_path    = os.path.join(tier_dir, "documents.csv")
@@ -947,6 +1053,11 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
     print(f"  Output:     {out_dir}")
     print(f"  OIDA OCR:   {'yes' if use_oida else 'no (synthetic)'}")
     print(f"  Layout:     {'flat natives/' if flat else 'natives/{custodian}/{year}/{month}'}")
+    if with_errors:
+        promoted = apply_error_rate(all_docs, error_rate, seed)
+        flagged  = sum(1 for d in all_docs if (d.get("Processing Error Type") or "").strip())
+        print(f"  Errors:     on — {flagged:,} documents flagged"
+              + (f" ({promoted:,} promoted to hit {error_rate:.0%})" if promoted else ""))
     print(f"{'='*60}\n")
 
     Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -963,11 +1074,15 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
     skipped  = 0
     natives_written = 0
     cust_stats = {}
+    error_rows = []
     t0 = time.time()
 
     for i, doc in enumerate(all_docs):
-        native_path = generate_native(doc, cache, out_dir, flat=flat)
-        values      = doc_to_dat_row(doc, native_path, families_by_doc)
+        native_path = generate_native(doc, cache, out_dir, flat=flat,
+                                      with_errors=with_errors, error_rows=error_rows)
+        native_bytes = (os.path.getsize(os.path.join(out_dir, native_path.replace("\\", os.sep)))
+                        if native_path else None)
+        values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes)
         dat_rows.append(values)
 
         cust = (doc.get("Custodian") or "").strip() or "(unassigned)"
@@ -982,7 +1097,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
         if native_path:
             natives_written += 1
             st["natives"] += 1
-            st["bytes"]   += os.path.getsize(os.path.join(out_dir, native_path.replace("\\", os.sep)))
+            st["bytes"]   += native_bytes
         else:
             skipped += 1
 
@@ -1009,15 +1124,28 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False):
     # Write the custodian data source sheet
     write_custodian_sources(cust_stats, out_dir, flat)
 
+    # Write the expected-errors manifest
+    if with_errors:
+        write_expected_errors(error_rows, out_dir)
+
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
-                             .replace("{custodian_block}", custodian_readme_block(cust_stats, flat)))
+                             .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
+                + expected_errors_readme_block(error_rows))
 
     print(f"\n  Done in {time.time()-t0:.0f}s")
     print(f"  Natives:    {natives_written:,} files ({skipped:,} documents have no native)")
     print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(DAT_COLUMNS)} fields)")
+    if with_errors:
+        guaranteed = sum(1 for r in error_rows if r["Guaranteed"] == "yes")
+        print(f"  Broken:     {len(error_rows):,} natives fabricated "
+              f"({guaranteed:,} guaranteed) -> EXPECTED_ERRORS.csv")
+        skipped_kinds = {(d.get("Processing Error Type") or "").strip()
+                         for d in all_docs} & set(error_natives.NOT_FABRICABLE)
+        for kind in sorted(skipped_kinds):
+            print(f"    not fabricated: {kind} — {error_natives.NOT_FABRICABLE[kind]}")
     print(f"  Custodians: {len(cust_stats)} -> custodian-sources.csv")
     for name in sorted(cust_stats):
         st = cust_stats[name]
@@ -1034,6 +1162,12 @@ def main():
     p.add_argument("--no-oida",  action="store_true", help="Use synthetic content instead of OIDA OCR")
     p.add_argument("--limit",    type=int, default=None, help="Only process first N documents (useful for testing)")
     p.add_argument("--seed",     type=int, default=DEFAULT_SEED)
+    p.add_argument("--with-errors", action="store_true",
+                   help="Fabricate natives that genuinely fail processing for every "
+                        "document flagged Processing Status = Error")
+    p.add_argument("--error-rate", type=float, default=None,
+                   help="Promote extra documents to errors until this fraction is reached "
+                        "(e.g. 0.25). Requires --with-errors")
     p.add_argument("--flat",     action="store_true",
                    help="Write every native into one natives/ directory instead of "
                         "natives/{custodian}/{year}/{month}/")
@@ -1041,7 +1175,11 @@ def main():
 
     tier_dir = args.dir or os.path.join("mock-data", args.tier)
     out_dir  = args.out or os.path.join("load-packages", args.tier)
-    build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed, args.flat)
+    if args.error_rate is not None and not args.with_errors:
+        p.error("--error-rate requires --with-errors")
+
+    build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed, args.flat,
+          args.with_errors, args.error_rate)
 
 if __name__ == "__main__":
     main()
