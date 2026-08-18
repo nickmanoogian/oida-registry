@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-medium-documents.csv
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-medium-documents.csv
   size: 9447470
 outs:
 - path: documents.csv

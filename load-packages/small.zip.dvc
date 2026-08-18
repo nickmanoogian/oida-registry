@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.9.0/small-load-package.zip
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.9.0/small-load-package.zip
   size: 10373219
 outs:
 - path: small.zip

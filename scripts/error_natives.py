@@ -25,7 +25,7 @@ import zipfile
 
 # Password applied to every encrypted artefact in a package. Documented in
 # IMPORT_README.txt so testers can add it to the Relativity password bank.
-PACKAGE_PASSWORD = "oioda"
+PACKAGE_PASSWORD = "oida"
 
 TRUNCATE_FRACTION = 0.4   # keep this much of a valid file for "Corrupt File"
 NEST_DEPTH        = 8     # container nesting for extraction timeout

@@ -1,7 +1,7 @@
-REGISTRY := https://github.com/nickmanoogian/oioda-registry
+REGISTRY := https://github.com/nickmanoogian/oida-registry
 OUT       := ./data
 MOCK_OUT  := ./mock-data
-ECI_OUT   := /tmp/oioda-large
+ECI_OUT   := /tmp/oida-large
 
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \

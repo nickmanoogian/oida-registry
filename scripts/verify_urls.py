@@ -30,8 +30,8 @@ _tag_cache = {}
 DVC_FOLDERS = [".", "data-products", "metadata", "samples", "load-packages"]
 
 RELEASE_URLS = [
-    ("mock-data/medium documents (v1.3.0)", "https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-medium-documents.csv"),
-    ("mock-data/large documents (v1.3.0)",  "https://github.com/nickmanoogian/oioda-registry/releases/download/v1.3.0/v13-large-documents.csv.gz"),
+    ("mock-data/medium documents (v1.3.0)", "https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-medium-documents.csv"),
+    ("mock-data/large documents (v1.3.0)",  "https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-large-documents.csv.gz"),
 ]
 
 
@@ -49,7 +49,7 @@ def release_published(url):
         tag_url = f"https://github.com/{repo}/releases/tag/{tag}"
         try:
             req = urllib.request.Request(tag_url, method="HEAD",
-                  headers={"User-Agent": "oioda-registry-healthcheck"})
+                  headers={"User-Agent": "oida-registry-healthcheck"})
             with urllib.request.urlopen(req, timeout=15) as r:
                 _tag_cache[(repo, tag)] = r.status == 200
         except Exception:
@@ -71,7 +71,7 @@ def head(url, label, failures, pending):
 
     try:
         req = urllib.request.Request(url, method="HEAD",
-              headers={"User-Agent": "oioda-registry-healthcheck"})
+              headers={"User-Agent": "oida-registry-healthcheck"})
         with urllib.request.urlopen(req, timeout=15) as r:
             ok = r.status == 200
         if ok:

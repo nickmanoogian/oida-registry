@@ -1,0 +1,50 @@
+Message
+X-Priority:
+3 X-MSMail-Priority:
+Normal Thread-Index:
+Ac4ZMmTSQPapKUToTt6UNEgi9AxfHQ== From:
+"David Benavidez" <dbenavidez@insysrx.com> Subject:
+Inai Mkandawire Date:
+Mon, 4 Mar 2013 16:49:17 -0700 MIME-Version:
+1.0 Content-type:
+[||REDACTED-NAME||]-||] charset=iso-8859-1; boundary="00BOFFAD_message_boundary"
+Content-Description:
+[||REDACTED-NAME||]-||] message --OOBOFFAD_message_boundary
+Content-type:
+[||REDACTED-NAME||]-||] charset=iso-8859-1 Content-Transfer-Encoding:
+7bit Content-Disposition:
+inline Content-Description:
+Message [||REDACTED-NAME||]-||] Contact:
+[||REDACTED-NAME||]-||] Rep:
+Jessica Larichiuta NPI:
+1952513988 --OOBOFFAD_message_boundary
+Content-type:
+[||REDACTED-NAME||]-||] Content-Transfer-Encoding:
+Quoted-printable Content-Disposition:
+inline Content-Description:
+HTML [||REDACTED-NAME||]-||] <!DOCTYPE
+HTML PUBLIC "-//W3C//DTD HTML 3.2//EN!!> <HTML>
+<HEAD>
+<META
+HTTP-EQUIV=3D"Content-Type" [||REDACTED-PATIENT_ID_NUMBER||]-||] charset= =3Diso-8859-1">
+<META
+NAME=3D"Generator" CONTENT=3D"MS Exchange Server version= 14.01.0438.000">
+CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010938771 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION <TITLE>Inai
+Mkandawire</TITLE> </HEAD>
+<BODY>
+<!--
+Converted from [||REDACTED-NAME||]-||] format --> <P
+DIR=3DLTR><SPAN LANG=3D"en-us"><FONT FACE=3D"Calibri">Contact:= Janice</FONT></SPAN></P>
+<P
+DIR=3DLTR><SPAN LANG=3D"en-us"><FONT FACE=3D"Calibri">Rep: Jessica= Larichiuta</FONT></SPAN></P>
+<P
+DIR=3DLTR><SPAN LANG=3D"en-us"><FONT FACE=3D"Calibri">NPI:= 1952513988</FONT></SPAN></P>
+<P
+DIR=3DLTR><SPAN LANG=3D"en-us"></SPAN></P> </BODY>
+</HTML>
+--00B0FFAD_message_boundary--
+CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-010938772 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION

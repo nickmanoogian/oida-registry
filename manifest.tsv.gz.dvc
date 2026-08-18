@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.0.0/manifest.tsv.gz
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.0.0/manifest.tsv.gz
   size: 608771151
 outs:
 - path: manifest.tsv.gz

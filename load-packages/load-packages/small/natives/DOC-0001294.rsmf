@@ -1,0 +1,22 @@
+{
+  "Version": "1.0",
+  "Application": "Slack",
+  "EventCollectionId": "bf925057e7468f91",
+  "Participants": [
+    "Lisa Torres",
+    "Thomas Bradley",
+    "Michael Brennan"
+  ],
+  "BeginDate": "2015-05-28 00:00:00",
+  "EndDate": "2015-05-28 23:00:00",
+  "MessageCount": "118",
+  "HasPlaceholders": false,
+  "Messages": [
+    {
+      "Sender": "Lisa Torres",
+      "Timestamp": "2015-05-28 00:00:00",
+      "Content": "[Slack conversation \u2014 Lisa Torres]",
+      "Channel": ""
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+INSYS
+- REIMBURSEMENT ASSISTANCE/PRIOR AUTHORIZATION REQUEST FAX
+TO: [||REDACTED-PHONE_NUMBER||] (Please Complete Entire Form) PATIENT
+INFORMATION PRESCRIBER
+INFORMATION Patient
+Name: Physician Name: Specialty:
+Date
+of Birth: /_/ Patient
+Phone# Address: Prescription
+Plan/PBM Name: Physician's
+Phone: Plan
+Phone# Physician's
+Fax: Member
+ID: NPI
+Number: Group
+#: Tax
+ID # Gender
+(Circle One): Male Female Contact
+Person: MEDICATION
+INFORMATION PHARMACY INFORMATION Medication:
+Pharmacy
+Name: Strength:
+Pharmacy Phone: Units
+per 30 days: Pharmacy Fax: INSYS
+Sales Rep: Pharmacy Zip Code: *Diagnosis:
+* ICD9 Code: Drug
+Allergies Rationale
+For Prior Authorization (Please Select ALL that APPLY) #
+Treatment Failure with Formulary Equivalent Medication **Name of Medication Tried/Failed and Dose: #
+Patient Stable on Medication Over 3 Months Due to Sample or Previous Insurance Coverage #
+Formulary Alternatives NOT Clinically Appropriate for This Patient (Possible Drug Interaction) #
+Patient Cannot Tolerate Formulary Medication Due to Side Effects #
+Generic is Not Reliable for This Patient #
+Provider Preferred Product #
+Sleep Disruption with Previous Treatment #
+Patient is Diabetic Current Product Patient is taking is Sugar Based #
+Application Site Irritation with Previous Product #
+Inadequate analgesic effect #
+Dental Caries I
+permit my signature on this form to be used by INSYS Therapeutics to obtain information on my behalf from the patient's Managed Care Organization (MCO), and I permit INSYS Therapeutics
+to correspond with respect to accessing medication through the MCO's Prior Authorization Process. Any use or disclosure of protected health information supplied to INSYS Therapeutics
+by me, my practice or MCO will be restricted by INSYS Therapeutics to the minimum, reasonably necessary, to comply with the MCOs Prior Authorization Process and otherwise
+will be maintained in confidence in accordance with HIPAA and all other applicable laws and regulations. INSYS will NOT use patient protected health information for purposes other
+than mentioned above. Physician's
+Signature (Signature must be of Prescribing Provider) X
+Date: / / Upon
+Completion Fax Form to: [||REDACTED-PHONE_NUMBER||] for Questions call: [||REDACTED-PHONE_NUMBER||] CONFIDENTIAL
+- SUBJECT TO PROTECTIVE ORDER INSYS-MDL-005138552 CONFIDENTIAL
+PROTECTED HEALTH INFORMATION
