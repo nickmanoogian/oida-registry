@@ -344,7 +344,38 @@ count, natives written and total bytes:
 If you want the old single-directory layout, pass `--flat`. It cannot support per-custodian
 data sources, and the generated `IMPORT_README.txt` says so.
 
-Verify a built package against [`mock-data/RULES.md`](mock-data/RULES.md) Rule 11:
+### Errored files for failure path testing
+
+The default package is clean: every native processes successfully. That is the wrong shape for
+bug bashing, where the interesting question is what the product does with documents that fail.
+
+```bash
+make load-small-errors
+# or: python scripts/build_load_package.py --tier small --with-errors
+```
+
+Every document already flagged `Processing Status = Error` in `documents.csv` gets a native
+that genuinely fails in the way its `Processing Error Type` describes. In the small tier that
+is 106 fabricated files across seven scenarios: password protection, corruption, unsupported
+types, extraction failure, container nesting, conversion failure and PDFs with no text layer.
+A password protected document is really encrypted, a corrupt file is really truncated.
+
+Push the rate higher than production ever sees:
+
+```bash
+python scripts/build_load_package.py --tier small --with-errors --error-rate 0.25
+```
+
+The package gains `EXPECTED_ERRORS.csv`, one row per broken document with how it was built, the
+error Relativity is expected to report, and whether that outcome is guaranteed. Rows marked
+`Guaranteed = no` depend on engine or worker configuration rather than on the file. Encrypted
+artefacts use the password `oioda`, so you can test the password bank path or the failure path.
+
+Two things are deliberately **not** fabricated. MIP protected rows need a real Microsoft 365
+tenant to apply the sensitivity label, so their natives stay healthy and the build says so.
+Malware, EICAR strings and zip bombs are out of scope for a shared dataset.
+
+Verify a built package against [`mock-data/RULES.md`](mock-data/RULES.md) Rules 11 and 12:
 
 ```bash
 make load-validate

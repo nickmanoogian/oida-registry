@@ -336,6 +336,57 @@ python scripts/validate_load_package.py load-packages/small
 
 ---
 
+## Rule 12 — Native Layer Error Fidelity
+
+Rule 6 governs the *metadata* error distribution. This rule governs the *files*.
+
+**A document flagged `Processing Status = Error` must have a native that actually produces that
+error when processed.** Metadata that claims an error while sitting on top of a healthy file is
+worse than no error modelling at all: it makes a dataset look like it covers the failure paths
+when it does not.
+
+When a package is built with `--with-errors`:
+
+| `Processing Error Type` | The native on disk is |
+|---|---|
+| Password Protected | A real encrypted PDF, or a real password protected container for non-PDF rows |
+| Corrupt File | A valid file truncated to 40% of its bytes |
+| Unsupported File Type | A real stub of an unsupported format, correct magic bytes |
+| Extraction Failure | A valid OOXML package with its main part removed |
+| Container Extraction Timeout | Eight levels of nested containers, tiny payload |
+| Teams Conversion Error | RSMF JSON truncated mid-object |
+| OCR Failure - Poor Scan Quality | A PDF with vector marks only and no text layer |
+| Empty File | Exactly 0 bytes |
+| Extension Mismatch | PDF content under the extension the row claims |
+
+Requirements:
+
+- **Sizes must agree.** `File Size` in the load file is rewritten from the bytes actually
+  written. The metadata's original figure describes a file that was never created.
+- **`Processing Status` and `Processing Error Type` belong in the load file.** Both are in
+  `DAT_COLUMNS` so an import-only workflow still sees the intended outcome.
+- **Every package ships `EXPECTED_ERRORS.csv`**: control number, custodian, native file,
+  scenario, how it was built, the expected Relativity error, whether that outcome is
+  guaranteed, and any caveat. A tester compares it against the processing error report.
+- **Never fabricate a zip bomb, malware, or an EICAR style test file.** Container scenarios use
+  shallow nesting with tiny payloads.
+- **State what cannot be fabricated.** MIP protected rows need a real tenant to apply the
+  label, so their natives stay healthy and the build says so out loud rather than pretending
+  coverage exists.
+- **Be honest about non-determinism.** OCR failure, container timeout and conversion errors
+  depend on engine and worker configuration. Those rows are marked `Guaranteed = no` with the
+  reason, and the expected error is treated as a family, not an exact string.
+- **Never rescue a deliberately broken file.** The generator's exception fallback is disabled
+  for documents with a fabrication scenario; a failure there is a bug worth seeing.
+
+Verify with:
+
+```bash
+python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
