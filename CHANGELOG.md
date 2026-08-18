@@ -6,6 +6,36 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Edge cases: documents that starve a feature
+
+- **`--edge-cases` on `generate_mock_metadata.py`.** Rule 12 covers files that fail processing.
+  This covers the more dangerous case: documents that process perfectly and still leave a
+  feature with nothing to work with. The generated tiers were uniform to a fault, every document
+  carrying a custodian, a date, extracted text and `Language = English`, so any feature that
+  aggregates over a collection had only ever seen a complete input.
+
+  Twelve scenarios, each drawn from a disjoint pool so no document carries two faults: no
+  custodian, no date, sentinel dates (1601, 1970, 2099), no extracted text, non-English, mixed
+  language, blank recipients, distribution-list-only recipients, orphan attachments, families
+  naming an absent document, duplicate MD5 across custodians, and audio/video with no text.
+
+- **`edge-cases.json`** in any tier that has them: per scenario, what it starves, the count, and
+  the document list. The counterpart to `EXPECTED_ERRORS.csv`.
+
+- **RULES.md Rule 13**, and Rule 13 checks in `validate_mock_data.py` that probe every listed
+  document and fail if one is not actually starved, so the report cannot drift from the data.
+
+- `make mock-small-edge`. `make load-small-errors` now builds from the edge-case tier, so the
+  errored package carries both kinds of problem.
+
+### Changed
+
+- Documents with no custodian land in `natives/_Unassigned/` and get their own row in
+  `custodian-sources.csv`.
+
+**Off by default.** Edge cases run on a separate RNG stream after generation, so default output
+stays byte-identical and the committed tiers plus the CI determinism check are unaffected.
+
 ### Added — Pre-built errored package
 
 - **`load-packages/small-errors.zip`**, published alongside the clean package rather than

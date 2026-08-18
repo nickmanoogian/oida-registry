@@ -214,6 +214,44 @@ def run(tier_name, tier_dir, verbose):
         ok = len(phases) >= 2
         if not check("Multiple narrative phases present", ok, f"phases: {phases}", verbose): failures += 1
 
+    # ── Rule 13 — edge cases, when the tier carries them ──────────────────
+    edge_path = os.path.join(tier_dir, "edge-cases.json")
+    if os.path.exists(edge_path):
+        print("\nRule 13 — edge cases")
+        report   = json.load(open(edge_path))["scenarios"]
+        by_ctrl  = {d["Control Number"]: d for d in docs}
+
+        # A scenario is only real if the documents it names are actually starved.
+        PROBES = {
+            "no_custodian":       lambda d: not d.get("Custodian","").strip(),
+            "missing_date":       lambda d: not d.get("Primary Date","").strip(),
+            "sentinel_date":      lambda d: d.get("Primary Date","")[:4] in ("1601","1970","2099"),
+            "no_extracted_text":  lambda d: not d.get("Extracted Text Preview","").strip(),
+            "non_english":        lambda d: d.get("Language","") not in ("", "English"),
+            "mixed_language":     lambda d: ";" in d.get("Language",""),
+            "blank_recipients":   lambda d: not d.get("Email To","").strip(),
+            "media_no_text":      lambda d: d.get("File Type Category","").startswith("Media"),
+        }
+        for name, probe in PROBES.items():
+            listed = report.get(name, {}).get("documents", [])
+            if not listed:
+                continue
+            bad = [c for c in listed if c in by_ctrl and not probe(by_ctrl[c])]
+            if not check(f"{name}: every listed document is actually starved",
+                         not bad, f"{len(bad)} not starved: {bad[:3]}", verbose): failures += 1
+
+        # A broken family must genuinely reference a document that is absent.
+        missing = report.get("broken_family", {}).get("documents", [])
+        if missing:
+            still_here = [b["missing_child"] for b in missing if b["missing_child"] in by_ctrl]
+            if not check("broken_family: the named child is absent from documents.csv",
+                         not still_here, f"{len(still_here)} still present", verbose): failures += 1
+
+        counts_ok = all(len(v.get("documents", [])) == v.get("count")
+                        for v in report.values())
+        if not check("edge-cases.json counts match its own document lists",
+                     counts_ok, "", verbose): failures += 1
+
     # ── Summary ───────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if failures == 0:

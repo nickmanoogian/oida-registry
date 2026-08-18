@@ -5,7 +5,7 @@ ECI_OUT   := /tmp/oioda-large
 
 .PHONY: help list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
-        mock-regen-small mock-regen-medium mock-regen-large \
+        mock-regen-small mock-regen-medium mock-regen-large mock-small-edge \
         load-small load-small-synthetic load-small-errors load-medium load-large load-validate \
         export-insys
 
@@ -23,6 +23,7 @@ help:
 	@echo "  make mock-medium     Pull pre-built medium tier (~9,900 docs) into $(MOCK_OUT)/medium/"
 	@echo "  make mock-large      Pull pre-built large tier (~148K docs) into $(MOCK_OUT)/large/"
 	@echo "  make mock-validate   Validate the small tier against RULES.md"
+	@echo "  make mock-small-edge Generate a small tier with edge cases (starved documents)"
 	@echo "  make mock-regen-small   Regenerate small tier from the generator script"
 	@echo "  make mock-regen-medium  Regenerate medium tier"
 	@echo "  make mock-regen-large   Regenerate large tier"
@@ -101,6 +102,10 @@ mock-large:
 mock-validate:
 	python3 scripts/validate_mock_data.py --tier small
 
+mock-small-edge:
+	python3 scripts/generate_mock_metadata.py --tier small --edge-cases --out mock-data/small-edge
+	python3 scripts/validate_mock_data.py --tier small --dir mock-data/small-edge
+
 # ── ECI real-data export ────────────────────────────────────────────────────
 
 export-insys:
@@ -130,8 +135,8 @@ load-small-synthetic:
 	python3 scripts/build_load_package.py --tier small --no-oida
 	@echo "Package ready at load-packages/small/"
 
-load-small-errors:
-	python3 scripts/build_load_package.py --tier small --with-errors --out load-packages/small-errors
+load-small-errors: mock-small-edge
+	python3 scripts/build_load_package.py --tier small --dir mock-data/small-edge --with-errors --out load-packages/small-errors
 	@echo "Package ready at load-packages/small-errors/ (see EXPECTED_ERRORS.csv)"
 
 load-medium:
