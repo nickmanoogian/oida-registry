@@ -32,6 +32,7 @@ help:
 	@echo "  make load-small-synthetic  Same, synthetic content (no S3, faster)"
 	@echo "  make load-medium         Build medium tier load package"
 	@echo "  make load-small-errors   Build small tier with natives that genuinely fail processing"
+	@echo "                           (separate package: load-packages/small-errors/)"
 	@echo "  make load-large          Build large tier load package"
 	@echo "  make load-validate       Check a built package against RULES.md Rule 11"
 	@echo ""
@@ -130,8 +131,8 @@ load-small-synthetic:
 	@echo "Package ready at load-packages/small/"
 
 load-small-errors:
-	python3 scripts/build_load_package.py --tier small --with-errors
-	@echo "Package ready at load-packages/small/ (see EXPECTED_ERRORS.csv)"
+	python3 scripts/build_load_package.py --tier small --with-errors --out load-packages/small-errors
+	@echo "Package ready at load-packages/small-errors/ (see EXPECTED_ERRORS.csv)"
 
 load-medium:
 	python3 scripts/build_load_package.py --tier medium
@@ -143,3 +144,4 @@ load-large:
 
 load-validate:
 	python3 scripts/validate_load_package.py load-packages/small
+	@test ! -d load-packages/small-errors || python3 scripts/validate_load_package.py load-packages/small-errors

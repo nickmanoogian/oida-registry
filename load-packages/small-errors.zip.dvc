@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oioda-registry/releases/download/v1.8.0/small-errors-load-package.zip
+  size: 9892795
+outs:
+- path: small-errors.zip
+  size: 9892795
+  isexec: false
