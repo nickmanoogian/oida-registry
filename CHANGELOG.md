@@ -6,6 +6,17 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.9.0 packages
+
+Both published packages rebuilt so the downloadable artifacts match the code:
+
+- `small-errors.zip` now carries **both** kinds of problem. It previously had only the fabricated
+  processing failures; it now also carries the 190 starved documents from the edge-case tier
+  (no custodian, no date, sentinel dates, no text, non-English, broken families, duplicate MD5,
+  media with no text), plus `edge-cases.json`, and `_Unassigned` as a fifth data source.
+- `small.zip` picks up the container linkage fix: 84 documents now carry a `Container ID` and
+  `Container Name` that resolve to a real container record.
+
 ### Fixed — Rules that were not being enforced
 
 An audit of `validate_mock_data.py` against RULES.md found most rules were checking far less
