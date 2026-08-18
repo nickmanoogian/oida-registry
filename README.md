@@ -377,8 +377,8 @@ make mock-small-edge
 Twelve scenarios, each from a disjoint pool so no document carries two faults: documents with no
 custodian, no date, sentinel dates (1601, 2099), no extracted text, non-English and mixed
 language, emails with blank or distribution-list-only recipients, orphan attachments, families
-naming a document that is absent, the same MD5 under two custodians, and audio/video with no
-text at all.
+naming a document that is absent, the same MD5 under two custodians, audio/video with no text at
+all.
 
 The tier ships `edge-cases.json`: per scenario, what it starves, the count, and the document
 list. `validate_mock_data.py` probes every listed document and fails if one is not actually

@@ -563,6 +563,38 @@ def dat_native_path(abs_path, out_dir):
     return os.path.relpath(abs_path, out_dir).replace(os.sep, "\\")
 
 
+OVERSIZED_WORD_THRESHOLD = 250_000   # past any current model context
+
+
+def expand_to_word_count(body, doc):
+    """Grow `body` to the Word Count the metadata claims, when that is oversized.
+
+    Left alone for every ordinary document: only rows deliberately marked oversized
+    by the edge cases cross the threshold.
+    """
+    try:
+        target = int(str(doc.get("Word Count", "") or "0").strip())
+    except ValueError:
+        return body
+    if target < OVERSIZED_WORD_THRESHOLD:
+        return body
+
+    seed_words = (body or "opioid distribution compliance review").split()
+    if len(seed_words) < 50:
+        seed_words = (seed_words * 50)[:200]
+
+    out, n = [], 0
+    para = 0
+    while n < target:
+        chunk = seed_words[: min(len(seed_words), target - n)]
+        out.append(" ".join(chunk))
+        n += len(chunk)
+        para += 1
+        if para % 12 == 0:
+            out.append("\n\n")
+    return " ".join(out)
+
+
 # ── Native file dispatcher ────────────────────────────────────────────────
 
 def generate_native(doc, cache, out_dir, flat=False, with_errors=False, error_rows=None):
@@ -576,6 +608,11 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False, error_ro
         body = hot.get("body","")
     else:
         body = get_ocr_content(doc, cache)
+
+    # Rule 13 oversized_text: the metadata's Word Count is the contract, so a
+    # document claiming a million words gets a native that actually holds them.
+    # Everything downstream that reads document text meets a real one here.
+    body = expand_to_word_count(body, doc)
 
     error_rows = error_rows if error_rows is not None else []
 
