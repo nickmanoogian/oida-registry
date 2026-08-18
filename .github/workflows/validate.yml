@@ -26,6 +26,13 @@ jobs:
           python3 scripts/generate_mock_metadata.py --tier small --edge-cases --out /tmp/small-edge
           python3 scripts/validate_mock_data.py --tier small --dir /tmp/small-edge
 
+      - name: Broken load files carry the fault they claim
+        run: |
+          pip install --quiet "fpdf2>=2.8" python-docx openpyxl python-pptx
+          python3 scripts/build_load_package.py --tier small --no-oida --limit 60 --out /tmp/pkg
+          python3 scripts/build_broken_load_files.py --package /tmp/pkg --out /tmp/broken
+          python3 scripts/build_broken_load_files.py --package /tmp/pkg --out /tmp/broken --verify
+
       - name: Regenerate small tier and check determinism
         run: |
           python3 scripts/generate_mock_metadata.py --tier small

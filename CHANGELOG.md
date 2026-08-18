@@ -6,6 +6,35 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Load files that fail at import
+
+The last gap from the 2026-08-18 standup. Everything in the repo broke during or after
+processing; nothing broke at the import boundary, which is where Alex's "put in load files and
+try to find all those gotchas" lands.
+
+`scripts/build_broken_load_files.py` and `make load-broken` emit seven variants, one fault each:
+
+| Variant | Fault |
+|---|---|
+| `missing-native` | `NativeFilePath` points at a file that is not in the package |
+| `duplicate-control` | the same Control Number on three rows |
+| `bad-date` | `13/45/2011`, and a non-numeric value, in a date field |
+| `unqualified-delimiter` | a raw column separator inside a field value, so the row gains a column |
+| `encoding` | Latin-1 bytes in a file read as UTF-8, no BOM |
+| `short-row` | 49 fields against a 55 field header |
+| `blank-required` | empty Control Number |
+
+Only the `.dat` is written. Natives are not duplicated: every variant points at the same relative
+paths as the clean package, so a tester drops one `.dat` in beside an unzipped `natives/` folder.
+`manifest.csv` records each variant, the rows it affects by control number, and the expected
+failure.
+
+`--verify` asserts every variant carries the fault it claims, and runs in CI. A broken load file
+that parses cleanly is the same trap as a healthy native behind an error flag.
+
+**The clean package remains the default.** These variants are built locally, are opt in, and do
+not modify any package. The README now states the three-way choice up front.
+
 ### Fixed — the edge-case manifest never shipped
 
 `edge-cases.json` was written into the metadata tier and never copied into the load package, so
