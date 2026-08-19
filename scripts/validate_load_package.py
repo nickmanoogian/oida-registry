@@ -16,7 +16,13 @@ Usage:
   python scripts/validate_load_package.py load-packages/small --flat
 """
 
-import argparse, csv, json, os, re, sys, zipfile
+import argparse
+import csv
+import json
+import os
+import re
+import sys
+import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import error_natives
@@ -204,8 +210,12 @@ def main():
         # not a silent gap.
         i_type    = header.index("Processing Error Type")
         by_ctrl   = {r[i_ctrl]: r[i_type].strip() for r in rows}
+        # A row with no NativeFilePath has no file to break, so it cannot be
+        # fabricated however it is flagged. That is a documented exclusion too.
+        no_native = {r[i_ctrl] for r in rows if not r[i_nat]}
         undocumented = sorted(c for c in (flagged - listed)
-                              if by_ctrl.get(c) not in error_natives.NOT_FABRICABLE)
+                              if by_ctrl.get(c) not in error_natives.NOT_FABRICABLE
+                              and c not in no_native)
         excluded = len(flagged - listed) - len(undocumented)
         check("every flagged document is fabricated or a documented exclusion",
               not undocumented,

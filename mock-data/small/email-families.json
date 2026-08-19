@@ -25,677 +25,557 @@
   {
     "family_id": "FAM-000001",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000220",
+    "parent_doc_id": "DOC-0000443",
     "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline June 2016",
+    "subject": "RE: Q4 2014 Territory Quota \u2014 Variance Analysis",
     "family_size": 1
   },
   {
     "family_id": "FAM-000002",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000113",
+    "parent_doc_id": "DOC-0000299",
     "children": [],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "subject": "RE: MNK Engagement \u2014 Close-Out Documentation",
     "family_size": 1
   },
   {
     "family_id": "FAM-000003",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000157",
+    "parent_doc_id": "DOC-0000636",
     "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 February 2016",
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Mid-Atlantic",
     "family_size": 1
   },
   {
     "family_id": "FAM-000004",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000238",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 Express Scripts \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000005",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000107",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000006",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000051",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000007",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000465",
-    "children": [],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000008",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000263",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000009",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000501",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000010",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000043",
-    "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Gulf Coast Pharmacy Cluster",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000011",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000141",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000012",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000076",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000013",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000282",
-    "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Southeast Pharmacy Cluster",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000014",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000700",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000015",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000046",
-    "children": [],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000016",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000654",
-    "children": [],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Gulf Coast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000017",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000258",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 December 2014 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000018",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000345",
-    "children": [],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 May 2016 \u2014 Threshold Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000019",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000446",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000020",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000765",
-    "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline September 2016",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000021",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000542",
-    "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000022",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000142",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to McKesson Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000023",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000097",
-    "children": [],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000024",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000405",
-    "children": [],
-    "subject": "RE: Q3 2015 Territory Quota \u2014 Variance Analysis",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000025",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000646",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000026",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000326",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 January 2013 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000027",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000699",
-    "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Northwest Order Patterns",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000028",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000388",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 September 2014 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000029",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000705",
-    "children": [],
-    "subject": "RE: Q4 2013 Territory Quota \u2014 Variance Analysis",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000030",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000089",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 June 2013 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000031",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000460",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 CVS Health \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000032",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000518",
-    "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 June 2015",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000033",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000053",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 McKesson \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000034",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000409",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000035",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000788",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000036",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000256",
-    "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline August 2014",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000037",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000452",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000038",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000086",
-    "children": [],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000039",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000251",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000040",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000672",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 Express Scripts \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000041",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000012",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000042",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000106",
-    "children": [],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 March 2015 \u2014 Threshold Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000043",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000325",
-    "children": [],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 December 2014 \u2014 Threshold Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000044",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000434",
-    "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Southwest Pharmacy Cluster",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000045",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000752",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Great Lakes",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000046",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000104",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 Cardinal Health \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000047",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000600",
-    "children": [],
-    "subject": "SOM Policy Exception Request \u2014 Walgreens \u2014 August 2013",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000048",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000629",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000049",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000577",
-    "children": [],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000050",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000341",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000051",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000093",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000052",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000065",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000053",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000580",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000054",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000719",
-    "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline January 2013",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000055",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000650",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 Walgreens \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000056",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000063",
-    "children": [],
-    "subject": "RE: Q3 2015 Territory Quota \u2014 Variance Analysis",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000057",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000351",
-    "children": [],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000058",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000561",
-    "children": [],
-    "subject": "SOM Policy Exception Request \u2014 Express Scripts \u2014 June 2014",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000059",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000729",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000060",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000626",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000061",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000593",
-    "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000062",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000738",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000063",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000785",
-    "children": [],
-    "subject": "RE: Oxycodone ER Sales Incentive Acceleration \u2014 2013 Plan",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000064",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000178",
+    "parent_doc_id": "DOC-0000485",
     "children": [],
     "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000065",
+    "family_id": "FAM-000005",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000554",
-    "children": [],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Southwest",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000066",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000444",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000067",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000105",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000068",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000485",
+    "parent_doc_id": "DOC-0000767",
     "children": [],
     "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000069",
+    "family_id": "FAM-000006",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000408",
+    "parent_doc_id": "DOC-0000536",
     "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000070",
+    "family_id": "FAM-000007",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000308",
+    "parent_doc_id": "DOC-0000415",
     "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 December 2013",
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000071",
+    "family_id": "FAM-000008",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000017",
+    "parent_doc_id": "DOC-0000105",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Mid-Atlantic",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000009",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000696",
+    "children": [],
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000010",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000208",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000011",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000224",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000012",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000237",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000013",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000761",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Southwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000014",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000660",
+    "children": [],
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000015",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000685",
     "children": [],
     "subject": "RE: SOM Flag \u2014 Walgreens \u2014 Business Justification Required",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000072",
+    "family_id": "FAM-000016",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000484",
+    "parent_doc_id": "DOC-0000526",
     "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 December 2016",
+    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000073",
+    "family_id": "FAM-000017",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000571",
+    "parent_doc_id": "DOC-0000026",
     "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 August 2015 \u2014 Legal Hold Reminder",
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000074",
+    "family_id": "FAM-000018",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000230",
+    "parent_doc_id": "DOC-0000592",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000019",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000475",
+    "children": [],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000020",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000616",
+    "children": [],
+    "subject": "FW: Managed Care Update \u2014 Subsys Formulary \u2014 Express Scripts",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000021",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000304",
     "children": [],
     "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000075",
+    "family_id": "FAM-000022",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000474",
+    "parent_doc_id": "DOC-0000033",
     "children": [],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 February 2014 \u2014 Threshold Review",
+    "subject": "RE: Subsys Sales Incentive Acceleration \u2014 2014 Plan",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000076",
+    "family_id": "FAM-000023",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000783",
+    "parent_doc_id": "DOC-0000145",
+    "children": [],
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline November 2013",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000024",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000157",
     "children": [],
     "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000077",
+    "family_id": "FAM-000025",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000032",
+    "parent_doc_id": "DOC-0000715",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000026",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000027",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000027",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000624",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000028",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000302",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 November 2013 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000029",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000064",
     "children": [],
     "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000078",
+    "family_id": "FAM-000030",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000431",
+    "parent_doc_id": "DOC-0000421",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000031",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000142",
+    "children": [],
+    "subject": "FW: SOM Archive Cleanup \u2014 March 2013",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000032",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000253",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Insys Exposure Analysis \u2014 Speaker Payments",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000033",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000333",
     "children": [],
     "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000079",
+    "family_id": "FAM-000034",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000777",
+    "parent_doc_id": "DOC-0000146",
     "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Gulf Coast Order Patterns",
+    "subject": "RE: IRC Prior Authorization Process \u2014 Script Update v5",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000080",
+    "family_id": "FAM-000035",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000413",
+    "parent_doc_id": "DOC-0000359",
+    "children": [],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000036",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000768",
+    "children": [],
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline January 2016",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000037",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000564",
+    "children": [],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Mid-Atlantic Pharmacy Cluster",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000038",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000156",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Mid-Atlantic",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000039",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000787",
+    "children": [],
+    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 August 2016",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000040",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000336",
+    "children": [],
+    "subject": "RE: Q3 2015 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000041",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000366",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000042",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000614",
     "children": [],
     "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000081",
+    "family_id": "FAM-000043",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000423",
+    "parent_doc_id": "DOC-0000776",
     "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 March 2013 \u2014 Legal Hold Reminder",
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Mid-Atlantic",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000082",
+    "family_id": "FAM-000044",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000539",
+    "parent_doc_id": "DOC-0000779",
     "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000083",
+    "family_id": "FAM-000045",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000445",
+    "parent_doc_id": "DOC-0000350",
     "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "subject": "FW: State AG Investigation \u2014 Mid-Atlantic \u2014 Document Preservation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000084",
+    "family_id": "FAM-000046",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000790",
+    "parent_doc_id": "DOC-0000413",
     "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 May 2015 \u2014 Legal Hold Reminder",
+    "subject": "SOM Policy Exception Request \u2014 CVS Health \u2014 July 2016",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000085",
+    "family_id": "FAM-000047",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000588",
+    "children": [],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000048",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000777",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000049",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000286",
+    "children": [],
+    "subject": "FW: SOM Archive Cleanup \u2014 March 2014",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000050",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000184",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 July 2015 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000051",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000254",
+    "children": [],
+    "subject": "RE: SOM Records Preservation \u2014 August 2014 \u2014 Legal Hold Reminder",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000052",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000177",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000053",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000542",
+    "children": [],
+    "subject": "RE: Mallinckrodt \u2014 Follow-On Engagement \u2014 Sales Operations",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000054",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000004",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Midwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000055",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000120",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000056",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000473",
+    "children": [],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000057",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000748",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southeast",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000058",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000300",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000059",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000188",
+    "children": [],
+    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 January 2013",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000060",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000294",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000061",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000241",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Great Lakes Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000062",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000148",
+    "children": [],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000063",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000071",
+    "children": [],
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000064",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000275",
+    "children": [],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000065",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000520",
+    "children": [],
+    "subject": "RE: Q3 2014 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000066",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000179",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000067",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000609",
+    "children": [],
+    "subject": "RE: DOJ Civil Investigation \u2014 Insys Reimbursement Center",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000068",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000126",
+    "children": [],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000069",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000307",
+    "children": [],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000070",
     "thread_id": null,
     "parent_doc_id": "DOC-0000006",
     "children": [],
@@ -703,639 +583,319 @@
     "family_size": 1
   },
   {
-    "family_id": "FAM-000086",
+    "family_id": "FAM-000071",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000567",
+    "parent_doc_id": "DOC-0000399",
     "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
+    "subject": "FW: SOM Archive Cleanup \u2014 March 2015",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000087",
+    "family_id": "FAM-000072",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000436",
-    "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline May 2013",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000088",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000599",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000089",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000039",
-    "children": [],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000090",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000337",
-    "children": [],
-    "subject": "SOM Policy Exception Request \u2014 CVS Health \u2014 January 2016",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000091",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000632",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Gulf Coast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000092",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000404",
-    "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Mid-Atlantic Pharmacy Cluster",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000093",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000261",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000094",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000647",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000095",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000124",
-    "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 January 2013",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000096",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000586",
-    "children": [],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000097",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000045",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000098",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000574",
-    "children": [],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 June 2014 \u2014 Threshold Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000099",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000170",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000100",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000309",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 CVS Health \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000101",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000775",
-    "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 July 2014",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000102",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000514",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000103",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000191",
-    "children": [],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000104",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000718",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000105",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000156",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000106",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000727",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Great Lakes \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000107",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000701",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000108",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000011",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000109",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000211",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000110",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000246",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000111",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000429",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 March 2015 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000112",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000247",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000113",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000569",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000114",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000144",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000115",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000570",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000116",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000226",
-    "children": [],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000117",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000128",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to AmerisourceBergen Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000118",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000192",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000119",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000237",
-    "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000120",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000511",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000121",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000451",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000122",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000664",
-    "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Southeast Order Patterns",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000123",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000496",
-    "children": [],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000124",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000009",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000125",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000679",
-    "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southwest",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000126",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000771",
-    "children": [],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000127",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000288",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000128",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000635",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000129",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000151",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000130",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000050",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000131",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000221",
-    "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Great Lakes",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000132",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000028",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000133",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000158",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southeast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000134",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000637",
-    "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000135",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000092",
-    "children": [],
-    "subject": "RE: Oxycodone ER Sales Incentive Acceleration \u2014 2015 Plan",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000136",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000575",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 September 2016 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000137",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000753",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000138",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000532",
-    "children": [],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000139",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000536",
-    "children": [],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Gulf Coast",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000140",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000361",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000141",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000352",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000142",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000576",
-    "children": [],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Midwest",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000143",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000504",
-    "children": [],
-    "subject": "FW: State AG Investigation \u2014 Southwest \u2014 Document Preservation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000144",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000250",
-    "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000145",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000184",
-    "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 May 2014",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000146",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000019",
-    "children": [],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000147",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000268",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000148",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000601",
-    "children": [],
-    "subject": "RE: SOM Records Preservation \u2014 March 2014 \u2014 Legal Hold Reminder",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000149",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000459",
-    "children": [],
-    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 November 2015",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000150",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000406",
-    "children": [],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000151",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000204",
-    "children": [],
-    "subject": "FW: SOM Archive Cleanup \u2014 October 2013",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000152",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000508",
-    "children": [],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000153",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000354",
-    "children": [],
-    "subject": "SOM Policy Exception Request \u2014 Walgreens \u2014 October 2014",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000154",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000280",
-    "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000155",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000244",
-    "children": [],
-    "subject": "FW: Compliance Escalation \u2014 Southwest Order Patterns",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000156",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000588",
-    "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline February 2016",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000157",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000541",
-    "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to McKesson Fraud Investigation Inquiry",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000158",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000275",
-    "children": [],
-    "subject": "RE: Exalgo Sales Incentive Acceleration \u2014 2014 Plan",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000159",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000722",
-    "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000160",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000367",
+    "parent_doc_id": "DOC-0000783",
     "children": [],
     "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southwest",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000161",
+    "family_id": "FAM-000073",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000242",
+    "parent_doc_id": "DOC-0000594",
     "children": [],
-    "subject": "RE: SOM Flag \u2014 CVS Health \u2014 Business Justification Required",
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Great Lakes",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000162",
-    "thread_id": null,
-    "parent_doc_id": "DOC-0000549",
-    "children": [],
-    "subject": "RE: SOM Flag \u2014 Express Scripts \u2014 Business Justification Required",
-    "family_size": 1
-  },
-  {
-    "family_id": "FAM-000163",
+    "family_id": "FAM-000074",
     "thread_id": null,
     "parent_doc_id": "DOC-0000573",
     "children": [],
-    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000164",
+    "family_id": "FAM-000075",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000533",
+    "parent_doc_id": "DOC-0000189",
     "children": [],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Southeast",
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000165",
+    "family_id": "FAM-000076",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000155",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 September 2015 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000077",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000442",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000078",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000385",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to CVS Health Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000079",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000181",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Mid-Atlantic",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000080",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000094",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000081",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000030",
+    "children": [],
+    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 April 2014",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000082",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000484",
+    "children": [],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000083",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000310",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000084",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000342",
+    "children": [],
+    "subject": "RE: SOM Flag \u2014 AmerisourceBergen \u2014 Business Justification Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000085",
+    "thread_id": null,
+    "parent_doc_id": "HOT-0000003",
+    "children": [],
+    "subject": "FW: DEA Diversion Investigator Meeting \u2014 SOM Program Review [CONFIDENTIAL]",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000086",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000002",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southeast",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000087",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000555",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000088",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000206",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000089",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000256",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000090",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000121",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 November 2016 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000091",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000377",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000092",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000460",
+    "children": [],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000093",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000343",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000094",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000346",
+    "children": [],
+    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 December 2013",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000095",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000089",
+    "children": [],
+    "subject": "RE: Exalgo Sales Incentive Acceleration \u2014 2013 Plan",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000096",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000191",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Southeast \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000097",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000675",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000098",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000781",
+    "children": [],
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000099",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000025",
+    "children": [],
+    "subject": "RE: SOM Flag \u2014 Walgreens \u2014 Business Justification Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000100",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000562",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000101",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000439",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000102",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000556",
+    "children": [],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000103",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000323",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Gulf Coast \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000104",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000509",
+    "children": [],
+    "subject": "RE: Q1 2016 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000105",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000799",
+    "children": [],
+    "subject": "RE: McKinsey \u2014 Regulatory Risk Assessment \u2014 Client Portfolio",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000106",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000116",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000107",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000242",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northeast",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000108",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000075",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000109",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000388",
+    "children": [],
+    "subject": "RE: SOM Flag \u2014 Walgreens \u2014 Business Justification Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000110",
     "thread_id": null,
     "parent_doc_id": "DOC-0000639",
     "children": [],
@@ -1343,815 +903,1233 @@
     "family_size": 1
   },
   {
-    "family_id": "FAM-000166",
+    "family_id": "FAM-000111",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000320",
+    "parent_doc_id": "DOC-0000499",
     "children": [],
-    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 December 2016",
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000167",
+    "family_id": "FAM-000112",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000384",
+    "parent_doc_id": "DOC-0000041",
     "children": [],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Southwest Pharmacy Cluster",
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000168",
+    "family_id": "FAM-000113",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000572",
+    "parent_doc_id": "DOC-0000517",
     "children": [],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "subject": "FW: State AG Investigation \u2014 Southeast \u2014 Document Preservation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000169",
+    "family_id": "FAM-000114",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000034",
+    "parent_doc_id": "DOC-0000794",
     "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000170",
+    "family_id": "FAM-000115",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000363",
+    "parent_doc_id": "DOC-0000316",
     "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Gulf Coast",
+    "subject": "RE: DOJ Civil Investigation \u2014 Insys Reimbursement Center",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000171",
+    "family_id": "FAM-000116",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000284",
+    "parent_doc_id": "DOC-0000187",
     "children": [],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000172",
+    "family_id": "FAM-000117",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000037",
+    "parent_doc_id": "DOC-0000547",
     "children": [],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southeast",
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000173",
+    "family_id": "FAM-000118",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000792",
+    "parent_doc_id": "DOC-0000055",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Midwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000119",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000679",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southwest",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000120",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000610",
     "children": [],
     "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 1
   },
   {
-    "family_id": "FAM-000174",
+    "family_id": "FAM-000121",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000619",
+    "parent_doc_id": "DOC-0000384",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000122",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000623",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000123",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000315",
+    "children": [],
+    "subject": "FW: SOM Archive Cleanup \u2014 October 2015",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000124",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000375",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000125",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000572",
+    "children": [],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000126",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000290",
     "children": [],
     "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000127",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000354",
+    "children": [],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Southeast",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000128",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000537",
+    "children": [],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000129",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000196",
+    "children": [],
+    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 September 2013",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000130",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000076",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000131",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000037",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000132",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000173",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000133",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000232",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Mid-Atlantic",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000134",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000752",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 July 2016 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000135",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000733",
+    "children": [],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000136",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000759",
+    "children": [],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000137",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000544",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Southeast Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000138",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000579",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000139",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000637",
+    "children": [],
+    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000140",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000532",
+    "children": [],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000141",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000210",
+    "children": [],
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000142",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000136",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000143",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000500",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 September 2015 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000144",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000190",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to CVS Health Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000145",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000106",
+    "children": [],
+    "subject": "RE: SOM Records Preservation \u2014 July 2016 \u2014 Legal Hold Reminder",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000146",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000169",
+    "children": [],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Great Lakes Pharmacy Cluster",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000147",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000621",
+    "children": [],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Mid-Atlantic",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000148",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000774",
+    "children": [],
+    "subject": "RE: Q2 2014 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000149",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000615",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 October 2015 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000150",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000065",
+    "children": [],
+    "subject": "RE: Q1 2016 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000151",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000099",
+    "children": [],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000152",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000360",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000153",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000641",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000154",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000198",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000155",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000015",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000156",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000617",
+    "children": [],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000157",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000320",
+    "children": [],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000158",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000119",
+    "children": [],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000159",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000251",
+    "children": [],
+    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000160",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000667",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 April 2015 \u2014 Threshold Review",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000161",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000701",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000162",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000751",
+    "children": [],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Gulf Coast",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000163",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000159",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Gulf Coast \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000164",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000508",
+    "children": [],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000165",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000139",
+    "children": [],
+    "subject": "RE: SOM Records Preservation \u2014 July 2016 \u2014 Legal Hold Reminder",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000166",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000758",
+    "children": [],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000167",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000239",
+    "children": [],
+    "subject": "FW: State AG Investigation \u2014 Northwest \u2014 Document Preservation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000168",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000497",
+    "children": [],
+    "subject": "RE: Q3 2015 Territory Quota \u2014 Variance Analysis",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000169",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000267",
+    "children": [],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000170",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000705",
+    "children": [],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000171",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000650",
+    "children": [],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000172",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000115",
+    "children": [],
+    "subject": "RE: Subsys Sales Incentive Acceleration \u2014 2013 Plan",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000173",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000410",
+    "children": [],
+    "subject": "RE: McKinsey \u2014 Regulatory Risk Assessment \u2014 Client Portfolio",
+    "family_size": 1
+  },
+  {
+    "family_id": "FAM-000174",
+    "thread_id": null,
+    "parent_doc_id": "DOC-0000127",
+    "children": [],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 March 2014 \u2014 Threshold Review",
     "family_size": 1
   },
   {
     "family_id": "FAM-000175",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000231",
+    "parent_doc_id": "DOC-0000561",
     "children": [],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "subject": "FW: Compliance Escalation \u2014 Northeast Order Patterns",
     "family_size": 1
   },
   {
     "family_id": "FAM-000176",
     "thread_id": null,
-    "parent_doc_id": "DOC-0000512",
+    "parent_doc_id": "DOC-0000353",
     "children": [],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline April 2014",
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Great Lakes",
     "family_size": 1
   },
   {
     "family_id": "FAM-000177",
     "thread_id": "THR-000001",
-    "parent_doc_id": "DOC-0000483",
+    "parent_doc_id": "DOC-0000014",
     "children": [
-      "DOC-0000681",
-      "DOC-0000770"
-    ],
-    "subject": "FW: SOM Archive Cleanup \u2014 December 2016",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000178",
-    "thread_id": "THR-000002",
-    "parent_doc_id": "DOC-0000060",
-    "children": [
-      "DOC-0000271",
-      "DOC-0000205",
-      "DOC-0000215"
-    ],
-    "subject": "RE: Q4 2016 Territory Quota \u2014 Variance Analysis",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000179",
-    "thread_id": "THR-000003",
-    "parent_doc_id": "DOC-0000591",
-    "children": [
-      "DOC-0000739",
-      "DOC-0000708",
-      "DOC-0000675"
-    ],
-    "subject": "RE: Xartemis XR Sales Incentive Acceleration \u2014 2016 Plan",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000180",
-    "thread_id": "THR-000004",
-    "parent_doc_id": "DOC-0000478",
-    "children": [
-      "DOC-0000197",
-      "DOC-0000693"
-    ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000181",
-    "thread_id": "THR-000005",
-    "parent_doc_id": "DOC-0000149",
-    "children": [
-      "DOC-0000007",
-      "DOC-0000015",
-      "DOC-0000506",
-      "DOC-0000736"
+      "DOC-0000474",
+      "DOC-0000502",
+      "DOC-0000702",
+      "DOC-0000078"
     ],
     "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
     "family_size": 5
   },
   {
+    "family_id": "FAM-000178",
+    "thread_id": "THR-000002",
+    "parent_doc_id": "DOC-0000225",
+    "children": [
+      "DOC-0000591"
+    ],
+    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000179",
+    "thread_id": "THR-000003",
+    "parent_doc_id": "DOC-0000569",
+    "children": [
+      "DOC-0000626",
+      "DOC-0000096",
+      "DOC-0000782",
+      "DOC-0000349",
+      "DOC-0000091"
+    ],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000180",
+    "thread_id": "THR-000004",
+    "parent_doc_id": "DOC-0000668",
+    "children": [
+      "DOC-0000434",
+      "DOC-0000524",
+      "DOC-0000230",
+      "DOC-0000054"
+    ],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000181",
+    "thread_id": "THR-000005",
+    "parent_doc_id": "DOC-0000798",
+    "children": [
+      "DOC-0000595",
+      "DOC-0000150",
+      "DOC-0000406",
+      "DOC-0000193",
+      "DOC-0000770"
+    ],
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline September 2014",
+    "family_size": 6
+  },
+  {
     "family_id": "FAM-000182",
     "thread_id": "THR-000006",
-    "parent_doc_id": "DOC-0000607",
+    "parent_doc_id": "DOC-0000205",
     "children": [
-      "DOC-0000497",
-      "DOC-0000589",
-      "DOC-0000687"
+      "DOC-0000317",
+      "DOC-0000576"
     ],
     "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Northeast Pharmacy Cluster",
-    "family_size": 4
+    "family_size": 3
   },
   {
     "family_id": "FAM-000183",
     "thread_id": "THR-000007",
-    "parent_doc_id": "DOC-0000376",
+    "parent_doc_id": "DOC-0000790",
     "children": [
-      "DOC-0000366",
-      "DOC-0000713"
+      "DOC-0000022",
+      "DOC-0000394",
+      "DOC-0000479",
+      "DOC-0000059",
+      "DOC-0000345"
     ],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
-    "family_size": 3
+    "subject": "RE: SOM Records Preservation \u2014 July 2014 \u2014 Legal Hold Reminder",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000184",
     "thread_id": "THR-000008",
-    "parent_doc_id": "DOC-0000509",
+    "parent_doc_id": "DOC-0000630",
     "children": [
-      "DOC-0000604",
-      "DOC-0000225",
-      "DOC-0000372",
-      "DOC-0000314",
-      "DOC-0000773"
+      "DOC-0000118",
+      "DOC-0000507",
+      "DOC-0000788",
+      "DOC-0000367"
     ],
-    "subject": "RE: Q1 2016 Territory Quota \u2014 Variance Analysis",
-    "family_size": 6
+    "subject": "FW: State AG Investigation \u2014 Southwest \u2014 Document Preservation",
+    "family_size": 5
   },
   {
     "family_id": "FAM-000185",
     "thread_id": "THR-000009",
-    "parent_doc_id": "DOC-0000683",
+    "parent_doc_id": "DOC-0000058",
     "children": [
-      "DOC-0000779"
+      "DOC-0000295",
+      "DOC-0000795",
+      "DOC-0000590",
+      "DOC-0000729"
     ],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Midwest",
-    "family_size": 2
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 5
   },
   {
     "family_id": "FAM-000186",
     "thread_id": "THR-000010",
-    "parent_doc_id": "DOC-0000464",
+    "parent_doc_id": "DOC-0000717",
     "children": [
-      "DOC-0000024",
-      "DOC-0000455"
+      "DOC-0000390",
+      "DOC-0000741",
+      "DOC-0000567",
+      "DOC-0000068"
     ],
-    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
-    "family_size": 3
+    "subject": "RE: SOM Flag \u2014 AmerisourceBergen \u2014 Business Justification Required",
+    "family_size": 5
   },
   {
     "family_id": "FAM-000187",
     "thread_id": "THR-000011",
-    "parent_doc_id": "DOC-0000168",
+    "parent_doc_id": "DOC-0000714",
     "children": [
-      "DOC-0000798",
-      "DOC-0000443",
-      "DOC-0000688",
-      "DOC-0000071",
-      "DOC-0000061"
+      "DOC-0000468",
+      "DOC-0000203"
     ],
-    "subject": "FW: State AG Investigation \u2014 Mid-Atlantic \u2014 Document Preservation",
-    "family_size": 6
+    "subject": "RE: SOM Flag \u2014 Cardinal Health \u2014 Business Justification Required",
+    "family_size": 3
   },
   {
     "family_id": "FAM-000188",
     "thread_id": "THR-000012",
-    "parent_doc_id": "DOC-0000617",
+    "parent_doc_id": "DOC-0000797",
     "children": [
-      "DOC-0000594",
-      "DOC-0000706",
-      "DOC-0000029"
+      "DOC-0000144",
+      "DOC-0000541",
+      "DOC-0000419"
     ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
+    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
     "family_size": 4
   },
   {
     "family_id": "FAM-000189",
     "thread_id": "THR-000013",
-    "parent_doc_id": "DOC-0000285",
+    "parent_doc_id": "DOC-0000016",
     "children": [
-      "DOC-0000206",
-      "DOC-0000291",
-      "DOC-0000784",
-      "DOC-0000418"
+      "DOC-0000780"
     ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 5
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000190",
     "thread_id": "THR-000014",
-    "parent_doc_id": "DOC-0000335",
+    "parent_doc_id": "DOC-0000559",
     "children": [
-      "DOC-0000014",
-      "DOC-0000131",
-      "DOC-0000527"
+      "DOC-0000727"
     ],
-    "subject": "RE: Exalgo Sales Incentive Acceleration \u2014 2016 Plan",
-    "family_size": 4
+    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000191",
     "thread_id": "THR-000015",
-    "parent_doc_id": "DOC-0000096",
+    "parent_doc_id": "DOC-0000221",
     "children": [
-      "DOC-0000442",
-      "DOC-0000159",
-      "DOC-0000255"
+      "DOC-0000638",
+      "DOC-0000249",
+      "DOC-0000028"
     ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Gulf Coast Pharmacy Cluster",
     "family_size": 4
   },
   {
     "family_id": "FAM-000192",
     "thread_id": "THR-000016",
-    "parent_doc_id": "DOC-0000438",
+    "parent_doc_id": "DOC-0000796",
     "children": [
-      "DOC-0000145",
-      "DOC-0000382",
-      "DOC-0000214",
-      "DOC-0000622"
+      "DOC-0000554",
+      "DOC-0000724",
+      "DOC-0000053",
+      "DOC-0000178",
+      "DOC-0000706"
     ],
-    "subject": "FW: SOM Archive Cleanup \u2014 February 2015",
-    "family_size": 5
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000193",
     "thread_id": "THR-000017",
-    "parent_doc_id": "DOC-0000370",
+    "parent_doc_id": "DOC-0000455",
     "children": [
-      "DOC-0000305",
-      "DOC-0000381",
-      "DOC-0000383",
-      "DOC-0000799",
-      "DOC-0000703",
-      "DOC-0000711",
-      "DOC-0000660"
+      "DOC-0000515",
+      "DOC-0000080"
     ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 8
+    "subject": "SOM Policy Exception Request \u2014 McKesson \u2014 October 2013",
+    "family_size": 3
   },
   {
     "family_id": "FAM-000194",
     "thread_id": "THR-000018",
-    "parent_doc_id": "DOC-0000298",
+    "parent_doc_id": "DOC-0000045",
     "children": [
-      "DOC-0000276"
+      "DOC-0000793",
+      "DOC-0000040",
+      "DOC-0000280"
     ],
-    "subject": "RE: Q3 2015 Territory Quota \u2014 Variance Analysis",
-    "family_size": 2
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000195",
     "thread_id": "THR-000019",
-    "parent_doc_id": "DOC-0000440",
+    "parent_doc_id": "DOC-0000738",
     "children": [
-      "DOC-0000274",
-      "DOC-0000669",
-      "DOC-0000547"
+      "DOC-0000167",
+      "DOC-0000185",
+      "DOC-0000161",
+      "DOC-0000340"
     ],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline August 2014",
-    "family_size": 4
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northwest",
+    "family_size": 5
   },
   {
     "family_id": "FAM-000196",
     "thread_id": "THR-000020",
-    "parent_doc_id": "DOC-0000369",
+    "parent_doc_id": "DOC-0000676",
     "children": [
-      "DOC-0000491",
-      "DOC-0000716"
+      "DOC-0000708"
     ],
-    "subject": "RE: Pennsaid Sales Incentive Acceleration \u2014 2016 Plan",
-    "family_size": 3
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000197",
     "thread_id": "THR-000021",
-    "parent_doc_id": "DOC-0000153",
+    "parent_doc_id": "DOC-0000506",
     "children": [
-      "DOC-0000175"
+      "DOC-0000450"
     ],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southwest",
+    "subject": "SOM Policy Exception Request \u2014 Walgreens \u2014 February 2014",
     "family_size": 2
   },
   {
     "family_id": "FAM-000198",
     "thread_id": "THR-000022",
-    "parent_doc_id": "DOC-0000466",
+    "parent_doc_id": "DOC-0000728",
     "children": [
-      "DOC-0000027",
-      "DOC-0000503",
-      "DOC-0000627",
-      "DOC-0000035",
-      "DOC-0000169",
-      "DOC-0000067",
-      "DOC-0000176"
+      "DOC-0000619",
+      "DOC-0000313",
+      "DOC-0000281"
     ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
-    "family_size": 8
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000199",
     "thread_id": "THR-000023",
-    "parent_doc_id": "DOC-0000327",
+    "parent_doc_id": "DOC-0000563",
     "children": [
-      "DOC-0000339",
-      "DOC-0000293",
-      "DOC-0000462"
+      "DOC-0000356",
+      "DOC-0000482",
+      "DOC-0000010"
     ],
-    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 July 2015",
+    "subject": "PRIVILEGED \u2014 FW: Subsys IRC Practices \u2014 Attorney Review",
     "family_size": 4
   },
   {
     "family_id": "FAM-000200",
     "thread_id": "THR-000024",
-    "parent_doc_id": "DOC-0000584",
+    "parent_doc_id": "DOC-0000235",
     "children": [
-      "DOC-0000022",
-      "DOC-0000083"
+      "DOC-0000598"
     ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northeast",
-    "family_size": 3
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000201",
     "thread_id": "THR-000025",
-    "parent_doc_id": "DOC-0000780",
+    "parent_doc_id": "DOC-0000047",
     "children": [
-      "DOC-0000427",
-      "DOC-0000324",
-      "DOC-0000054"
+      "DOC-0000114",
+      "DOC-0000604",
+      "DOC-0000034"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "subject": "SOM Policy Exception Request \u2014 Express Scripts \u2014 December 2013",
     "family_size": 4
   },
   {
     "family_id": "FAM-000202",
     "thread_id": "THR-000026",
-    "parent_doc_id": "DOC-0000741",
+    "parent_doc_id": "DOC-0000321",
     "children": [
-      "DOC-0000126",
-      "DOC-0000430",
-      "DOC-0000454",
-      "DOC-0000651",
-      "DOC-0000479",
-      "DOC-0000746",
-      "DOC-0000686"
+      "DOC-0000261",
+      "DOC-0000296",
+      "DOC-0000197",
+      "DOC-0000452",
+      "DOC-0000425"
     ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 8
+    "subject": "RE: SOM Flag \u2014 Cardinal Health \u2014 Business Justification Required",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000203",
     "thread_id": "THR-000027",
-    "parent_doc_id": "DOC-0000229",
+    "parent_doc_id": "DOC-0000487",
     "children": [
-      "DOC-0000641"
+      "DOC-0000689",
+      "DOC-0000109",
+      "DOC-0000328",
+      "DOC-0000472",
+      "DOC-0000172"
     ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northwest",
-    "family_size": 2
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000204",
     "thread_id": "THR-000028",
-    "parent_doc_id": "DOC-0000042",
+    "parent_doc_id": "DOC-0000682",
     "children": [
-      "DOC-0000563",
-      "DOC-0000763",
-      "DOC-0000782",
-      "DOC-0000018",
-      "DOC-0000610"
+      "DOC-0000433",
+      "DOC-0000647",
+      "DOC-0000039"
     ],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 February 2014 \u2014 Threshold Review",
-    "family_size": 6
+    "subject": "RE: Q2 2014 Territory Quota \u2014 Variance Analysis",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000205",
     "thread_id": "THR-000029",
-    "parent_doc_id": "DOC-0000165",
+    "parent_doc_id": "DOC-0000583",
     "children": [
-      "DOC-0000682",
-      "DOC-0000081",
-      "DOC-0000167",
-      "DOC-0000390",
-      "DOC-0000358",
-      "DOC-0000228",
-      "DOC-0000209"
+      "DOC-0000558"
     ],
-    "subject": "CONFIDENTIAL \u2014 Response to CVS Health Fraud Investigation Inquiry",
-    "family_size": 8
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 August 2014 \u2014 Threshold Review",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000206",
     "thread_id": "THR-000030",
-    "parent_doc_id": "DOC-0000072",
+    "parent_doc_id": "DOC-0000093",
     "children": [
-      "DOC-0000306",
-      "DOC-0000415",
-      "DOC-0000505",
-      "DOC-0000757",
-      "DOC-0000428",
-      "DOC-0000146",
-      "DOC-0000103"
+      "DOC-0000444",
+      "DOC-0000721",
+      "DOC-0000760"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 8
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000207",
     "thread_id": "THR-000031",
-    "parent_doc_id": "DOC-0000218",
+    "parent_doc_id": "DOC-0000457",
     "children": [
-      "DOC-0000385",
-      "DOC-0000403",
-      "DOC-0000707"
+      "DOC-0000611",
+      "DOC-0000511"
     ],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Mid-Atlantic",
-    "family_size": 4
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Mid-Atlantic",
+    "family_size": 3
   },
   {
     "family_id": "FAM-000208",
     "thread_id": "THR-000032",
-    "parent_doc_id": "DOC-0000259",
+    "parent_doc_id": "DOC-0000612",
     "children": [
-      "DOC-0000557"
+      "DOC-0000582",
+      "DOC-0000160",
+      "DOC-0000789"
     ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 2
+    "subject": "FW: Compliance Escalation \u2014 Great Lakes Order Patterns",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000209",
     "thread_id": "THR-000033",
-    "parent_doc_id": "DOC-0000457",
+    "parent_doc_id": "DOC-0000081",
     "children": [
-      "DOC-0000680",
-      "DOC-0000579",
-      "DOC-0000270",
-      "DOC-0000391",
-      "DOC-0000733"
+      "DOC-0000319",
+      "DOC-0000791",
+      "DOC-0000218"
     ],
-    "subject": "RE: Q4 2016 Territory Quota \u2014 Variance Analysis",
-    "family_size": 6
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000210",
     "thread_id": "THR-000034",
-    "parent_doc_id": "DOC-0000395",
+    "parent_doc_id": "DOC-0000522",
     "children": [
-      "DOC-0000560",
-      "DOC-0000456",
-      "DOC-0000500",
-      "DOC-0000568"
-    ],
-    "subject": "RE: SOM Flag \u2014 Express Scripts \u2014 Business Justification Required",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000211",
-    "thread_id": "THR-000035",
-    "parent_doc_id": "DOC-0000198",
-    "children": [
-      "DOC-0000344",
-      "DOC-0000278",
-      "DOC-0000421",
-      "DOC-0000125",
-      "DOC-0000608"
-    ],
-    "subject": "SOM Policy Exception Request \u2014 CVS Health \u2014 September 2016",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000212",
-    "thread_id": "THR-000036",
-    "parent_doc_id": "DOC-0000581",
-    "children": [
-      "DOC-0000556",
-      "DOC-0000287",
-      "DOC-0000119",
-      "DOC-0000074",
-      "DOC-0000056"
-    ],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Northeast",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000213",
-    "thread_id": "THR-000037",
-    "parent_doc_id": "DOC-0000213",
-    "children": [
-      "DOC-0000652",
-      "DOC-0000723"
-    ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000214",
-    "thread_id": "THR-000038",
-    "parent_doc_id": "DOC-0000279",
-    "children": [
-      "DOC-0000193",
-      "DOC-0000136",
-      "DOC-0000123",
-      "DOC-0000463"
-    ],
-    "subject": "FW: DEA Suspicious Order Monitoring \u2014 November 2014 \u2014 Threshold Review",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000215",
-    "thread_id": "THR-000039",
-    "parent_doc_id": "DOC-0000171",
-    "children": [
-      "DOC-0000379",
-      "DOC-0000441"
-    ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000216",
-    "thread_id": "THR-000040",
-    "parent_doc_id": "DOC-0000111",
-    "children": [
-      "DOC-0000186"
-    ],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline February 2015",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000217",
-    "thread_id": "THR-000041",
-    "parent_doc_id": "DOC-0000304",
-    "children": [
-      "DOC-0000528"
-    ],
-    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 December 2014",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000218",
-    "thread_id": "THR-000042",
-    "parent_doc_id": "DOC-0000386",
-    "children": [
-      "DOC-0000468",
-      "DOC-0000008",
-      "DOC-0000331",
-      "DOC-0000769",
-      "DOC-0000717"
-    ],
-    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 May 2014",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000219",
-    "thread_id": "THR-000043",
-    "parent_doc_id": "DOC-0000323",
-    "children": [
-      "DOC-0000387",
-      "DOC-0000243",
-      "DOC-0000394",
-      "DOC-0000160"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Great Lakes \u2014 Document Preservation",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000220",
-    "thread_id": "THR-000044",
-    "parent_doc_id": "DOC-0000636",
-    "children": [
-      "DOC-0000289",
-      "DOC-0000044",
-      "DOC-0000759",
-      "DOC-0000399",
-      "DOC-0000302",
-      "DOC-0000085",
-      "DOC-0000519"
-    ],
-    "subject": "SOM Policy Exception Request \u2014 Walgreens \u2014 August 2016",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000221",
-    "thread_id": "THR-000045",
-    "parent_doc_id": "DOC-0000033",
-    "children": [
-      "DOC-0000487",
-      "DOC-0000492",
-      "DOC-0000353",
-      "DOC-0000710",
-      "DOC-0000473"
-    ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000222",
-    "thread_id": "THR-000046",
-    "parent_doc_id": "DOC-0000490",
-    "children": [
-      "DOC-0000616"
-    ],
-    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000223",
-    "thread_id": "THR-000047",
-    "parent_doc_id": "DOC-0000419",
-    "children": [
-      "DOC-0000510",
-      "DOC-0000336",
-      "DOC-0000488",
-      "DOC-0000416",
-      "DOC-0000132",
-      "DOC-0000728",
-      "DOC-0000360"
-    ],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000224",
-    "thread_id": "THR-000048",
-    "parent_doc_id": "DOC-0000139",
-    "children": [
-      "DOC-0000402",
-      "DOC-0000544"
-    ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000225",
-    "thread_id": "THR-000049",
-    "parent_doc_id": "DOC-0000196",
-    "children": [
-      "DOC-0000677",
-      "DOC-0000517"
-    ],
-    "subject": "RE: SOM Records Preservation \u2014 March 2016 \u2014 Legal Hold Reminder",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000226",
-    "thread_id": "THR-000050",
-    "parent_doc_id": "DOC-0000565",
-    "children": [
-      "DOC-0000585",
-      "DOC-0000216"
-    ],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Mid-Atlantic",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000227",
-    "thread_id": "THR-000051",
-    "parent_doc_id": "DOC-0000673",
-    "children": [
-      "DOC-0000347",
-      "DOC-0000300",
-      "DOC-0000239",
-      "DOC-0000712"
-    ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000228",
-    "thread_id": "THR-000052",
-    "parent_doc_id": "DOC-0000796",
-    "children": [
-      "DOC-0000322",
-      "DOC-0000152",
-      "DOC-0000138",
-      "DOC-0000525"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Great Lakes",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000229",
-    "thread_id": "THR-000053",
-    "parent_doc_id": "DOC-0000768",
-    "children": [
-      "DOC-0000362",
-      "DOC-0000066"
+      "DOC-0000382",
+      "DOC-0000107"
     ],
     "subject": "FW: Compliance Escalation \u2014 Southeast Order Patterns",
     "family_size": 3
   },
   {
-    "family_id": "FAM-000230",
-    "thread_id": "THR-000054",
-    "parent_doc_id": "DOC-0000164",
+    "family_id": "FAM-000211",
+    "thread_id": "THR-000035",
+    "parent_doc_id": "DOC-0000023",
     "children": [
-      "DOC-0000342",
-      "DOC-0000084",
-      "DOC-0000114",
-      "DOC-0000545"
+      "DOC-0000673",
+      "DOC-0000032",
+      "DOC-0000429",
+      "DOC-0000694"
     ],
-    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 November 2013",
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
     "family_size": 5
   },
   {
-    "family_id": "FAM-000231",
-    "thread_id": "THR-000055",
-    "parent_doc_id": "DOC-0000333",
+    "family_id": "FAM-000212",
+    "thread_id": "THR-000036",
+    "parent_doc_id": "DOC-0000132",
     "children": [
-      "DOC-0000374",
-      "DOC-0000794",
-      "DOC-0000751"
+      "DOC-0000427",
+      "DOC-0000344",
+      "DOC-0000166"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 March 2016 \u2014 Legal Hold Reminder",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000213",
+    "thread_id": "THR-000037",
+    "parent_doc_id": "DOC-0000697",
+    "children": [
+      "DOC-0000700",
+      "DOC-0000067"
+    ],
+    "subject": "FW: State AG Investigation \u2014 Great Lakes \u2014 Document Preservation",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000214",
+    "thread_id": "THR-000038",
+    "parent_doc_id": "DOC-0000463",
+    "children": [
+      "DOC-0000009",
+      "DOC-0000326",
+      "DOC-0000656",
+      "DOC-0000123",
+      "DOC-0000570"
+    ],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000215",
+    "thread_id": "THR-000039",
+    "parent_doc_id": "DOC-0000204",
+    "children": [
+      "DOC-0000601"
+    ],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 October 2016 \u2014 Threshold Review",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000216",
+    "thread_id": "THR-000040",
+    "parent_doc_id": "DOC-0000411",
+    "children": [
+      "DOC-0000101",
+      "DOC-0000223"
+    ],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000217",
+    "thread_id": "THR-000041",
+    "parent_doc_id": "DOC-0000737",
+    "children": [
+      "DOC-0000451",
+      "DOC-0000048",
+      "DOC-0000720",
+      "DOC-0000449",
+      "DOC-0000083"
+    ],
+    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000218",
+    "thread_id": "THR-000042",
+    "parent_doc_id": "DOC-0000401",
+    "children": [
+      "DOC-0000698",
+      "DOC-0000778",
+      "DOC-0000786"
+    ],
+    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000219",
+    "thread_id": "THR-000043",
+    "parent_doc_id": "DOC-0000441",
+    "children": [
+      "DOC-0000634",
+      "DOC-0000056",
+      "DOC-0000348",
+      "DOC-0000478"
+    ],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000220",
+    "thread_id": "THR-000044",
+    "parent_doc_id": "DOC-0000035",
+    "children": [
+      "DOC-0000050",
+      "DOC-0000658",
+      "DOC-0000176"
     ],
     "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 4
   },
   {
+    "family_id": "FAM-000221",
+    "thread_id": "THR-000045",
+    "parent_doc_id": "DOC-0000358",
+    "children": [
+      "DOC-0000683",
+      "DOC-0000092",
+      "DOC-0000486"
+    ],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Northeast Pharmacy Cluster",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000222",
+    "thread_id": "THR-000046",
+    "parent_doc_id": "DOC-0000545",
+    "children": [
+      "DOC-0000769",
+      "DOC-0000318",
+      "DOC-0000073",
+      "DOC-0000062"
+    ],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Gulf Coast Pharmacy Cluster",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000223",
+    "thread_id": "THR-000047",
+    "parent_doc_id": "DOC-0000653",
+    "children": [
+      "DOC-0000269",
+      "DOC-0000338",
+      "DOC-0000135",
+      "DOC-0000464",
+      "DOC-0000773",
+      "DOC-0000219",
+      "DOC-0000730"
+    ],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000224",
+    "thread_id": "THR-000048",
+    "parent_doc_id": "DOC-0000229",
+    "children": [
+      "DOC-0000351"
+    ],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northwest",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000225",
+    "thread_id": "THR-000049",
+    "parent_doc_id": "DOC-0000279",
+    "children": [
+      "DOC-0000069",
+      "DOC-0000038",
+      "DOC-0000629"
+    ],
+    "subject": "RE: SOM Flag \u2014 McKesson \u2014 Business Justification Required",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000226",
+    "thread_id": "THR-000050",
+    "parent_doc_id": "DOC-0000454",
+    "children": [
+      "DOC-0000584",
+      "DOC-0000376"
+    ],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000227",
+    "thread_id": "THR-000051",
+    "parent_doc_id": "DOC-0000775",
+    "children": [
+      "DOC-0000690"
+    ],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000228",
+    "thread_id": "THR-000052",
+    "parent_doc_id": "DOC-0000371",
+    "children": [
+      "DOC-0000001",
+      "DOC-0000625",
+      "DOC-0000461",
+      "DOC-0000764",
+      "DOC-0000231",
+      "DOC-0000180",
+      "DOC-0000438"
+    ],
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline December 2016",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000229",
+    "thread_id": "THR-000053",
+    "parent_doc_id": "DOC-0000003",
+    "children": [
+      "DOC-0000496",
+      "DOC-0000504",
+      "DOC-0000066"
+    ],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000230",
+    "thread_id": "THR-000054",
+    "parent_doc_id": "DOC-0000125",
+    "children": [
+      "DOC-0000209",
+      "DOC-0000266"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 December 2014 \u2014 Legal Hold Reminder",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000231",
+    "thread_id": "THR-000055",
+    "parent_doc_id": "DOC-0000086",
+    "children": [
+      "DOC-0000084",
+      "DOC-0000214",
+      "DOC-0000363"
+    ],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 4
+  },
+  {
     "family_id": "FAM-000232",
     "thread_id": "THR-000056",
-    "parent_doc_id": "DOC-0000789",
+    "parent_doc_id": "DOC-0000745",
     "children": [
-      "DOC-0000530",
-      "DOC-0000450",
-      "DOC-0000224",
-      "DOC-0000481"
+      "DOC-0000238",
+      "DOC-0000263",
+      "DOC-0000327",
+      "DOC-0000046",
+      "DOC-0000731",
+      "DOC-0000666",
+      "DOC-0000396"
     ],
-    "subject": "CONFIDENTIAL \u2014 Response to CVS Health Fraud Investigation Inquiry",
-    "family_size": 5
+    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
+    "family_size": 8
   },
   {
     "family_id": "FAM-000233",
     "thread_id": "THR-000057",
-    "parent_doc_id": "DOC-0000704",
+    "parent_doc_id": "DOC-0000481",
     "children": [
-      "DOC-0000194",
-      "DOC-0000102",
-      "DOC-0000725",
-      "DOC-0000236",
-      "DOC-0000349"
+      "DOC-0000134"
     ],
-    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
-    "family_size": 6
+    "subject": "FW: State AG Investigation \u2014 Mid-Atlantic \u2014 Document Preservation",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000234",
     "thread_id": "THR-000058",
-    "parent_doc_id": "DOC-0000760",
+    "parent_doc_id": "DOC-0000686",
     "children": [
-      "DOC-0000791",
-      "DOC-0000055",
-      "DOC-0000177",
-      "DOC-0000330",
-      "DOC-0000435"
+      "DOC-0000648",
+      "DOC-0000488",
+      "DOC-0000061",
+      "DOC-0000422",
+      "DOC-0000800"
     ],
     "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
     "family_size": 6
@@ -2159,1068 +2137,1114 @@
   {
     "family_id": "FAM-000235",
     "thread_id": "THR-000059",
-    "parent_doc_id": "DOC-0000038",
+    "parent_doc_id": "DOC-0000578",
     "children": [
-      "DOC-0000181",
-      "DOC-0000461"
+      "DOC-0000372",
+      "DOC-0000642",
+      "DOC-0000276",
+      "DOC-0000288",
+      "DOC-0000087",
+      "DOC-0000704",
+      "DOC-0000546"
     ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 3
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
+    "family_size": 8
   },
   {
     "family_id": "FAM-000236",
     "thread_id": "THR-000060",
-    "parent_doc_id": "DOC-0000122",
+    "parent_doc_id": "DOC-0000535",
     "children": [
-      "DOC-0000755",
-      "DOC-0000526",
-      "DOC-0000597"
+      "DOC-0000090",
+      "DOC-0000272",
+      "DOC-0000539",
+      "DOC-0000723",
+      "DOC-0000606",
+      "DOC-0000543",
+      "DOC-0000681"
     ],
-    "subject": "RE: Duexis Sales Incentive Acceleration \u2014 2014 Plan",
-    "family_size": 4
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 8
   },
   {
     "family_id": "FAM-000237",
     "thread_id": "THR-000061",
-    "parent_doc_id": "DOC-0000592",
+    "parent_doc_id": "DOC-0000398",
     "children": [
-      "DOC-0000212",
-      "DOC-0000267",
-      "DOC-0000562",
-      "DOC-0000195"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to McKesson Fraud Investigation Inquiry",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000238",
-    "thread_id": "THR-000062",
-    "parent_doc_id": "DOC-0000498",
-    "children": [
-      "DOC-0000432",
-      "DOC-0000649",
-      "DOC-0000731",
-      "DOC-0000653",
-      "DOC-0000075",
-      "DOC-0000578",
-      "DOC-0000396"
-    ],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000239",
-    "thread_id": "THR-000063",
-    "parent_doc_id": "DOC-0000472",
-    "children": [
-      "DOC-0000299"
-    ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Gulf Coast Pharmacy Cluster",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000240",
-    "thread_id": "THR-000064",
-    "parent_doc_id": "DOC-0000425",
-    "children": [
-      "DOC-0000087",
-      "DOC-0000685"
-    ],
-    "subject": "RE: Duexis Sales Incentive Acceleration \u2014 2013 Plan",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000241",
-    "thread_id": "THR-000065",
-    "parent_doc_id": "DOC-0000292",
-    "children": [
-      "DOC-0000078",
-      "DOC-0000249",
-      "DOC-0000179"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000242",
-    "thread_id": "THR-000066",
-    "parent_doc_id": "DOC-0000781",
-    "children": [
-      "DOC-0000587",
-      "DOC-0000185"
-    ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Mid-Atlantic Pharmacy Cluster",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000243",
-    "thread_id": "THR-000067",
-    "parent_doc_id": "DOC-0000595",
-    "children": [
-      "DOC-0000495"
-    ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000244",
-    "thread_id": "THR-000068",
-    "parent_doc_id": "DOC-0000338",
-    "children": [
-      "DOC-0000318",
-      "DOC-0000025",
-      "DOC-0000307"
+      "DOC-0000540",
+      "DOC-0000393",
+      "DOC-0000303"
     ],
     "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
     "family_size": 4
   },
   {
-    "family_id": "FAM-000245",
-    "thread_id": "THR-000069",
-    "parent_doc_id": "DOC-0000121",
+    "family_id": "FAM-000238",
+    "thread_id": "THR-000062",
+    "parent_doc_id": "DOC-0000490",
     "children": [
-      "DOC-0000248",
-      "DOC-0000203",
-      "DOC-0000743",
-      "DOC-0000233"
+      "DOC-0000153"
     ],
-    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 August 2013",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000246",
-    "thread_id": "THR-000070",
-    "parent_doc_id": "DOC-0000201",
-    "children": [
-      "DOC-0000776"
-    ],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "subject": "RE: SOM Records Preservation \u2014 July 2016 \u2014 Legal Hold Reminder",
     "family_size": 2
   },
   {
-    "family_id": "FAM-000247",
-    "thread_id": "THR-000071",
-    "parent_doc_id": "DOC-0000666",
+    "family_id": "FAM-000239",
+    "thread_id": "THR-000063",
+    "parent_doc_id": "DOC-0000739",
     "children": [
-      "DOC-0000787"
+      "DOC-0000654",
+      "DOC-0000234",
+      "DOC-0000017",
+      "DOC-0000212",
+      "DOC-0000301"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 2
+    "subject": "RE: SOM Flag \u2014 Cardinal Health \u2014 Business Justification Required",
+    "family_size": 6
   },
   {
-    "family_id": "FAM-000248",
-    "thread_id": "THR-000072",
-    "parent_doc_id": "DOC-0000223",
+    "family_id": "FAM-000240",
+    "thread_id": "THR-000064",
+    "parent_doc_id": "DOC-0000233",
     "children": [
-      "DOC-0000364",
-      "DOC-0000332",
-      "DOC-0000606",
-      "DOC-0000316"
+      "DOC-0000549",
+      "DOC-0000657",
+      "DOC-0000593",
+      "DOC-0000383"
     ],
-    "subject": "FW: SOM Archive Cleanup \u2014 February 2013",
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
     "family_size": 5
   },
   {
-    "family_id": "FAM-000249",
-    "thread_id": "THR-000073",
-    "parent_doc_id": "DOC-0000667",
+    "family_id": "FAM-000241",
+    "thread_id": "THR-000065",
+    "parent_doc_id": "DOC-0000469",
     "children": [
-      "DOC-0000648",
-      "DOC-0000343",
-      "DOC-0000535"
+      "DOC-0000602",
+      "DOC-0000240",
+      "DOC-0000165",
+      "DOC-0000661",
+      "DOC-0000568"
     ],
-    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
-    "family_size": 4
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline March 2016",
+    "family_size": 6
   },
   {
-    "family_id": "FAM-000250",
-    "thread_id": "THR-000074",
-    "parent_doc_id": "DOC-0000612",
+    "family_id": "FAM-000242",
+    "thread_id": "THR-000066",
+    "parent_doc_id": "DOC-0000687",
     "children": [
-      "DOC-0000662",
-      "DOC-0000749",
-      "DOC-0000048"
-    ],
-    "subject": "RE: Q2 2015 Territory Quota \u2014 Variance Analysis",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000251",
-    "thread_id": "THR-000075",
-    "parent_doc_id": "DOC-0000217",
-    "children": [
-      "DOC-0000598",
-      "DOC-0000098",
-      "DOC-0000486"
-    ],
-    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000252",
-    "thread_id": "THR-000076",
-    "parent_doc_id": "DOC-0000049",
-    "children": [
-      "DOC-0000590",
-      "DOC-0000041"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000253",
-    "thread_id": "THR-000077",
-    "parent_doc_id": "DOC-0000566",
-    "children": [
-      "DOC-0000182",
-      "DOC-0000553",
-      "DOC-0000064"
-    ],
-    "subject": "RE: SOM Flag \u2014 CVS Health \u2014 Business Justification Required",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000254",
-    "thread_id": "THR-000078",
-    "parent_doc_id": "DOC-0000180",
-    "children": [
-      "DOC-0000257",
-      "DOC-0000642"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to Express Scripts Fraud Investigation Inquiry",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000255",
-    "thread_id": "THR-000079",
-    "parent_doc_id": "DOC-0000108",
-    "children": [
-      "DOC-0000155",
-      "DOC-0000520",
-      "DOC-0000772"
-    ],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000256",
-    "thread_id": "THR-000080",
-    "parent_doc_id": "DOC-0000482",
-    "children": [
-      "DOC-0000133",
-      "DOC-0000726"
-    ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000257",
-    "thread_id": "THR-000081",
-    "parent_doc_id": "DOC-0000401",
-    "children": [
+      "DOC-0000052",
       "DOC-0000447",
-      "DOC-0000558"
+      "DOC-0000445",
+      "DOC-0000495",
+      "DOC-0000632"
     ],
-    "subject": "RE: SOM Flag \u2014 McKesson \u2014 Business Justification Required",
-    "family_size": 3
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 6
   },
   {
-    "family_id": "FAM-000258",
-    "thread_id": "THR-000082",
-    "parent_doc_id": "DOC-0000426",
+    "family_id": "FAM-000243",
+    "thread_id": "THR-000067",
+    "parent_doc_id": "DOC-0000042",
     "children": [
-      "DOC-0000546",
-      "DOC-0000762"
+      "DOC-0000565",
+      "DOC-0000693"
     ],
     "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Gulf Coast",
     "family_size": 3
   },
   {
-    "family_id": "FAM-000259",
-    "thread_id": "THR-000083",
-    "parent_doc_id": "DOC-0000070",
+    "family_id": "FAM-000244",
+    "thread_id": "THR-000068",
+    "parent_doc_id": "DOC-0000207",
     "children": [
-      "DOC-0000154",
-      "DOC-0000240",
-      "DOC-0000317"
+      "DOC-0000459",
+      "DOC-0000643",
+      "DOC-0000431",
+      "DOC-0000049"
     ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000260",
-    "thread_id": "THR-000084",
-    "parent_doc_id": "DOC-0000150",
-    "children": [
-      "DOC-0000245",
-      "DOC-0000329"
-    ],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Northwest",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000261",
-    "thread_id": "THR-000085",
-    "parent_doc_id": "DOC-0000766",
-    "children": [
-      "DOC-0000439",
-      "DOC-0000095",
-      "DOC-0000173",
-      "DOC-0000756"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northwest",
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 5
   },
   {
-    "family_id": "FAM-000262",
-    "thread_id": "THR-000086",
-    "parent_doc_id": "DOC-0000068",
+    "family_id": "FAM-000245",
+    "thread_id": "THR-000069",
+    "parent_doc_id": "DOC-0000325",
     "children": [
-      "DOC-0000375",
-      "DOC-0000143",
-      "DOC-0000529",
-      "DOC-0000100",
-      "DOC-0000099"
+      "DOC-0000131",
+      "DOC-0000389"
+    ],
+    "subject": "FW: UHC Fraud Investigation \u2014 Subsys Prior Authorization Pattern",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000246",
+    "thread_id": "THR-000070",
+    "parent_doc_id": "DOC-0000183",
+    "children": [
+      "DOC-0000322"
+    ],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000247",
+    "thread_id": "THR-000071",
+    "parent_doc_id": "DOC-0000501",
+    "children": [
+      "DOC-0000152"
+    ],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000248",
+    "thread_id": "THR-000072",
+    "parent_doc_id": "DOC-0000245",
+    "children": [
+      "DOC-0000277",
+      "DOC-0000596",
+      "DOC-0000644",
+      "DOC-0000688",
+      "DOC-0000077"
+    ],
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000249",
+    "thread_id": "THR-000073",
+    "parent_doc_id": "DOC-0000020",
+    "children": [
+      "DOC-0000305",
+      "DOC-0000765",
+      "DOC-0000713",
+      "DOC-0000476"
+    ],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000250",
+    "thread_id": "THR-000074",
+    "parent_doc_id": "DOC-0000710",
+    "children": [
+      "DOC-0000255",
+      "DOC-0000492",
+      "DOC-0000243",
+      "DOC-0000250",
+      "DOC-0000051",
+      "DOC-0000282",
+      "DOC-0000707"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 January 2016 \u2014 Legal Hold Reminder",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000251",
+    "thread_id": "THR-000075",
+    "parent_doc_id": "DOC-0000380",
+    "children": [
+      "DOC-0000211",
+      "DOC-0000519",
+      "DOC-0000186",
+      "DOC-0000289",
+      "DOC-0000600"
     ],
     "subject": "CONFIDENTIAL \u2014 Response to McKesson Fraud Investigation Inquiry",
     "family_size": 6
   },
   {
-    "family_id": "FAM-000263",
-    "thread_id": "THR-000087",
-    "parent_doc_id": "DOC-0000311",
+    "family_id": "FAM-000252",
+    "thread_id": "THR-000076",
+    "parent_doc_id": "DOC-0000097",
     "children": [
-      "DOC-0000004",
-      "DOC-0000795",
-      "DOC-0000674"
+      "DOC-0000140"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000264",
-    "thread_id": "THR-000088",
-    "parent_doc_id": "DOC-0000583",
-    "children": [
-      "DOC-0000021",
-      "DOC-0000266"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to Cardinal Health Fraud Investigation Inquiry",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000265",
-    "thread_id": "THR-000089",
-    "parent_doc_id": "DOC-0000494",
-    "children": [
-      "DOC-0000057",
-      "DOC-0000069",
-      "DOC-0000800",
-      "DOC-0000665",
-      "DOC-0000091",
-      "DOC-0000540",
-      "DOC-0000207"
-    ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000266",
-    "thread_id": "THR-000090",
-    "parent_doc_id": "DOC-0000694",
-    "children": [
-      "DOC-0000301",
-      "DOC-0000732",
-      "DOC-0000631",
-      "DOC-0000303",
-      "DOC-0000420"
-    ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000267",
-    "thread_id": "THR-000091",
-    "parent_doc_id": "DOC-0000090",
-    "children": [
-      "DOC-0000582"
-    ],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
     "family_size": 2
   },
   {
-    "family_id": "FAM-000268",
-    "thread_id": "THR-000092",
-    "parent_doc_id": "HOT-0000003",
+    "family_id": "FAM-000253",
+    "thread_id": "THR-000077",
+    "parent_doc_id": "DOC-0000424",
     "children": [
-      "DOC-0000052",
-      "DOC-0000254",
-      "DOC-0000073",
-      "DOC-0000040"
+      "DOC-0000174",
+      "DOC-0000695",
+      "DOC-0000162",
+      "DOC-0000538",
+      "DOC-0000483",
+      "DOC-0000265",
+      "DOC-0000691"
     ],
-    "subject": "FW: DEA Diversion Investigator Meeting \u2014 SOM Program Review [CONFIDENTIAL]",
+    "subject": "Subsys Speaker Event \u2014 Mid-Atlantic \u2014 Attendance Report",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000254",
+    "thread_id": "THR-000078",
+    "parent_doc_id": "DOC-0000163",
+    "children": [
+      "DOC-0000122",
+      "DOC-0000753"
+    ],
+    "subject": "FW: SOM Archive Cleanup \u2014 April 2014",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000255",
+    "thread_id": "THR-000079",
+    "parent_doc_id": "DOC-0000133",
+    "children": [
+      "DOC-0000268",
+      "DOC-0000011"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 September 2016 \u2014 Legal Hold Reminder",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000256",
+    "thread_id": "THR-000080",
+    "parent_doc_id": "DOC-0000480",
+    "children": [
+      "DOC-0000719",
+      "DOC-0000357"
+    ],
+    "subject": "RE: Speaker Bureau \u2014 Internal Compliance Review \u2014 November 2015",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000257",
+    "thread_id": "THR-000081",
+    "parent_doc_id": "DOC-0000332",
+    "children": [
+      "DOC-0000164",
+      "DOC-0000199",
+      "DOC-0000331",
+      "DOC-0000664"
+    ],
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Southeast",
     "family_size": 5
   },
   {
-    "family_id": "FAM-000269",
-    "thread_id": "THR-000093",
-    "parent_doc_id": "DOC-0000340",
+    "family_id": "FAM-000258",
+    "thread_id": "THR-000082",
+    "parent_doc_id": "DOC-0000117",
     "children": [
-      "DOC-0000702",
-      "DOC-0000630",
-      "DOC-0000235",
-      "DOC-0000277",
-      "DOC-0000507",
-      "DOC-0000670",
-      "DOC-0000062"
+      "DOC-0000175",
+      "DOC-0000024",
+      "DOC-0000403",
+      "DOC-0000381"
     ],
-    "subject": "FW: State AG Investigation \u2014 Southeast \u2014 Document Preservation",
-    "family_size": 8
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Mid-Atlantic",
+    "family_size": 5
   },
   {
-    "family_id": "FAM-000270",
-    "thread_id": "THR-000094",
-    "parent_doc_id": "DOC-0000744",
+    "family_id": "FAM-000259",
+    "thread_id": "THR-000083",
+    "parent_doc_id": "DOC-0000171",
     "children": [
-      "DOC-0000534",
-      "DOC-0000745"
+      "DOC-0000379",
+      "DOC-0000607"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
     "family_size": 3
   },
   {
-    "family_id": "FAM-000271",
-    "thread_id": "THR-000095",
-    "parent_doc_id": "DOC-0000003",
+    "family_id": "FAM-000260",
+    "thread_id": "THR-000084",
+    "parent_doc_id": "DOC-0000785",
     "children": [
-      "DOC-0000458"
+      "DOC-0000324",
+      "DOC-0000420",
+      "DOC-0000580",
+      "DOC-0000613"
     ],
-    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
-    "family_size": 2
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 5
   },
   {
-    "family_id": "FAM-000272",
-    "thread_id": "THR-000096",
-    "parent_doc_id": "DOC-0000162",
+    "family_id": "FAM-000261",
+    "thread_id": "THR-000085",
+    "parent_doc_id": "DOC-0000466",
     "children": [
-      "DOC-0000778",
-      "DOC-0000273"
+      "DOC-0000574",
+      "DOC-0000013",
+      "DOC-0000259"
     ],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Midwest",
-    "family_size": 3
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline November 2014",
+    "family_size": 4
   },
   {
-    "family_id": "FAM-000273",
-    "thread_id": "THR-000097",
-    "parent_doc_id": "DOC-0000377",
+    "family_id": "FAM-000262",
+    "thread_id": "THR-000086",
+    "parent_doc_id": "DOC-0000311",
     "children": [
-      "DOC-0000002",
-      "DOC-0000605",
-      "DOC-0000730",
-      "DOC-0000424",
-      "DOC-0000135"
+      "DOC-0000217",
+      "DOC-0000409",
+      "DOC-0000416",
+      "DOC-0000552"
+    ],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000263",
+    "thread_id": "THR-000087",
+    "parent_doc_id": "DOC-0000329",
+    "children": [
+      "DOC-0000247",
+      "DOC-0000246",
+      "DOC-0000082",
+      "DOC-0000763",
+      "DOC-0000649"
     ],
     "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
     "family_size": 6
   },
   {
-    "family_id": "FAM-000274",
-    "thread_id": "THR-000098",
-    "parent_doc_id": "DOC-0000690",
+    "family_id": "FAM-000264",
+    "thread_id": "THR-000088",
+    "parent_doc_id": "DOC-0000079",
     "children": [
-      "DOC-0000031"
+      "DOC-0000498",
+      "DOC-0000432",
+      "DOC-0000274",
+      "DOC-0000750",
+      "DOC-0000716"
+    ],
+    "subject": "RE: Oxycodone ER Sales Incentive Acceleration \u2014 2015 Plan",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000265",
+    "thread_id": "THR-000089",
+    "parent_doc_id": "DOC-0000283",
+    "children": [
+      "DOC-0000364",
+      "DOC-0000252"
+    ],
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000266",
+    "thread_id": "THR-000090",
+    "parent_doc_id": "DOC-0000334",
+    "children": [
+      "DOC-0000665",
+      "DOC-0000534",
+      "DOC-0000672"
+    ],
+    "subject": "FW: Compliance Escalation \u2014 Midwest Order Patterns",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000267",
+    "thread_id": "THR-000091",
+    "parent_doc_id": "DOC-0000248",
+    "children": [
+      "DOC-0000031",
+      "DOC-0000646",
+      "DOC-0000740",
+      "DOC-0000095"
+    ],
+    "subject": "FW: State AG Investigation \u2014 Insys Speaker Program",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000268",
+    "thread_id": "THR-000092",
+    "parent_doc_id": "DOC-0000766",
+    "children": [
+      "DOC-0000446",
+      "DOC-0000273",
+      "DOC-0000402",
+      "DOC-0000236",
+      "DOC-0000718",
+      "DOC-0000744",
+      "DOC-0000659"
+    ],
+    "subject": "FW: UHC Fraud Investigation \u2014 Subsys Prior Authorization Pattern",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000269",
+    "thread_id": "THR-000093",
+    "parent_doc_id": "DOC-0000182",
+    "children": [
+      "DOC-0000423"
+    ],
+    "subject": "RE: Q3 2013 Territory Quota \u2014 Variance Analysis",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000270",
+    "thread_id": "THR-000094",
+    "parent_doc_id": "DOC-0000435",
+    "children": [
+      "DOC-0000271",
+      "DOC-0000627"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 May 2013 \u2014 Legal Hold Reminder",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000271",
+    "thread_id": "THR-000095",
+    "parent_doc_id": "DOC-0000168",
+    "children": [
+      "DOC-0000130",
+      "DOC-0000154",
+      "DOC-0000309"
     ],
     "subject": "FW: Compliance Escalation \u2014 Gulf Coast Order Patterns",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000272",
+    "thread_id": "THR-000096",
+    "parent_doc_id": "DOC-0000633",
+    "children": [
+      "DOC-0000113",
+      "DOC-0000531"
+    ],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Northeast Pharmacy Cluster",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000273",
+    "thread_id": "THR-000097",
+    "parent_doc_id": "DOC-0000170",
+    "children": [
+      "DOC-0000465"
+    ],
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Gulf Coast",
     "family_size": 2
+  },
+  {
+    "family_id": "FAM-000274",
+    "thread_id": "THR-000098",
+    "parent_doc_id": "DOC-0000226",
+    "children": [
+      "DOC-0000521",
+      "DOC-0000631",
+      "DOC-0000405"
+    ],
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000275",
     "thread_id": "THR-000099",
-    "parent_doc_id": "DOC-0000380",
+    "parent_doc_id": "DOC-0000589",
     "children": [
-      "DOC-0000115",
-      "DOC-0000644",
-      "DOC-0000734",
-      "DOC-0000698"
+      "DOC-0000417",
+      "DOC-0000102",
+      "DOC-0000400",
+      "DOC-0000362"
     ],
-    "subject": "FW: State AG Investigation \u2014 Southeast \u2014 Document Preservation",
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Great Lakes",
     "family_size": 5
   },
   {
     "family_id": "FAM-000276",
     "thread_id": "THR-000100",
-    "parent_doc_id": "DOC-0000117",
+    "parent_doc_id": "DOC-0000373",
     "children": [
-      "DOC-0000476",
-      "DOC-0000397"
+      "DOC-0000370"
     ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southwest",
-    "family_size": 3
+    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000277",
     "thread_id": "THR-000101",
-    "parent_doc_id": "DOC-0000047",
+    "parent_doc_id": "DOC-0000365",
     "children": [
-      "DOC-0000183",
-      "DOC-0000453"
+      "DOC-0000291"
     ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Northwest Pharmacy Cluster",
-    "family_size": 3
+    "subject": "FW: Internal Investigation Update \u2014 SOM Override Findings",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000278",
     "thread_id": "THR-000102",
-    "parent_doc_id": "DOC-0000252",
+    "parent_doc_id": "DOC-0000270",
     "children": [
-      "DOC-0000715",
-      "DOC-0000522",
-      "DOC-0000538",
-      "DOC-0000378",
-      "DOC-0000523"
+      "DOC-0000018",
+      "DOC-0000074",
+      "DOC-0000044",
+      "DOC-0000635"
     ],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline April 2014",
-    "family_size": 6
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 5
   },
   {
     "family_id": "FAM-000279",
     "thread_id": "THR-000103",
-    "parent_doc_id": "DOC-0000295",
+    "parent_doc_id": "DOC-0000670",
     "children": [
-      "DOC-0000493"
+      "DOC-0000297",
+      "DOC-0000651",
+      "DOC-0000684"
     ],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline September 2016",
-    "family_size": 2
+    "subject": "FW: State AG Investigation \u2014 Midwest \u2014 Document Preservation",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000280",
     "thread_id": "THR-000104",
-    "parent_doc_id": "DOC-0000365",
+    "parent_doc_id": "DOC-0000330",
     "children": [
-      "DOC-0000082"
+      "DOC-0000408",
+      "DOC-0000585",
+      "DOC-0000462"
     ],
-    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
-    "family_size": 2
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000281",
     "thread_id": "THR-000105",
-    "parent_doc_id": "DOC-0000283",
+    "parent_doc_id": "DOC-0000426",
     "children": [
-      "DOC-0000737",
-      "DOC-0000161",
-      "DOC-0000548"
+      "DOC-0000518",
+      "DOC-0000284",
+      "DOC-0000202"
     ],
-    "subject": "FW: State AG Investigation \u2014 Gulf Coast \u2014 Document Preservation",
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Gulf Coast",
     "family_size": 4
   },
   {
     "family_id": "FAM-000282",
     "thread_id": "THR-000106",
-    "parent_doc_id": "DOC-0000188",
+    "parent_doc_id": "DOC-0000784",
     "children": [
-      "DOC-0000410"
-    ],
-    "subject": "RE: SOM Flag \u2014 Walgreens \u2014 Business Justification Required",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000283",
-    "thread_id": "THR-000107",
-    "parent_doc_id": "DOC-0000088",
-    "children": [
-      "DOC-0000624",
-      "DOC-0000671",
-      "DOC-0000477",
-      "DOC-0000134",
-      "DOC-0000200",
-      "DOC-0000129",
-      "DOC-0000016"
-    ],
-    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Midwest",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000284",
-    "thread_id": "THR-000108",
-    "parent_doc_id": "DOC-0000368",
-    "children": [
-      "DOC-0000602",
-      "DOC-0000210",
-      "DOC-0000740",
-      "DOC-0000714",
-      "DOC-0000470",
-      "DOC-0000537",
-      "DOC-0000747"
-    ],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000285",
-    "thread_id": "THR-000109",
-    "parent_doc_id": "DOC-0000697",
-    "children": [
-      "DOC-0000449"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Great Lakes \u2014 Document Preservation",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000286",
-    "thread_id": "THR-000110",
-    "parent_doc_id": "DOC-0000676",
-    "children": [
-      "DOC-0000531",
-      "DOC-0000371"
-    ],
-    "subject": "RE: Duexis Sales Incentive Acceleration \u2014 2014 Plan",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000287",
-    "thread_id": "THR-000111",
-    "parent_doc_id": "DOC-0000552",
-    "children": [
-      "DOC-0000628",
-      "DOC-0000422",
-      "DOC-0000684"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northeast",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000288",
-    "thread_id": "THR-000112",
-    "parent_doc_id": "DOC-0000334",
-    "children": [
-      "DOC-0000692",
-      "DOC-0000645"
-    ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000289",
-    "thread_id": "THR-000113",
-    "parent_doc_id": "DOC-0000328",
-    "children": [
-      "DOC-0000621",
-      "DOC-0000174",
-      "DOC-0000269",
-      "DOC-0000638",
-      "DOC-0000613",
-      "DOC-0000774",
-      "DOC-0000499"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northwest",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000290",
-    "thread_id": "THR-000114",
-    "parent_doc_id": "DOC-0000101",
-    "children": [
-      "DOC-0000620"
-    ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000291",
-    "thread_id": "THR-000115",
-    "parent_doc_id": "DOC-0000400",
-    "children": [
-      "DOC-0000036",
-      "DOC-0000611",
-      "DOC-0000640",
-      "DOC-0000294",
-      "DOC-0000357"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000292",
-    "thread_id": "THR-000116",
-    "parent_doc_id": "DOC-0000480",
-    "children": [
-      "DOC-0000260",
-      "DOC-0000199"
+      "DOC-0000339",
+      "DOC-0000110"
     ],
     "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
     "family_size": 3
   },
   {
-    "family_id": "FAM-000293",
-    "thread_id": "THR-000117",
-    "parent_doc_id": "DOC-0000603",
+    "family_id": "FAM-000283",
+    "thread_id": "THR-000107",
+    "parent_doc_id": "DOC-0000285",
     "children": [
-      "DOC-0000448",
-      "DOC-0000030",
-      "DOC-0000609",
-      "DOC-0000550",
-      "DOC-0000659"
+      "DOC-0000355",
+      "DOC-0000391",
+      "DOC-0000043"
     ],
-    "subject": "FW: SOM Archive Cleanup \u2014 July 2014",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000294",
-    "thread_id": "THR-000118",
-    "parent_doc_id": "DOC-0000346",
-    "children": [
-      "DOC-0000469"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Southeast",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000295",
-    "thread_id": "THR-000119",
-    "parent_doc_id": "DOC-0000163",
-    "children": [
-      "DOC-0000797",
-      "DOC-0000219",
-      "DOC-0000118",
-      "DOC-0000393",
-      "DOC-0000524",
-      "DOC-0000564",
-      "DOC-0000172"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Great Lakes \u2014 Document Preservation",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000296",
-    "thread_id": "THR-000120",
-    "parent_doc_id": "DOC-0000080",
-    "children": [
-      "DOC-0000489",
-      "DOC-0000166",
-      "DOC-0000663",
-      "DOC-0000001",
-      "DOC-0000262",
-      "DOC-0000140",
-      "DOC-0000286"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Northeast",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000297",
-    "thread_id": "THR-000121",
-    "parent_doc_id": "DOC-0000264",
-    "children": [
-      "DOC-0000407"
-    ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000298",
-    "thread_id": "THR-000122",
-    "parent_doc_id": "DOC-0000312",
-    "children": [
-      "DOC-0000058",
-      "DOC-0000596",
-      "DOC-0000265",
-      "DOC-0000272"
-    ],
-    "subject": "FW: Compliance Escalation \u2014 Southeast Order Patterns",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000299",
-    "thread_id": "THR-000123",
-    "parent_doc_id": "DOC-0000392",
-    "children": [
-      "DOC-0000297",
-      "DOC-0000467",
-      "DOC-0000515",
-      "DOC-0000516"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Mid-Atlantic \u2014 Document Preservation",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000300",
-    "thread_id": "THR-000124",
-    "parent_doc_id": "DOC-0000005",
-    "children": [
-      "DOC-0000689",
-      "DOC-0000359",
-      "DOC-0000761"
-    ],
-    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
     "family_size": 4
   },
   {
-    "family_id": "FAM-000301",
-    "thread_id": "THR-000125",
-    "parent_doc_id": "DOC-0000475",
+    "family_id": "FAM-000284",
+    "thread_id": "THR-000108",
+    "parent_doc_id": "DOC-0000437",
     "children": [
-      "DOC-0000148"
-    ],
-    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Midwest",
-    "family_size": 2
-  },
-  {
-    "family_id": "FAM-000302",
-    "thread_id": "THR-000126",
-    "parent_doc_id": "DOC-0000615",
-    "children": [
-      "DOC-0000137",
-      "DOC-0000793",
-      "DOC-0000633"
-    ],
-    "subject": "FW: State AG Investigation \u2014 Northeast \u2014 Document Preservation",
-    "family_size": 4
-  },
-  {
-    "family_id": "FAM-000303",
-    "thread_id": "THR-000127",
-    "parent_doc_id": "DOC-0000227",
-    "children": [
-      "DOC-0000513",
-      "DOC-0000656",
-      "DOC-0000521",
-      "DOC-0000189"
-    ],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000304",
-    "thread_id": "THR-000128",
-    "parent_doc_id": "DOC-0000023",
-    "children": [
-      "DOC-0000116",
-      "DOC-0000232",
-      "DOC-0000767",
-      "DOC-0000120"
-    ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Mid-Atlantic Pharmacy Cluster",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000305",
-    "thread_id": "THR-000129",
-    "parent_doc_id": "DOC-0000417",
-    "children": [
-      "DOC-0000625",
-      "DOC-0000618",
-      "DOC-0000735",
-      "DOC-0000720",
-      "DOC-0000026",
-      "DOC-0000373",
-      "DOC-0000059"
-    ],
-    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
-    "family_size": 8
-  },
-  {
-    "family_id": "FAM-000306",
-    "thread_id": "THR-000130",
-    "parent_doc_id": "DOC-0000786",
-    "children": [
-      "DOC-0000754",
-      "DOC-0000551"
+      "DOC-0000008",
+      "DOC-0000137"
     ],
     "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
     "family_size": 3
   },
   {
+    "family_id": "FAM-000285",
+    "thread_id": "THR-000109",
+    "parent_doc_id": "DOC-0000100",
+    "children": [
+      "DOC-0000440",
+      "DOC-0000494",
+      "DOC-0000645"
+    ],
+    "subject": "RE: Oxycodone ER Sales Incentive Acceleration \u2014 2013 Plan",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000286",
+    "thread_id": "THR-000110",
+    "parent_doc_id": "DOC-0000195",
+    "children": [
+      "DOC-0000557",
+      "DOC-0000662"
+    ],
+    "subject": "SOM Policy Exception Request \u2014 CVS Health \u2014 October 2013",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000287",
+    "thread_id": "THR-000111",
+    "parent_doc_id": "DOC-0000533",
+    "children": [
+      "DOC-0000599",
+      "DOC-0000036"
+    ],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Southwest Pharmacy Cluster",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000288",
+    "thread_id": "THR-000112",
+    "parent_doc_id": "DOC-0000215",
+    "children": [
+      "DOC-0000060",
+      "DOC-0000005"
+    ],
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000289",
+    "thread_id": "THR-000113",
+    "parent_doc_id": "DOC-0000747",
+    "children": [
+      "DOC-0000471",
+      "DOC-0000392",
+      "DOC-0000491"
+    ],
+    "subject": "SOM Policy Exception Request \u2014 Cardinal Health \u2014 July 2013",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000290",
+    "thread_id": "THR-000114",
+    "parent_doc_id": "DOC-0000070",
+    "children": [
+      "DOC-0000732",
+      "DOC-0000306"
+    ],
+    "subject": "FW: State AG Investigation \u2014 Mid-Atlantic \u2014 Document Preservation",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000291",
+    "thread_id": "THR-000115",
+    "parent_doc_id": "DOC-0000138",
+    "children": [
+      "DOC-0000671",
+      "DOC-0000516",
+      "DOC-0000192",
+      "DOC-0000387"
+    ],
+    "subject": "LEGAL HOLD NOTICE \u2014 Opioid Litigation \u2014 Immediate Action Required",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000292",
+    "thread_id": "THR-000116",
+    "parent_doc_id": "DOC-0000347",
+    "children": [
+      "DOC-0000063",
+      "DOC-0000699",
+      "DOC-0000746",
+      "DOC-0000530",
+      "DOC-0000510"
+    ],
+    "subject": "RE: SOM Flag \u2014 Cardinal Health \u2014 Business Justification Required",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000293",
+    "thread_id": "THR-000117",
+    "parent_doc_id": "DOC-0000749",
+    "children": [
+      "DOC-0000103",
+      "DOC-0000244",
+      "DOC-0000430"
+    ],
+    "subject": "RE: Subsys Sales Incentive Acceleration \u2014 2013 Plan",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000294",
+    "thread_id": "THR-000118",
+    "parent_doc_id": "DOC-0000663",
+    "children": [
+      "DOC-0000655",
+      "DOC-0000674"
+    ],
+    "subject": "FW: DEA Suspicious Order Monitoring \u2014 February 2014 \u2014 Threshold Review",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000295",
+    "thread_id": "THR-000119",
+    "parent_doc_id": "DOC-0000736",
+    "children": [
+      "DOC-0000337",
+      "DOC-0000560",
+      "DOC-0000414",
+      "DOC-0000628",
+      "DOC-0000771",
+      "DOC-0000335",
+      "DOC-0000260"
+    ],
+    "subject": "RE: SOM Flag \u2014 AmerisourceBergen \u2014 Business Justification Required",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000296",
+    "thread_id": "THR-000120",
+    "parent_doc_id": "DOC-0000608",
+    "children": [
+      "DOC-0000527",
+      "DOC-0000147",
+      "DOC-0000021",
+      "DOC-0000407",
+      "DOC-0000726"
+    ],
+    "subject": "FW: SOM Archive Cleanup \u2014 October 2014",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000297",
+    "thread_id": "THR-000121",
+    "parent_doc_id": "DOC-0000293",
+    "children": [
+      "DOC-0000019"
+    ],
+    "subject": "RE: SOM Flag \u2014 McKesson \u2014 Business Justification Required",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000298",
+    "thread_id": "THR-000122",
+    "parent_doc_id": "DOC-0000548",
+    "children": [
+      "DOC-0000692",
+      "DOC-0000754",
+      "DOC-0000762",
+      "DOC-0000395"
+    ],
+    "subject": "FW: SOM Archive Cleanup \u2014 June 2014",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000299",
+    "thread_id": "THR-000123",
+    "parent_doc_id": "DOC-0000512",
+    "children": [
+      "DOC-0000735",
+      "DOC-0000312",
+      "DOC-0000072",
+      "DOC-0000412",
+      "DOC-0000470",
+      "DOC-0000458",
+      "DOC-0000575"
+    ],
+    "subject": "FW: State AG Investigation \u2014 Southeast \u2014 Document Preservation",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000300",
+    "thread_id": "THR-000124",
+    "parent_doc_id": "DOC-0000603",
+    "children": [
+      "DOC-0000436",
+      "DOC-0000453"
+    ],
+    "subject": "RE: Pennsaid Sales Incentive Acceleration \u2014 2016 Plan",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000301",
+    "thread_id": "THR-000125",
+    "parent_doc_id": "DOC-0000743",
+    "children": [
+      "DOC-0000007"
+    ],
+    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000302",
+    "thread_id": "THR-000126",
+    "parent_doc_id": "DOC-0000057",
+    "children": [
+      "DOC-0000456",
+      "DOC-0000201"
+    ],
+    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000303",
+    "thread_id": "THR-000127",
+    "parent_doc_id": "DOC-0000111",
+    "children": [
+      "DOC-0000514",
+      "DOC-0000262",
+      "DOC-0000755",
+      "DOC-0000597",
+      "DOC-0000448"
+    ],
+    "subject": "FW: Compliance Escalation \u2014 Mid-Atlantic Order Patterns",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000304",
+    "thread_id": "THR-000128",
+    "parent_doc_id": "DOC-0000222",
+    "children": [
+      "DOC-0000618"
+    ],
+    "subject": "RE: Oxycodone ER Sales Incentive Acceleration \u2014 2015 Plan",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000305",
+    "thread_id": "THR-000129",
+    "parent_doc_id": "DOC-0000467",
+    "children": [
+      "DOC-0000369",
+      "DOC-0000792",
+      "DOC-0000571",
+      "DOC-0000734"
+    ],
+    "subject": "FW: Compliance Escalation \u2014 Northwest Order Patterns",
+    "family_size": 5
+  },
+  {
+    "family_id": "FAM-000306",
+    "thread_id": "THR-000130",
+    "parent_doc_id": "DOC-0000278",
+    "children": [
+      "DOC-0000669",
+      "DOC-0000757"
+    ],
+    "subject": "FW: Compliance Escalation \u2014 Gulf Coast Order Patterns",
+    "family_size": 3
+  },
+  {
     "family_id": "FAM-000307",
     "thread_id": "THR-000131",
-    "parent_doc_id": "DOC-0000414",
+    "parent_doc_id": "DOC-0000341",
     "children": [
-      "DOC-0000709",
-      "DOC-0000721"
+      "DOC-0000489",
+      "DOC-0000143"
     ],
-    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline March 2016",
+    "subject": "RE: Congressional Inquiry \u2014 Opioid Distribution Practices",
     "family_size": 3
   },
   {
     "family_id": "FAM-000308",
     "thread_id": "THR-000132",
-    "parent_doc_id": "DOC-0000471",
+    "parent_doc_id": "DOC-0000108",
     "children": [
-      "DOC-0000321",
-      "DOC-0000310"
+      "DOC-0000287",
+      "DOC-0000141",
+      "DOC-0000529",
+      "DOC-0000677",
+      "DOC-0000012"
     ],
-    "subject": "CONFIDENTIAL \u2014 Response to Walgreens Fraud Investigation Inquiry",
-    "family_size": 3
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Great Lakes",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000309",
     "thread_id": "THR-000133",
-    "parent_doc_id": "DOC-0000313",
+    "parent_doc_id": "DOC-0000149",
     "children": [
-      "DOC-0000724",
-      "DOC-0000079",
-      "DOC-0000109"
+      "DOC-0000378"
     ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 4
+    "subject": "RE: Mallinckrodt \u2014 Follow-On Engagement \u2014 Sales Operations",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000310",
     "thread_id": "THR-000134",
-    "parent_doc_id": "DOC-0000764",
+    "parent_doc_id": "DOC-0000298",
     "children": [
-      "DOC-0000658",
-      "DOC-0000350",
-      "DOC-0000094",
-      "DOC-0000208",
-      "DOC-0000750"
+      "DOC-0000397"
     ],
-    "subject": "RE: Exalgo Sales Incentive Acceleration \u2014 2015 Plan",
-    "family_size": 6
+    "subject": "FW: DEA Administrative Subpoena \u2014 Production Deadline September 2015",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000311",
     "thread_id": "THR-000135",
-    "parent_doc_id": "DOC-0000020",
+    "parent_doc_id": "DOC-0000200",
     "children": [
-      "DOC-0000222"
+      "DOC-0000088",
+      "DOC-0000112",
+      "DOC-0000742"
+    ],
+    "subject": "FW: District Manager Coaching \u2014 Volume Acceleration \u2014 Southeast",
+    "family_size": 4
+  },
+  {
+    "family_id": "FAM-000312",
+    "thread_id": "THR-000136",
+    "parent_doc_id": "DOC-0000085",
+    "children": [
+      "DOC-0000566"
+    ],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000313",
+    "thread_id": "THR-000137",
+    "parent_doc_id": "DOC-0000258",
+    "children": [
+      "DOC-0000725",
+      "DOC-0000228",
+      "DOC-0000586",
+      "DOC-0000213",
+      "DOC-0000505",
+      "DOC-0000104",
+      "DOC-0000151"
+    ],
+    "subject": "RE: SOM Records Preservation \u2014 March 2015 \u2014 Legal Hold Reminder",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000314",
+    "thread_id": "THR-000138",
+    "parent_doc_id": "DOC-0000292",
+    "children": [
+      "DOC-0000525",
+      "DOC-0000314",
+      "DOC-0000652",
+      "DOC-0000553",
+      "DOC-0000352",
+      "DOC-0000493",
+      "DOC-0000368"
+    ],
+    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Gulf Coast Pharmacy Cluster",
+    "family_size": 8
+  },
+  {
+    "family_id": "FAM-000315",
+    "thread_id": "THR-000139",
+    "parent_doc_id": "DOC-0000374",
+    "children": [
+      "DOC-0000523"
     ],
     "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
     "family_size": 2
   },
   {
-    "family_id": "FAM-000312",
-    "thread_id": "THR-000136",
-    "parent_doc_id": "DOC-0000077",
-    "children": [
-      "DOC-0000398",
-      "DOC-0000112",
-      "DOC-0000655",
-      "DOC-0000543",
-      "DOC-0000319"
-    ],
-    "subject": "SOM Policy Exception Request \u2014 McKesson \u2014 August 2015",
-    "family_size": 6
-  },
-  {
-    "family_id": "FAM-000313",
-    "thread_id": "THR-000137",
-    "parent_doc_id": "DOC-0000147",
-    "children": [
-      "DOC-0000696",
-      "DOC-0000253"
-    ],
-    "subject": "FW: Cardinal Health \u2014 Order Anomaly Alert \u2014 Midwest Pharmacy Cluster",
-    "family_size": 3
-  },
-  {
-    "family_id": "FAM-000314",
-    "thread_id": "THR-000138",
-    "parent_doc_id": "DOC-0000614",
-    "children": [
-      "DOC-0000355",
-      "DOC-0000555",
-      "DOC-0000657",
-      "DOC-0000695"
-    ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 5
-  },
-  {
-    "family_id": "FAM-000315",
-    "thread_id": "THR-000139",
-    "parent_doc_id": "DOC-0000315",
-    "children": [
-      "DOC-0000356",
-      "DOC-0000348",
-      "DOC-0000110",
-      "DOC-0000623"
-    ],
-    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
-    "family_size": 5
-  },
-  {
     "family_id": "FAM-000316",
     "thread_id": "THR-000140",
-    "parent_doc_id": "DOC-0000758",
+    "parent_doc_id": "DOC-0000158",
     "children": [
-      "DOC-0000502",
-      "DOC-0000559"
+      "DOC-0000640",
+      "DOC-0000756"
     ],
-    "subject": "FW: SOM Archive Cleanup \u2014 December 2013",
+    "subject": "FW: Whistleblower Complaint \u2014 IRC Script Practices",
     "family_size": 3
   },
   {
     "family_id": "FAM-000317",
     "thread_id": "THR-000141",
-    "parent_doc_id": "DOC-0000290",
+    "parent_doc_id": "DOC-0000577",
     "children": [
-      "DOC-0000437",
-      "DOC-0000643",
-      "DOC-0000389",
-      "DOC-0000412",
-      "DOC-0000742"
+      "DOC-0000620",
+      "DOC-0000428",
+      "DOC-0000386"
     ],
-    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Mid-Atlantic",
-    "family_size": 6
+    "subject": "RE: Crisis Communications Plan \u2014 Opioid Media Inquiries",
+    "family_size": 4
   },
   {
     "family_id": "FAM-000318",
     "thread_id": "THR-000142",
-    "parent_doc_id": "DOC-0000748",
+    "parent_doc_id": "DOC-0000703",
     "children": [
-      "DOC-0000187",
-      "DOC-0000691",
-      "DOC-0000411"
+      "DOC-0000581",
+      "DOC-0000711"
     ],
-    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
-    "family_size": 4
+    "subject": "RE: Override of Cardinal Health Suspicious Order Flag \u2014 Gulf Coast",
+    "family_size": 3
   },
   {
     "family_id": "FAM-000319",
     "thread_id": "THR-000143",
-    "parent_doc_id": "DOC-0000130",
+    "parent_doc_id": "DOC-0000194",
     "children": [
-      "DOC-0000202"
+      "DOC-0000712",
+      "DOC-0000550",
+      "DOC-0000709",
+      "DOC-0000361",
+      "DOC-0000680",
+      "DOC-0000129",
+      "DOC-0000308"
     ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 2
+    "subject": "URGENT: Wholesaler Order Volume Anomaly \u2014 Northeast",
+    "family_size": 8
   },
   {
     "family_id": "FAM-000320",
     "thread_id": "THR-000144",
-    "parent_doc_id": "DOC-0000668",
+    "parent_doc_id": "DOC-0000678",
     "children": [
-      "DOC-0000234",
-      "DOC-0000013"
+      "DOC-0000605"
     ],
-    "subject": "RE: Whistleblower Concerns \u2014 Speaker Bureau \u2014 Escalation",
-    "family_size": 3
+    "subject": "RE: DEA Diversion Investigator Meeting \u2014 SOM Program Review",
+    "family_size": 2
   },
   {
     "family_id": "FAM-000321",
     "thread_id": "THR-000145",
-    "parent_doc_id": "DOC-0000433",
+    "parent_doc_id": "DOC-0000722",
     "children": [
-      "DOC-0000190",
-      "DOC-0000661"
+      "DOC-0000772",
+      "DOC-0000264",
+      "DOC-0000477",
+      "DOC-0000257",
+      "DOC-0000128"
     ],
-    "subject": "RE: Employee Disclosure \u2014 Cooperation with Investigators",
-    "family_size": 3
+    "subject": "RE: Ohio AG Subpoena \u2014 Opioid Sales Practices \u2014 Response Coordination",
+    "family_size": 6
   },
   {
     "family_id": "FAM-000322",
     "thread_id": "THR-000146",
-    "parent_doc_id": "DOC-0000281",
+    "parent_doc_id": "DOC-0000503",
     "children": [
-      "DOC-0000127",
-      "DOC-0000241",
-      "DOC-0000634",
-      "DOC-0000678",
-      "DOC-0000010",
-      "DOC-0000296"
+      "DOC-0000404",
+      "DOC-0000513"
     ],
-    "subject": "RE: SOM Flag \u2014 CVS Health \u2014 Business Justification Required",
-    "family_size": 7
+    "subject": "RE: Q4 2016 Territory Quota \u2014 Variance Analysis",
+    "family_size": 3
+  },
+  {
+    "family_id": "FAM-000323",
+    "thread_id": "THR-000147",
+    "parent_doc_id": "DOC-0000227",
+    "children": [
+      "DOC-0000587",
+      "DOC-0000098",
+      "DOC-0000029",
+      "DOC-0000551",
+      "DOC-0000622"
+    ],
+    "subject": "RE: DEA Response Preparation \u2014 SOM Documentation",
+    "family_size": 6
+  },
+  {
+    "family_id": "FAM-000324",
+    "thread_id": "THR-000148",
+    "parent_doc_id": "DOC-0000124",
+    "children": [
+      "DOC-0000216"
+    ],
+    "subject": "FW: SOM Archive Cleanup \u2014 January 2013",
+    "family_size": 2
+  },
+  {
+    "family_id": "FAM-000325",
+    "thread_id": "THR-000149",
+    "parent_doc_id": "DOC-0000220",
+    "children": [
+      "DOC-0000528",
+      "DOC-0000418"
+    ],
+    "subject": "SOM Policy Exception Request \u2014 AmerisourceBergen \u2014 March 2014",
+    "family_size": 3
   }
 ]

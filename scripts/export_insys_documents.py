@@ -37,12 +37,12 @@ from pathlib import Path
 
 try:
     import duckdb
-except ModuleNotFoundError:
+except ModuleNotFoundError as err:
     raise SystemExit(
         "Missing dependency 'duckdb'. Install the project requirements first:\n"
         "  python3 -m venv .venv && . .venv/bin/activate\n"
         "  pip install -r requirements.txt        # (or: pip install duckdb)\n"
-    )
+    ) from err
 
 BUCKET = "https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com"
 PARQUET = f"{BUCKET}/metadata/oida-index.parquet"

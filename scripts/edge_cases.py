@@ -151,6 +151,13 @@ def apply(all_docs, families, custodians, seed=42):
         d["Family ID"] = d["Parent Document ID"]
     report["orphan_attachment"] = [d["Control Number"] for d in docs]
 
+    # Anything an earlier scenario already claimed is off limits: deleting it would
+    # leave that scenario's report naming a document that is not in the set.
+    claimed = set()
+    for entries in report.values():
+        for e in entries:
+            claimed.add(e.get("control_number") if isinstance(e, dict) else e)
+
     broken = []
     for fam in families:
         if len(broken) >= count("broken_family"):
@@ -159,8 +166,8 @@ def apply(all_docs, families, custodians, seed=42):
         if len(kids) < 2:
             continue
         lost = kids[-1]
-        if lost.startswith("HOT-"):           # scripted documents are never removed
-            continue
+        if lost.startswith("HOT-") or lost in claimed:
+            continue                          # scripted, or already spoken for
         kids.pop()                            # the family record still references it
         broken.append({"parent": fam.get("parent_doc_id",""), "missing_child": lost})
     ids = {b["missing_child"] for b in broken}
