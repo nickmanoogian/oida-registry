@@ -36,6 +36,12 @@ FAMILY_SHARE = {
 
 MIN_FILE_TYPES = {"small": 20, "medium": 25, "large": 25}
 
+# The ECI document drill always shows Control Number, Custodian, Primary Date/Time,
+# Record Type, Unified Title, Topic (AI) and Summary (AI). The AI columns are produced
+# downstream; Record Type is collected, so the dataset owes it.
+# "Attachment" is absent by construction: family children here are thread replies.
+RECORD_TYPES = {"Email", "EDoc", "Container"}
+
 # Rule 6: the table's per-type counts (15 documents in the small tier) have never
 # matched what the generator produces, and 1% is low for a real matter. The rule
 # now states a rate band; see RULES.md Rule 6.
@@ -372,6 +378,23 @@ def run(tier_name, tier_dir, verbose):
         phases = {str(d.get("Narrative Phase","")) for d in docs if d.get("Narrative Phase","")}
         ok = len(phases) >= 2
         if not check("Multiple narrative phases present", ok, f"phases: {phases}", verbose): failures += 1
+
+    # ── Rule 14 — production drill baseline ───────────────────────────────
+    print("\nRule 14 — production drill baseline")
+    ok = "Record Type" in docs[0]
+    if not check("Record Type column present", ok, "", verbose): failures += 1
+    if ok:
+        blanks = [d["Control Number"] for d in docs if not d.get("Record Type","").strip()]
+        if not check("Every document has a Record Type", not blanks,
+                     f"{len(blanks)} blank: {blanks[:3]}", verbose): failures += 1
+        bad = [d["Control Number"] for d in docs
+               if d.get("Record Type","") not in RECORD_TYPES]
+        if not check(f"Record Type is one of {sorted(RECORD_TYPES)}", not bad,
+                     f"{len(bad)} unexpected: {bad[:3]}", verbose): failures += 1
+        containers_typed = [d for d in docs if str(d.get("Level","")) == "0"
+                            and d.get("Record Type") != "Container"]
+        if not check("Container records are typed as Container", not containers_typed,
+                     f"{len(containers_typed)} mistyped", verbose): failures += 1
 
     # ── Rule 13 — edge cases, when the tier carries them ──────────────────
     edge_path = os.path.join(tier_dir, "edge-cases.json")
