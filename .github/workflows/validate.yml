@@ -16,6 +16,11 @@ jobs:
           pip install --quiet ruff
           ruff check .
 
+      - name: Typecheck
+        run: |
+          pip install --quiet mypy
+          mypy scripts/ --ignore-missing-imports
+
       - name: Import cycle check
         run: python3 scripts/check_imports.py
 

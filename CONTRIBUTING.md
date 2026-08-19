@@ -12,7 +12,7 @@ Run the gate:
 make check
 ```
 
-That is lint, an import cycle check, the RULES.md validators, the error scenario matrix and the
+That is lint, typecheck, an import cycle check, the RULES.md validators, the error scenario matrix and the
 determinism check, ordered cheapest first so a typo fails in seconds rather than after a two
 minute build. CI runs the same things plus the package builds; `make check` is what keeps you
 from finding out on GitHub.
@@ -20,6 +20,11 @@ from finding out on GitHub.
 The idea is borrowed from eci-ui, which gates every PR on a single composite command
 (`npm run check:circular-deps`: lint, typecheck, madge, unit tests). One command a contributor
 can remember beats five they have to look up.
+
+Typecheck runs mypy in its default mode with `--ignore-missing-imports`. It is not strict and
+it is not asking for annotations; it found eleven real problems on its first run, including
+`element.find(tag).text` in `fetch_manifest.py`, which raises `AttributeError` the first time S3
+returns a listing without that tag.
 
 Lint is deliberately about defects rather than taste. The selection is in `ruff.toml` with the
 reasoning; notably `E701`/`E702` are off, because one-statement-per-line would rewrite hundreds

@@ -82,7 +82,28 @@ def apply(all_docs, families, custodians, seed=42):
         return max(1, int(total * RATES[key]))
 
     # ── nobody owns these documents ───────────────────────────────────────
+    # A parent and its attachments move together. Blanking one side only would
+    # leave a family straddling two custodians, which is not a thing a collection
+    # produces and would be indistinguishable from a bug.
     docs = _take(pool, count("no_custodian"))
+    kin = {d["Control Number"]: d for d in all_docs}
+    family_of = {}
+    for d in all_docs:
+        parent = d.get("Parent Document ID", "")
+        if d.get("Record Type") == "Attachment" and parent:
+            family_of.setdefault(parent, []).append(d)
+    chosen = {d["Control Number"] for d in docs}          # dicts are unhashable
+    queue  = list(docs)
+    while queue:
+        d = queue.pop()
+        parent_id = d.get("Parent Document ID", "")
+        if d.get("Record Type") == "Attachment" and parent_id and parent_id not in chosen:
+            parent = kin.get(parent_id)
+            if parent is not None:
+                chosen.add(parent_id); docs.append(parent); queue.append(parent)
+        for child in family_of.get(d["Control Number"], []):
+            if child["Control Number"] not in chosen:
+                chosen.add(child["Control Number"]); docs.append(child); queue.append(child)
     for d in docs:
         d["Custodian"] = d["Custodian Email"] = ""
         d["Custodian Department"] = d["Custodian Org"] = ""
@@ -145,11 +166,16 @@ def apply(all_docs, families, custodians, seed=42):
     report["list_only_recipients"] = [d["Control Number"] for d in docs]
 
     # ── families missing their other half ─────────────────────────────────
+    # Records what it detached from, so Rule 15 can tell a planted orphan from a
+    # broken one, and can excuse the parent whose Attachment Count it just falsified.
     docs = _take(pool, count("orphan_attachment"))
+    orphaned = []
     for d in docs:
+        was = d.get("Parent Document ID", "")
         d["Parent Document ID"] = f"DOC-{rng.randint(9_000_000, 9_999_999)}"
         d["Family ID"] = d["Parent Document ID"]
-    report["orphan_attachment"] = [d["Control Number"] for d in docs]
+        orphaned.append({"control_number": d["Control Number"], "detached_from": was})
+    report["orphan_attachment"] = orphaned
 
     # Anything an earlier scenario already claimed is off limits: deleting it would
     # leave that scenario's report naming a document that is not in the set.
@@ -158,6 +184,7 @@ def apply(all_docs, families, custodians, seed=42):
         for e in entries:
             claimed.add(e.get("control_number") if isinstance(e, dict) else e)
 
+    by_ctrl = {d["Control Number"]: d for d in all_docs}
     broken = []
     for fam in families:
         if len(broken) >= count("broken_family"):
@@ -168,6 +195,8 @@ def apply(all_docs, families, custodians, seed=42):
         lost = kids[-1]
         if lost.startswith("HOT-") or lost in claimed:
             continue                          # scripted, or already spoken for
+        if by_ctrl.get(lost, {}).get("Record Type") == "Attachment":
+            continue                          # its parent's Attachment Count would lie
         kids.pop()                            # the family record still references it
         broken.append({"parent": fam.get("parent_doc_id",""), "missing_child": lost})
     ids = {b["missing_child"] for b in broken}

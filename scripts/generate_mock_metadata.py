@@ -959,6 +959,8 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
     bates_prefix = ORG_BATES_PREFIX.get(org, "MNK")
 
+    has_attachments = is_email and random.random() < 0.35
+
     return {
         "Control Number":          ctrl,
         "File Name":               f"{subject[:40].replace('/','_')}.{ext}" if is_email else f"{ctrl}.{ext}",
@@ -1031,8 +1033,11 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
         "Date Received":           date_recv,
         "Conversation Topic":      subject if is_email else "",
         "Conversation Index":      fake_hash(128) if is_email else "",
-        "Has Attachments":         "Yes" if is_email and random.random()<0.35 else "No",
-        "Attachment Count":        random.randint(1,4) if is_email and random.random()<0.35 else 0,
+        # One roll, not two. These were independent, so an email could claim no
+        # attachments and a count of three, or the reverse. Rule 15 reconciles the
+        # claim against real children afterwards.
+        "Has Attachments":         "Yes" if has_attachments else "No",
+        "Attachment Count":        random.randint(1,4) if has_attachments else 0,
         "Email Thread ID":         "",
         "Email Threading Inclusive": "",
         "Importance":              random.choice(["Normal","Normal","Normal","High","Low"]) if is_email else "",
@@ -1322,6 +1327,56 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
                 d["Email Subject"] = "RE: " + parent.get("Email Subject","").lstrip("RE: ").lstrip("FW: ")
         families.append({"family_id":fk,"thread_id":tk,"parent_doc_id":parent["Control Number"],
                          "children":[d["Control Number"] for d in group[1:]],"subject":parent.get("Email Subject",""),"family_size":len(group)})
+
+    # ── Materialise attachments (RULES.md Rule 15) ──
+    # Has Attachments and Attachment Count were rolled at random and never backed by
+    # anything: no attachment existed as its own document, so Record Type never took
+    # the value Attachment and nothing that rolls up a family by attachment record
+    # could be tested. Rather than invent documents, which would inflate the tier and
+    # skew the Rule 1 shares, loose EDocs are re-parented onto the emails that claim
+    # them. Attachments really are Word, Excel, PDF and image files.
+    by_cust = {}
+    for d in all_docs:
+        if (str(d.get("Level","")) == "1"
+                and not d.get("Parent Document ID")
+                and d.get("File Type Category","") not in ("Email - MSG", "Email - EML")
+                and "Container" not in d.get("File Type Category","")
+                and not d.get("Control Number","").startswith(("HOT-", "STHR-"))):
+            by_cust.setdefault(d.get("Custodian",""), []).append(d)
+    # Only half of each custodian's loose documents may be consumed. Without a
+    # reserve, attachments ate 595 of 617 and left 22 standalone EDocs, which is not
+    # a collection anyone has ever seen. A real one has plenty of loose files.
+    for cust, pool in by_cust.items():
+        random.shuffle(pool)
+        by_cust[cust] = pool[: len(pool) // 2]
+
+    fam_by_parent = {f["parent_doc_id"]: f for f in families}
+    attached_total = 0
+    for parent in all_docs:
+        if parent.get("Has Attachments") != "Yes":
+            continue
+        pool = by_cust.get(parent.get("Custodian",""), [])
+        want = int(parent.get("Attachment Count") or 0)
+        take = [pool.pop() for _ in range(min(want, len(pool)))]
+
+        # The claim has to match what is actually there, in both directions.
+        parent["Attachment Count"] = len(take)
+        parent["Has Attachments"]  = "Yes" if take else "No"
+
+        fam = fam_by_parent.get(parent["Control Number"])
+        for child in take:
+            child["Parent Document ID"] = parent["Control Number"]
+            child["Family ID"]          = parent.get("Family ID") or parent["Control Number"]
+            child["Has Attachments"]    = "No"
+            child["Attachment Count"]   = 0
+            child["Primary Date"]       = parent.get("Primary Date","")
+            child["Sort Date"]          = parent.get("Sort Date","")
+            if fam is not None:
+                fam["children"].append(child["Control Number"])
+                fam["family_size"] = 1 + len(fam["children"])
+        attached_total += len(take)
+
+    print(f"  Attachments materialised: {attached_total:,} documents re-parented onto their emails")
 
     # ── Batches ──
     batch_sets = {

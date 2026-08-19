@@ -25,6 +25,19 @@ _TAG_TRUNCATED = f"{{{NS}}}IsTruncated"
 _TAG_TOKEN     = f"{{{NS}}}NextContinuationToken"
 
 
+def _text(element, tag, default=""):
+    """Text of a child element, or `default`.
+
+    ElementTree returns None for a missing child, and `.text` is None for an empty
+    one, so the direct `element.find(tag).text` this used to do raised
+    AttributeError the first time S3 returned a listing without the tag.
+    """
+    found = element.find(tag)
+    if found is None or found.text is None:
+        return default
+    return found.text
+
+
 def fetch_manifest(prefix: str = "", outfile: str = "manifest.tsv.gz") -> None:
     count = 0
     token = None
@@ -42,18 +55,18 @@ def fetch_manifest(prefix: str = "", outfile: str = "manifest.tsv.gz") -> None:
                 root = ET.fromstring(r.read())
 
             for obj in root.findall(_TAG_CONTENTS):
-                key  = obj.find(_TAG_KEY).text
-                size = obj.find(_TAG_SIZE).text
-                etag = obj.find(_TAG_ETAG).text.strip('"')
+                key  = _text(obj, _TAG_KEY)
+                size = _text(obj, _TAG_SIZE)
+                etag = _text(obj, _TAG_ETAG).strip('"')
                 f.write(f"{key}\t{size}\t{etag}\n")
                 count += 1
 
             if count % PROGRESS_INTERVAL == 0:
                 print(f"  {count:,} objects written...", flush=True)
 
-            if root.find(_TAG_TRUNCATED).text.lower() != "true":
+            if _text(root, _TAG_TRUNCATED).lower() != "true":
                 break
-            token = root.find(_TAG_TOKEN).text
+            token = _text(root, _TAG_TOKEN)
 
     print(f"Done — {count:,} objects → {outfile}")
 

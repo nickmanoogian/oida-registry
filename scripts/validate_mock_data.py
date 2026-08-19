@@ -44,7 +44,7 @@ MIN_FILE_TYPES = {"small": 20, "medium": 25, "large": 25}
 # Record Type, Unified Title, Topic (AI) and Summary (AI). The AI columns are produced
 # downstream; Record Type is collected, so the dataset owes it.
 # "Attachment" is absent by construction: family children here are thread replies.
-RECORD_TYPES = {"Email", "EDoc", "Container"}
+RECORD_TYPES = {"Email", "EDoc", "Container", "Attachment"}
 
 # Rule 6: the table's per-type counts (15 documents in the small tier) have never
 # matched what the generator produces, and 1% is low for a real matter. The rule
@@ -399,6 +399,58 @@ def run(tier_name, tier_dir, verbose):
                             and d.get("Record Type") != "Container"]
         if not check("Container records are typed as Container", not containers_typed,
                      f"{len(containers_typed)} mistyped", verbose): failures += 1
+
+    # ── Rule 15 — attachments ─────────────────────────────────────────────
+    print("\nRule 15 — attachments")
+    attachments = [d for d in docs if d.get("Record Type") == "Attachment"]
+    by_ctrl_all = {d["Control Number"]: d for d in docs}
+
+    # An edge tier plants orphans on purpose. Excuse the planted ones and the parents
+    # whose Attachment Count they falsified, so a real break still shows.
+    planted, bereaved = set(), set()
+    _edge = os.path.join(tier_dir, "edge-cases.json")
+    if os.path.exists(_edge):
+        for e in json.load(open(_edge))["scenarios"].get("orphan_attachment", {}).get("documents", []):
+            if isinstance(e, dict):
+                planted.add(e.get("control_number"))
+                if e.get("detached_from"):
+                    bereaved.add(e["detached_from"])
+            else:
+                planted.add(e)
+    attachments = [d for d in attachments if d["Control Number"] not in planted]
+    if not attachments:
+        print(f"  {WARN}  No attachment records found")
+    else:
+        orphans = [d["Control Number"] for d in attachments
+                   if d.get("Parent Document ID","") not in by_ctrl_all]
+        if not check("Every attachment's parent exists", not orphans,
+                     f"{len(orphans)} orphaned: {orphans[:3]}", verbose): failures += 1
+
+        non_email = [d["Control Number"] for d in attachments
+                     if by_ctrl_all.get(d.get("Parent Document ID",""), {}).get("Record Type") != "Email"]
+        if not check("Every attachment hangs off an email", not non_email,
+                     f"{len(non_email)} with a non-email parent: {non_email[:3]}", verbose): failures += 1
+
+        split = [d["Control Number"] for d in attachments
+                 if by_ctrl_all.get(d.get("Parent Document ID",""), {}).get("Custodian")
+                 != d.get("Custodian")]
+        if not check("Attachments share their parent's custodian", not split,
+                     f"{len(split)} split across custodians: {split[:3]}", verbose): failures += 1
+
+        # The claim and the reality have to agree in both directions: an email that
+        # says it has three attachments must have three, and one that says it has
+        # none must have none.
+        real = Counter(d.get("Parent Document ID","") for d in attachments)
+        mismatched = []
+        for d in docs:
+            if d["Control Number"] in bereaved:
+                continue
+            claimed = int(d.get("Attachment Count") or 0)
+            actual  = real.get(d["Control Number"], 0)
+            if claimed != actual or (d.get("Has Attachments") == "Yes") != (actual > 0):
+                mismatched.append(d["Control Number"])
+        if not check("Has Attachments and Attachment Count match the real children",
+                     not mismatched, f"{len(mismatched)} disagree: {mismatched[:3]}", verbose): failures += 1
 
     # ── Rule 13 — edge cases, when the tier carries them ──────────────────
     edge_path = os.path.join(tier_dir, "edge-cases.json")

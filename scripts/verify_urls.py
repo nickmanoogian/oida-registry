@@ -25,7 +25,7 @@ import sys
 import urllib.request
 
 RELEASE_ASSET = re.compile(r"^https://github\.com/([^/]+/[^/]+)/releases/download/([^/]+)/")
-_tag_cache = {}
+_tag_cache: dict[tuple[str, str], bool] = {}
 
 DVC_FOLDERS = [".", "data-products", "metadata", "samples", "load-packages"]
 

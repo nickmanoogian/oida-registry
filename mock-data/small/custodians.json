@@ -17,7 +17,7 @@
     "hold": "Acknowledged",
     "hold_date": "2018-06-15",
     "key": true,
-    "actual_doc_count": 327
+    "actual_doc_count": 323
   },
   {
     "id": "C002",
@@ -35,7 +35,7 @@
     "narrative": "Field-level orders; first to receive suspicious order alerts",
     "hold": "Acknowledged",
     "hold_date": "2018-06-18",
-    "actual_doc_count": 226
+    "actual_doc_count": 243
   },
   {
     "id": "C003",
@@ -53,7 +53,7 @@
     "narrative": "Internal compliance objector; legal hold coordinator; whistleblower escalation",
     "hold": "Acknowledged",
     "hold_date": "2018-06-20",
-    "actual_doc_count": 201
+    "actual_doc_count": 223
   },
   {
     "id": "C004",
@@ -72,7 +72,7 @@
     "narrative": "Day-to-day SOM operations; wrote the business justification memos for overrides",
     "hold": "Acknowledged",
     "hold_date": "2018-06-18",
-    "actual_doc_count": 146
+    "actual_doc_count": 133
   },
   {
     "id": "C005",
@@ -91,7 +91,7 @@
     "hold": "Acknowledged",
     "hold_date": "2018-06-13",
     "key": true,
-    "actual_doc_count": 135
+    "actual_doc_count": 128
   },
   {
     "id": "C006",
@@ -110,7 +110,7 @@
     "narrative": "Sales maximization strategy; receives the McKinsey deliverables",
     "hold": "Acknowledged",
     "hold_date": "2018-06-12",
-    "actual_doc_count": 116
+    "actual_doc_count": 117
   },
   {
     "id": "C007",
@@ -130,7 +130,7 @@
     "hold": "Acknowledged",
     "hold_date": "2018-06-12",
     "key": true,
-    "actual_doc_count": 119
+    "actual_doc_count": 94
   },
   {
     "id": "C008",
@@ -147,7 +147,7 @@
     "narrative": "Calendar custodian; hold never acknowledged",
     "hold": "Outstanding",
     "hold_date": null,
-    "actual_doc_count": 65
+    "actual_doc_count": 76
   },
   {
     "id": "C009",
@@ -165,7 +165,7 @@
     "narrative": "Speaker bureau architect; payment escalation approver",
     "hold": "Acknowledged",
     "hold_date": "2018-07-01",
-    "actual_doc_count": 70
+    "actual_doc_count": 64
   },
   {
     "id": "C010",
@@ -182,6 +182,6 @@
     "narrative": "Delivered the opioid sales maximization strategy; the turbocharge deck",
     "hold": "Outstanding",
     "hold_date": null,
-    "actual_doc_count": 34
+    "actual_doc_count": 38
   }
 ]

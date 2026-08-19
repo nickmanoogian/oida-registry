@@ -6,6 +6,48 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — typecheck in the gate
+
+The last piece of eci-ui's `check:circular-deps`. I had assumed mypy over 5,000 untyped lines
+would mean scattering `# type: ignore`; in default mode with `--ignore-missing-imports` it found
+**eleven errors**, all of them real, and all now fixed:
+
+- `fetch_manifest.py` called `element.find(tag).text` in five places. `find` returns `None` for a
+  missing child, so the manifest rebuild raised `AttributeError` the first time S3 returned a
+  listing without one of those tags. Now goes through a `_text` helper.
+- `export_insys_documents.py` unpacked the result of `fetchone()` without checking for `None`.
+- `download.py`'s `human_size` declared `n: int` and then divided it into a float.
+- Two containers needed annotations the checker could not infer from an empty literal.
+
+`make check` is now lint → typecheck → import cycles → validators → scenario matrix →
+determinism, which is the full shape of the production gate.
+
+### Added — attachments are real documents now (Rule 15)
+
+`Has Attachments` and `Attachment Count` were rolled at random and backed by nothing. No
+attachment existed as its own document, so `Record Type` never took the value `Attachment` and
+nothing that rolls up a family by attachment record could be tested.
+
+Attachments are **re-parented from existing loose documents** rather than invented, so the tier
+size and the Rule 1 shares are unchanged and the files are the ones attachments really are: Word,
+Excel, PDF, images. The small tier now has **304 attachments across 129 emails (16% of email)**,
+with 313 documents still loose.
+
+Rule 15 requires the parent to resolve and to be an email, the attachment to share its parent's
+custodian and date, and the claim to match reality in both directions.
+
+Edge cases had to learn about families: they now move a family as a unit rather than blanking one
+side's custodian, `broken_family` never removes an attachment, and `orphan_attachment` records
+what it detached from so a planted orphan is distinguishable from a broken one.
+
+**Two bugs found on the way:**
+
+- `Has Attachments` and `Attachment Count` each rolled `random.random() < 0.35` **independently**,
+  so an email could claim no attachments and a count of three, or the reverse. 178 documents
+  disagreed with themselves. One roll now.
+- The first pass let attachments consume 595 of 617 loose documents, leaving 22 standalone EDocs.
+  Half of each custodian's pool is now reserved.
+
 ### Changed — v1.11.0 packages
 
 Republished so the download matches what the generator now produces. The v1.10.0 artifacts had

@@ -138,11 +138,15 @@ def export_custodians(out_json: Path) -> list[dict]:
 
 
 def summarize(out_csv: Path) -> None:
-    docs, with_sender, distinct_cust, first_date, last_date = con().execute(f"""
+    row = con().execute(f"""
     SELECT count(*), count(*) FILTER (WHERE "Email From" <> ''),
            count(DISTINCT "Custodian"), min("Primary Date"), max("Primary Date")
     FROM read_csv_auto({s(str(out_csv))})
     """).fetchone()
+    if row is None:
+        print("  (no rows to summarise)")
+        return
+    docs, with_sender, distinct_cust, first_date, last_date = row
     print(f"     docs={docs:,}  with_sender={with_sender:,}  "
           f"distinct_custodian_strings={distinct_cust:,}  dates={first_date}..{last_date}")
 
