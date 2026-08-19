@@ -6,6 +6,18 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.11.0 packages
+
+Republished so the download matches what the generator now produces. The v1.10.0 artifacts had
+**4 custodians and no `Record Type`**, which meant they could not exercise either of the things
+the last two releases fixed: the top-25 pair cut, and the drill baseline column.
+
+| | v1.10.0 | v1.11.0 |
+|---|---|---|
+| Custodians | 4 (6 pairs) | 10 (45 pairs) |
+| Distribution | flat, ~10% each | weighted, 22.7% to 2.4% |
+| `Record Type` | absent | Email / EDoc / Container |
+
 ### Added — one quality gate, borrowed from how eci-ui gates a PR
 
 eci-ui's AGENTS.md is explicit: `npm run check:circular-deps` **must pass before raising a PR**,
