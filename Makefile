@@ -72,6 +72,9 @@ imports:
 check: lint typecheck imports
 	@echo "\n── Rules ──"
 	@python3 scripts/validate_mock_data.py --tier small
+	@echo "\n── Edge case tier ──"
+	@python3 scripts/generate_mock_metadata.py --tier small --edge-cases --out /tmp/oida-gate-edge >/dev/null
+	@python3 scripts/validate_mock_data.py --tier small --dir /tmp/oida-gate-edge
 	@echo "\n── Error scenarios ──"
 	@python3 scripts/test_error_scenarios.py
 	@echo "\n── Determinism ──"

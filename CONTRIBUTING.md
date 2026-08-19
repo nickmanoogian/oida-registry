@@ -12,8 +12,8 @@ Run the gate:
 make check
 ```
 
-That is lint, typecheck, an import cycle check, the RULES.md validators, the error scenario matrix and the
-determinism check, ordered cheapest first so a typo fails in seconds rather than after a two
+That is lint, typecheck, an import cycle check, the RULES.md validators against both the default and
+the edge-case tier, the error scenario matrix and the determinism check, ordered cheapest first so a typo fails in seconds rather than after a two
 minute build. CI runs the same things plus the package builds; `make check` is what keeps you
 from finding out on GitHub.
 
