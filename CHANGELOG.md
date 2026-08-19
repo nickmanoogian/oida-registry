@@ -6,6 +6,17 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.12.0 packages
+
+Republished with the attachment records. The v1.11.0 artifacts had no `Attachment` rows at all,
+so nothing that rolls up a family by attachment record could be tested against the download.
+
+| | v1.11.0 | v1.12.0 |
+|---|---|---|
+| `Record Type` values | Email / EDoc / Container | + **Attachment** |
+| Attachments | none | 304 across 129 emails |
+| Starved documents | 195 | 210 |
+
 ### Added — typecheck in the gate
 
 The last piece of eci-ui's `check:circular-deps`. I had assumed mypy over 5,000 untyped lines
