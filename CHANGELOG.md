@@ -6,6 +6,30 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — Record Type, from the production drill baseline
+
+Checked the dataset against what the ECI drill actually renders
+(`docs/widgets/cross-cutting-ux.md` in eci-ui). The universal baseline is Control Number,
+Custodian, Primary Date/Time, **Record Type**, Unified Title, Topic (AI) and Summary (AI). The
+AI columns are produced downstream, but Record Type is a collected field and this dataset did
+not have it, so a drill built against it could not fill a column it always shows.
+
+Every document now carries one: `Email` (806), `EDoc` (617), `Container` (16). It is in
+`documents.csv` and in the load file. RULES.md Rule 14 and four validator checks enforce it;
+the metadata validator is now at 66 checks.
+
+**`Attachment` never occurs, and that is a real gap rather than an oversight.** Family children
+here are thread replies, which are emails. `Has Attachments` is populated but no attachment is
+materialised as its own document, so nothing that rolls up families by attachment record can be
+tested against this data.
+
+### Known gap recorded — the top-25 cut
+
+Production caps Key Relationships at the top 25 pairs and top 25 non-custodian entities. The
+small tier has 4 custodians, so 6 internal pairs, and can never reach that cut. eci-ui's own
+mock uses 8 custodians (28 pairs) specifically to sit above it. Recorded in Rule 14; fixing it
+means changing the tier's custodian count, which is a content decision rather than a bug fix.
+
 ### Changed — v1.10.0 packages
 
 Both packages republished, which closes the two loose ends left by the rename and the oversized

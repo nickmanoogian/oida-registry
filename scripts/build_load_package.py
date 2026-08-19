@@ -766,7 +766,7 @@ DAT_COLUMNS = [
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
-    "Rsmf Message Count","Processing Status","Processing Error Type","NativeFilePath",
+    "Rsmf Message Count","Record Type","Processing Status","Processing Error Type","NativeFilePath",
 ]
 
 
@@ -831,6 +831,7 @@ _COLUMN_MAP = {
     "Rsmf Application":          ("Rsmf/Application",        None),
     "Rsmf Participants":         ("Rsmf/Participants",       None),
     "Rsmf Message Count":        ("Rsmf/MessageCount",       None),
+    "Record Type":               ("Record Type",             None),
     "Processing Status":         ("Processing Status",       None),
     "Processing Error Type":     ("Processing Error Type",   None),
 }

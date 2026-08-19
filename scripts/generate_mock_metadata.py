@@ -1309,6 +1309,27 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
                             "doc_count":len(batch),"date_assigned":fmt_d(adate),"date_completed":fmt_d(cdate),
                             "document_ids":[d["Control Number"] for d in batch]})
 
+    # ── Record Type (production drill baseline) ──
+    # Runs last so scripted hot documents and thread stubs get a value too.
+    # The ECI document drill always shows Control Number, Custodian, Primary
+    # Date/Time, Record Type, Unified Title, Topic (AI) and Summary (AI). The first
+    # three exist here and the last three are produced by ECI, but Record Type is a
+    # real collected field and was missing, so a drill built from this data could
+    # not show the column it always shows.
+    for d in all_docs:
+        ft = d.get("File Type Category", "")
+        # Note: "Attachment" never occurs. Family children here are thread replies,
+        # which are emails; the dataset flags Has Attachments but never materialises
+        # an attachment as its own document.
+        if str(d.get("Level","")) == "0":
+            d["Record Type"] = "Container"
+        elif ft in ("Email - MSG", "Email - EML"):
+            d["Record Type"] = "Email"
+        elif d.get("Parent Document ID", ""):
+            d["Record Type"] = "Attachment"
+        else:
+            d["Record Type"] = "EDoc"
+
     # ── Edge cases (opt in) ──
     # Applied last, on its own RNG stream, so the default output is byte-identical
     # and the committed tiers plus the CI determinism check are unaffected.

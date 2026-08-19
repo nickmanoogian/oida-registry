@@ -455,6 +455,41 @@ python scripts/validate_mock_data.py --tier small --dir mock-data/small-edge
 
 ---
 
+## Rule 14 — Production Drill Baseline
+
+The ECI document drill always shows the same universal columns
+(`docs/widgets/cross-cutting-ux.md` in eci-ui, decided 2026-07-21):
+
+> Control Number · Custodian · Primary Date/Time · **Record Type** · Unified Title ·
+> Topic (AI) · Summary (AI)
+
+Three of those are produced by ECI downstream (Unified Title, Topic, Summary) and do not belong
+in a collected dataset. The rest are collected fields, and `Record Type` was missing, so a drill
+built against this data could not populate a column it always shows.
+
+Every document carries a `Record Type`:
+
+| Value | Applies to |
+|---|---|
+| `Email` | MSG and EML records |
+| `Container` | the container parents (Level 0) |
+| `EDoc` | everything else |
+
+**`Attachment` never occurs, by construction.** Family children in this dataset are thread
+replies, which are emails. `Has Attachments` and `Attachment Count` are populated, but no
+attachment is materialised as its own document. Any feature that rolls up families by
+attachment record needs a dataset this one does not yet provide.
+
+### Known gap: the top-25 cut
+
+Production caps Key Relationships at the **top 25 pairs and top 25 non-custodian entities**, and
+tells the user that "pairs and entities below the cut are not listed". The small tier has
+**4 custodians, so 6 internal pairs**, and can never reach that cut. eci-ui's own mock uses 8
+custodians (28 pairs) specifically to sit above it. The medium tier (10 custodians, 45 pairs) and
+large (40, 780) clear it; the published small package does not.
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
