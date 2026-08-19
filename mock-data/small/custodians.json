@@ -5,7 +5,7 @@
     "email": "michael.brennan@mallinckrodt.com",
     "role": "VP, Sales & Marketing",
     "dept": "Sales",
-    "doc_target": 700,
+    "doc_target": 340,
     "org": "Mallinckrodt",
     "phases_active": [
       1,
@@ -17,7 +17,7 @@
     "hold": "Acknowledged",
     "hold_date": "2018-06-15",
     "key": true,
-    "actual_doc_count": 370
+    "actual_doc_count": 327
   },
   {
     "id": "C002",
@@ -25,7 +25,7 @@
     "email": "sarah.chen@mallinckrodt.com",
     "role": "Regional Sales Director",
     "dept": "Sales",
-    "doc_target": 350,
+    "doc_target": 250,
     "org": "Mallinckrodt",
     "phases_active": [
       1,
@@ -35,7 +35,7 @@
     "narrative": "Field-level orders; first to receive suspicious order alerts",
     "hold": "Acknowledged",
     "hold_date": "2018-06-18",
-    "actual_doc_count": 351
+    "actual_doc_count": 226
   },
   {
     "id": "C003",
@@ -43,7 +43,7 @@
     "email": "thomas.bradley@mallinckrodt.com",
     "role": "Chief Compliance Officer",
     "dept": "Legal & Compliance",
-    "doc_target": 300,
+    "doc_target": 210,
     "org": "Mallinckrodt",
     "phases_active": [
       2,
@@ -53,15 +53,92 @@
     "narrative": "Internal compliance objector; legal hold coordinator; whistleblower escalation",
     "hold": "Acknowledged",
     "hold_date": "2018-06-20",
-    "actual_doc_count": 368
+    "actual_doc_count": 201
   },
   {
     "id": "C004",
+    "name": "Gregory Nash",
+    "email": "gregory.nash@mallinckrodt.com",
+    "role": "Director, SOM Compliance",
+    "dept": "Legal & Compliance",
+    "doc_target": 150,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "narrative": "Day-to-day SOM operations; wrote the business justification memos for overrides",
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-18",
+    "actual_doc_count": 146
+  },
+  {
+    "id": "C005",
+    "name": "Robert Ashton",
+    "email": "robert.ashton@mallinckrodt.com",
+    "role": "VP, Sales",
+    "dept": "Sales",
+    "doc_target": 140,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      2,
+      3,
+      4
+    ],
+    "narrative": "SOM flag override chain; key actor in the Cardinal Health decision",
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-13",
+    "key": true,
+    "actual_doc_count": 135
+  },
+  {
+    "id": "C006",
+    "name": "Patricia Morrison",
+    "email": "patricia.morrison@mallinckrodt.com",
+    "role": "VP, Marketing",
+    "dept": "Marketing",
+    "doc_target": 120,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "narrative": "Sales maximization strategy; receives the McKinsey deliverables",
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-12",
+    "actual_doc_count": 116
+  },
+  {
+    "id": "C007",
+    "name": "James Whitfield",
+    "email": "james.whitfield@mallinckrodt.com",
+    "role": "Chief Executive Officer",
+    "dept": "Executive",
+    "doc_target": 110,
+    "org": "Mallinckrodt",
+    "phases_active": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "narrative": "Ultimate SOM override authority; McKinsey engagement sponsor",
+    "hold": "Acknowledged",
+    "hold_date": "2018-06-12",
+    "key": true,
+    "actual_doc_count": 119
+  },
+  {
+    "id": "C008",
     "name": "Lisa Torres",
     "email": "lisa.torres@mallinckrodt.com",
     "role": "Executive Assistant",
     "dept": "Administration",
-    "doc_target": 150,
+    "doc_target": 90,
     "org": "Mallinckrodt",
     "phases_active": [
       2,
@@ -70,6 +147,41 @@
     "narrative": "Calendar custodian; hold never acknowledged",
     "hold": "Outstanding",
     "hold_date": null,
-    "actual_doc_count": 350
+    "actual_doc_count": 65
+  },
+  {
+    "id": "C009",
+    "name": "Dr. Alec Harrington",
+    "email": "alec.harrington@insysrx.com",
+    "role": "VP, Sales",
+    "dept": "Sales",
+    "doc_target": 60,
+    "org": "Insys",
+    "phases_active": [
+      2,
+      3,
+      4
+    ],
+    "narrative": "Speaker bureau architect; payment escalation approver",
+    "hold": "Acknowledged",
+    "hold_date": "2018-07-01",
+    "actual_doc_count": 70
+  },
+  {
+    "id": "C010",
+    "name": "Bradley Tevelow",
+    "email": "bradley.tevelow@mckinsey.com",
+    "role": "Senior Engagement Manager",
+    "dept": "Healthcare Practice",
+    "doc_target": 30,
+    "org": "McKinsey",
+    "phases_active": [
+      1,
+      2
+    ],
+    "narrative": "Delivered the opioid sales maximization strategy; the turbocharge deck",
+    "hold": "Outstanding",
+    "hold_date": null,
+    "actual_doc_count": 34
   }
 ]

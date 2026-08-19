@@ -64,26 +64,62 @@ ORG_COMPANY_NAME = {
 # ── Custodians ────────────────────────────────────────────────────────────
 
 CUSTODIANS = {
+    # 10 custodians for ~1,500 documents: about 150 each, skewed the way a real
+    # collection is. Four is not a realistic collection at this volume, and it
+    # yields only 6 internal pairs, below the top-25 cut Key Relationships applies
+    # and tells the user about. Ten gives 45 pairs. The six added here are drawn
+    # from the medium roster rather than invented, so the MDL 2804 narrative holds
+    # and the people the scripted hot documents name are actually custodians.
     "small": [
         {"id": "C001", "name": "Michael Brennan",  "email": "michael.brennan@mallinckrodt.com",
-         "role": "VP, Sales & Marketing",   "dept": "Sales",          "doc_target": 700,
+         "role": "VP, Sales & Marketing",   "dept": "Sales",          "doc_target": 340,
          "org": "Mallinckrodt", "phases_active": [1,2,3,4],
          "narrative": "SOM override decision-maker; escalated Cardinal Health flags",
          "hold": "Acknowledged", "hold_date": "2018-06-15", "key": True},
         {"id": "C002", "name": "Sarah Chen",        "email": "sarah.chen@mallinckrodt.com",
-         "role": "Regional Sales Director", "dept": "Sales",          "doc_target": 350,
+         "role": "Regional Sales Director", "dept": "Sales",          "doc_target": 250,
          "org": "Mallinckrodt", "phases_active": [1,2,3],
          "narrative": "Field-level orders; first to receive suspicious order alerts",
          "hold": "Acknowledged", "hold_date": "2018-06-18"},
         {"id": "C003", "name": "Thomas Bradley",    "email": "thomas.bradley@mallinckrodt.com",
-         "role": "Chief Compliance Officer","dept": "Legal & Compliance","doc_target": 300,
+         "role": "Chief Compliance Officer","dept": "Legal & Compliance","doc_target": 210,
          "org": "Mallinckrodt", "phases_active": [2,3,4],
          "narrative": "Internal compliance objector; legal hold coordinator; whistleblower escalation",
          "hold": "Acknowledged", "hold_date": "2018-06-20"},
-        {"id": "C004", "name": "Lisa Torres",       "email": "lisa.torres@mallinckrodt.com",
-         "role": "Executive Assistant",     "dept": "Administration", "doc_target": 150,
+        {"id": "C004", "name": "Gregory Nash",      "email": "gregory.nash@mallinckrodt.com",
+         "role": "Director, SOM Compliance","dept": "Legal & Compliance","doc_target": 150,
+         "org": "Mallinckrodt", "phases_active": [1,2,3,4],
+         "narrative": "Day-to-day SOM operations; wrote the business justification memos for overrides",
+         "hold": "Acknowledged", "hold_date": "2018-06-18"},
+        {"id": "C005", "name": "Robert Ashton",     "email": "robert.ashton@mallinckrodt.com",
+         "role": "VP, Sales",               "dept": "Sales",          "doc_target": 140,
+         "org": "Mallinckrodt", "phases_active": [2,3,4],
+         "narrative": "SOM flag override chain; key actor in the Cardinal Health decision",
+         "hold": "Acknowledged", "hold_date": "2018-06-13", "key": True},
+        {"id": "C006", "name": "Patricia Morrison", "email": "patricia.morrison@mallinckrodt.com",
+         "role": "VP, Marketing",           "dept": "Marketing",      "doc_target": 120,
+         "org": "Mallinckrodt", "phases_active": [1,2,3,4],
+         "narrative": "Sales maximization strategy; receives the McKinsey deliverables",
+         "hold": "Acknowledged", "hold_date": "2018-06-12"},
+        {"id": "C007", "name": "James Whitfield",   "email": "james.whitfield@mallinckrodt.com",
+         "role": "Chief Executive Officer", "dept": "Executive",      "doc_target": 110,
+         "org": "Mallinckrodt", "phases_active": [1,2,3,4],
+         "narrative": "Ultimate SOM override authority; McKinsey engagement sponsor",
+         "hold": "Acknowledged", "hold_date": "2018-06-12", "key": True},
+        {"id": "C008", "name": "Lisa Torres",       "email": "lisa.torres@mallinckrodt.com",
+         "role": "Executive Assistant",     "dept": "Administration", "doc_target": 90,
          "org": "Mallinckrodt", "phases_active": [2,3],
          "narrative": "Calendar custodian; hold never acknowledged",
+         "hold": "Outstanding", "hold_date": None},
+        {"id": "C009", "name": "Dr. Alec Harrington","email": "alec.harrington@insysrx.com",
+         "role": "VP, Sales",               "dept": "Sales",          "doc_target": 60,
+         "org": "Insys", "phases_active": [2,3,4],
+         "narrative": "Speaker bureau architect; payment escalation approver",
+         "hold": "Acknowledged", "hold_date": "2018-07-01"},
+        {"id": "C010", "name": "Bradley Tevelow",   "email": "bradley.tevelow@mckinsey.com",
+         "role": "Senior Engagement Manager","dept": "Healthcare Practice","doc_target": 30,
+         "org": "McKinsey", "phases_active": [1,2],
+         "narrative": "Delivered the opioid sales maximization strategy; the turbocharge deck",
          "hold": "Outstanding", "hold_date": None},
     ],
     "medium": [
@@ -1049,7 +1085,11 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
         ft_meta = FILE_TYPES[ft_name]
         for _ in range(count):
             doc_num += 1
-            cust  = random.choice(custs)
+            # doc_target was declared on every custodian and never read, so every
+            # tier came out flat: ten custodians at roughly 10% each. Real
+            # collections are heavily skewed, and a flat one hides every bug that
+            # depends on one custodian dominating.
+            cust  = random.choices(custs, weights=[c["doc_target"] for c in custs])[0]
             phase = assign_phase(cust, tier_name)
             org   = cust.get("org", "Mallinckrodt")
             d = make_doc(f"DOC-{doc_num:07d}", cust, ft_name, ft_meta, dr, custs, wf, phase, org)

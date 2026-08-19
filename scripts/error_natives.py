@@ -190,6 +190,14 @@ NOT_FABRICABLE = {
         "needs a real Microsoft 365 tenant to apply the sensitivity label",
 }
 
+NO_NATIVE_REASON = ("the document has no native file, so there is nothing to break; "
+                    "containers carry Has Natives = No")
+
+
+def has_no_native(doc):
+    """A container cannot carry a file-level failure: no file is written for it."""
+    return doc.get("Has Natives", "") == "No"
+
 # Outcomes that depend on the environment rather than the file.
 NOT_DETERMINISTIC = {
     "OCR Failure - Poor Scan Quality":

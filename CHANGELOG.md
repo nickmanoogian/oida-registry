@@ -23,12 +23,30 @@ here are thread replies, which are emails. `Has Attachments` is populated but no
 materialised as its own document, so nothing that rolls up families by attachment record can be
 tested against this data.
 
-### Known gap recorded — the top-25 cut
+### Fixed — custodian count and distribution
 
-Production caps Key Relationships at the top 25 pairs and top 25 non-custodian entities. The
-small tier has 4 custodians, so 6 internal pairs, and can never reach that cut. eci-ui's own
-mock uses 8 custodians (28 pairs) specifically to sit above it. Recorded in Rule 14; fixing it
-means changing the tier's custodian count, which is a content decision rather than a bug fix.
+Production caps Key Relationships at the top 25 pairs and top 25 non-custodian entities and tells
+the user that pairs below the cut are not listed. The small tier had 4 custodians, so 6 internal
+pairs, and could never reach that cut. It is now **10 custodians, 45 pairs**, about 150 documents
+each, spanning Mallinckrodt, Insys and McKinsey. The six added came from the medium roster rather
+than being invented, so the narrative holds and the people the scripted hot documents name are
+actually custodians.
+
+**`doc_target` was decorative.** It is declared on every custodian and was never read:
+`random.choice` picked uniformly, so every tier came out flat at roughly 10% each. Real
+collections are heavily skewed, and a flat one hides every bug that depends on one custodian
+dominating. Assignment is now weighted by `doc_target`; the small tier runs 23% down to 2.4%.
+
+### Fixed — two bugs the custodian change surfaced
+
+Neither was reachable before the custodian mix shifted, and both were caught by the validators
+rather than by review:
+
+- `broken_family` could delete a document another edge scenario had already claimed, leaving that
+  scenario's report naming a document absent from the set. Claimed documents are now off limits.
+- A container flagged with a file-level error (`Has Natives = No`) has no file to break, so it
+  could never be fabricated and showed up as an undocumented gap. It is now a documented
+  exclusion alongside MIP.
 
 ### Changed — v1.10.0 packages
 

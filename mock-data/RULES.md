@@ -480,13 +480,28 @@ replies, which are emails. `Has Attachments` and `Attachment Count` are populate
 attachment is materialised as its own document. Any feature that rolls up families by
 attachment record needs a dataset this one does not yet provide.
 
-### Known gap: the top-25 cut
+### Custodian count and distribution
 
-Production caps Key Relationships at the **top 25 pairs and top 25 non-custodian entities**, and
-tells the user that "pairs and entities below the cut are not listed". The small tier has
-**4 custodians, so 6 internal pairs**, and can never reach that cut. eci-ui's own mock uses 8
-custodians (28 pairs) specifically to sit above it. The medium tier (10 custodians, 45 pairs) and
-large (40, 780) clear it; the published small package does not.
+Production caps Key Relationships at the **top 25 pairs and top 25 non-custodian entities** and
+tells the user that pairs below the cut are not listed. A tier that cannot reach the cut cannot
+test it.
+
+| Tier | Custodians | Internal pairs |
+|---|---|---|
+| Small | 10 | 45 |
+| Medium | 10 | 45 |
+| Large | 40 | 780 |
+
+The small tier ran on 4 custodians, giving 6 pairs, and 4 is not a realistic collection at ~1,500
+documents anyway. It is now 10, roughly 150 documents each, spanning Mallinckrodt, Insys and
+McKinsey. The six added were drawn from the medium roster rather than invented, so the MDL 2804
+narrative holds and the people the scripted hot documents name are actually custodians.
+
+**The distribution must be skewed, and it must follow `doc_target`.** `doc_target` was declared on
+every custodian and never read: `random.choice` picked uniformly, so every tier came out flat at
+roughly 10% each. Real collections are nothing like that, and a flat one hides every bug that
+depends on one custodian dominating. Assignment is now weighted, and the small tier runs from 23%
+down to 2.4%, a 9.6x spread.
 
 ---
 
