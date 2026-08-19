@@ -4,6 +4,30 @@ This repo has two distinct areas that can be updated independently.
 
 ---
 
+## Before you raise a PR
+
+Run the gate:
+
+```bash
+make check
+```
+
+That is lint, an import cycle check, the RULES.md validators, the error scenario matrix and the
+determinism check, ordered cheapest first so a typo fails in seconds rather than after a two
+minute build. CI runs the same things plus the package builds; `make check` is what keeps you
+from finding out on GitHub.
+
+The idea is borrowed from eci-ui, which gates every PR on a single composite command
+(`npm run check:circular-deps`: lint, typecheck, madge, unit tests). One command a contributor
+can remember beats five they have to look up.
+
+Lint is deliberately about defects rather than taste. The selection is in `ruff.toml` with the
+reasoning; notably `E701`/`E702` are off, because one-statement-per-line would rewrite hundreds
+of lines of the existing house style and bury real changes in noise.
+
+If you change the generator, the committed small tier must be regenerated and committed with it.
+`make check` will tell you.
+
 ## 1. Mock data rules and generator
 
 Rules live in `mock-data/RULES.md`. The generator lives in `scripts/generate_mock_metadata.py`. Validation lives in `scripts/validate_mock_data.py`.

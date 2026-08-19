@@ -17,7 +17,6 @@ use shallow nesting with tiny payloads.
 """
 
 import io
-import json
 import os
 import subprocess
 import tempfile

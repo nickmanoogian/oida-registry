@@ -25,8 +25,20 @@ Requirements:
   pip install python-docx openpyxl python-pptx fpdf2
 """
 
-import argparse, csv, email.mime.multipart, email.mime.text, email.utils
-import gzip, json, os, random, re, shutil, sys, time, urllib.request
+import argparse
+import csv
+import email.mime.multipart
+import email.mime.text
+import email.utils
+import gzip
+import json
+import os
+import random
+import re
+import shutil
+import sys
+import time
+import urllib.request
 from datetime import datetime
 from pathlib import Path
 
@@ -34,12 +46,10 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import error_natives
 
 try:
-    from docx import Document as DocxDocument
-    from docx.shared import Pt
     import openpyxl
-    from pptx import Presentation
-    from pptx.util import Inches, Pt as PptPt
+    from docx import Document as DocxDocument
     from fpdf import FPDF
+    from pptx import Presentation
 except ImportError:
     sys.exit("Missing dependencies. Run: pip install python-docx openpyxl python-pptx fpdf2")
 
@@ -328,7 +338,7 @@ def load_or_fetch_ocr_cache(use_oida, manifest_path):
         print("  Falling back to synthetic content.")
         return {}
 
-    print(f"  Sampling OIDA OCR files from manifest (this takes a few minutes)...")
+    print("  Sampling OIDA OCR files from manifest (this takes a few minutes)...")
     ocr_keys = []
     with gzip.open(manifest_path, "rt") as f:
         next(f)  # skip header
@@ -416,8 +426,10 @@ def make_docx(doc, body):
     props.company  = doc.get("Company","")
     props.title    = doc.get("Title","")
     if doc.get("Date Created","").strip():
-        try: props.created = datetime.strptime(doc["Date Created"][:10], "%Y-%m-%d")
-        except: pass
+        try:
+            props.created = datetime.strptime(doc["Date Created"][:10], "%Y-%m-%d")
+        except ValueError:
+            pass          # edge cases write blank and sentinel dates on purpose
     if doc.get("Title"):
         d.add_heading(doc["Title"], 0)
     for para in body.split("\n\n"):
@@ -664,7 +676,7 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False, error_ro
 
         return dat_native_path(native_path, out_dir)
 
-    except Exception as e:
+    except Exception:
         # Fallback: write a txt placeholder. Never rescue a deliberately broken
         # file — if fabrication failed, that is a bug worth seeing.
         if with_errors and error_natives.scenario_for(doc) is not None:
@@ -699,62 +711,9 @@ def write_custodian_sources(stats, out_dir, flat):
 
 # ── Relativity .dat load file writer ─────────────────────────────────────
 
-# Map documents.csv column names to Relativity standard field names
-RELATIVITY_FIELD_MAP = {
-    "Control Number":         "BegDoc#",
-    "Control Number":         "EndDoc#",     # same value for single-page docs
-    "Family ID":              "BegAttach",
-    "Family ID":              "EndAttach",
-    "Custodian":              "Custodian",
-    "Custodian Email":        "Custodian Email",
-    "Custodian Org":          "Custodian Org",
-    "File Name":              "File Name",
-    "File Extension":         "File Type",
-    "File Size (bytes)":      "File Size",
-    "Primary Date":           "Date",
-    "Email From":             "From",
-    "Email From SMTP":        "From (SMTP)",
-    "Email To":               "To",
-    "Email To SMTP":          "To (SMTP)",
-    "Email CC":               "CC",
-    "Email Subject":          "Subject",
-    "Date Sent":              "Date Sent",
-    "Date Received":          "Date Received",
-    "Message ID":             "Message ID",
-    "Has Attachments":        "Has Attachments",
-    "Attachment Count":       "Attachment Count",
-    "Email Thread ID":        "Email Thread ID",
-    "Email Threading Inclusive": "Email Threading Inclusive",
-    "Conversation Topic":     "Conversation Topic",
-    "Author":                 "Author",
-    "Title":                  "Title",
-    "Company":                "Company",
-    "Page Count":             "Page Count",
-    "Workflow Stage":         "Workflow Stage",
-    "Responsiveness":         "Responsive",
-    "Privilege":              "Privileged",
-    "Privilege Reason":       "Privilege Reason",
-    "Hot Doc":                "Hot Doc",
-    "Issue Tags":             "Issue Tags",
-    "Bates Begin":            "BegBates",
-    "Bates End":              "EndBates",
-    "Production Set":         "Production Set",
-    "Redacted":               "Redacted",
-    "TAR Score":              "TAR Score",
-    "AL Predicted Relevant":  "AL Predicted Relevant",
-    "Batch Name":             "Batch Name",
-    "Batch Status":           "Batch Status",
-    "Reviewer":               "Reviewer",
-    "Narrative Phase":        "Narrative Phase",
-    "Narrative Phase Name":   "Narrative Phase Name",
-    "Dedup Method":           "Dedup Method",
-    "MD5 Hash":               "MD5 Hash",
-    "OCR Flag":               "OCR Flag",
-    "Rsmf/Application":       "Rsmf Application",
-    "Rsmf/Participants":      "Rsmf Participants",
-    "Rsmf/MessageCount":      "Rsmf Message Count",
-    "NativeFilePath":         "NativeFilePath",
-}
+# Note: a RELATIVITY_FIELD_MAP dict used to live here, defined and never used, and
+# it declared "Control Number" and "Family ID" twice each so half its entries were
+# silently dropped at parse time. Lint found it. DAT_COLUMNS below is the real thing.
 
 DAT_COLUMNS = [
     "BegDoc#","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",

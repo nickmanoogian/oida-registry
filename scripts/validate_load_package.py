@@ -16,7 +16,13 @@ Usage:
   python scripts/validate_load_package.py load-packages/small --flat
 """
 
-import argparse, csv, json, os, re, sys, zipfile
+import argparse
+import csv
+import json
+import os
+import re
+import sys
+import zipfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import error_natives

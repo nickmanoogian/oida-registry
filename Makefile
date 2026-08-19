@@ -3,13 +3,18 @@ OUT       := ./data
 MOCK_OUT  := ./mock-data
 ECI_OUT   := /tmp/oida-large
 
-.PHONY: help list get-small get-all manifest verify \
+.PHONY: help check lint imports list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large mock-small-edge \
         load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-validate \
         export-insys
 
 help:
+	@echo ""
+	@echo "  ── Quality gate ──────────────────────────────────────────────"
+	@echo "  make check           Everything a branch must pass before a PR"
+	@echo "  make lint            Ruff only"
+	@echo "  make imports         Import cycle check only"
 	@echo ""
 	@echo "  ── Raw OIDA data ─────────────────────────────────────────────"
 	@echo "  make list            List all available OIDA datasets with sizes"
@@ -45,6 +50,30 @@ help:
 	@echo "  OUT=$(OUT)       — raw OIDA download dir"
 	@echo "  MOCK_OUT=$(MOCK_OUT)  — mock data dir"
 	@echo ""
+
+# ── Quality gate ───────────────────────────────────────────────────────────
+# The single command a branch must pass before a PR goes up, modelled on eci-ui's
+# `npm run check:circular-deps` (lint + typecheck + cycles + tests in one). Ordered
+# cheapest first so a typo fails in seconds rather than after a two minute build.
+
+RUFF := $(shell command -v ruff 2>/dev/null || echo .venv/bin/ruff)
+
+lint:
+	@$(RUFF) check . || (echo "  lint failed — run '$(RUFF) check . --fix'" && exit 1)
+
+imports:
+	@python3 scripts/check_imports.py
+
+check: lint imports
+	@echo "\n── Rules ──"
+	@python3 scripts/validate_mock_data.py --tier small
+	@echo "\n── Error scenarios ──"
+	@python3 scripts/test_error_scenarios.py
+	@echo "\n── Determinism ──"
+	@python3 scripts/generate_mock_metadata.py --tier small >/dev/null
+	@git diff --quiet mock-data/small/ || (echo "  FAIL regenerating the small tier changed it — commit the regenerated files" && exit 1)
+	@echo "  small tier regenerates byte-identical"
+	@echo "\n  All gate checks passed. Safe to raise a PR.\n"
 
 # ── Raw OIDA data ──────────────────────────────────────────────────────────
 

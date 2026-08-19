@@ -154,7 +154,7 @@ def apply(all_docs, families, custodians, seed=42):
     # Anything an earlier scenario already claimed is off limits: deleting it would
     # leave that scenario's report naming a document that is not in the set.
     claimed = set()
-    for name, entries in report.items():
+    for entries in report.values():
         for e in entries:
             claimed.add(e.get("control_number") if isinstance(e, dict) else e)
 

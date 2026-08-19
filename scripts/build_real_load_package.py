@@ -27,8 +27,8 @@ from pathlib import Path
 
 try:
     import duckdb
-except ModuleNotFoundError:
-    raise SystemExit("Missing 'duckdb'. Run: pip install -r requirements.txt")
+except ModuleNotFoundError as err:
+    raise SystemExit("Missing 'duckdb'. Run: pip install -r requirements.txt") from err
 
 BUCKET = "https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com"
 PARQUET = f"{BUCKET}/metadata/oida-index.parquet"
@@ -126,7 +126,7 @@ def main() -> None:
     print(f"1/3  Querying real {COLLECTION} docs from the public OIDA index ...")
     cur = con.execute(QUERY.format(per_format=per_format, count=args.count))
     names = [d[0] for d in cur.description]
-    rows = [dict(zip(names, rec)) for rec in cur.fetchall()]
+    rows = [dict(zip(names, rec, strict=True)) for rec in cur.fetchall()]
     print(f"     selected {len(rows)} docs "
           f"({len({r['original_format'] for r in rows})} formats, "
           f"{len({r['custodian'] for r in rows})} distinct custodian strings)")

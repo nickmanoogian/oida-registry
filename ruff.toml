@@ -1,0 +1,32 @@
+# Lint configuration.
+#
+# eci-ui gates every PR on `npm run check:circular-deps`, which is lint, typecheck,
+# an import cycle check and the unit tests in one command (AGENTS.md). This repo had
+# 4,954 lines of Python and no static analysis at all, so `make check` is the
+# equivalent gate and this is its lint half.
+#
+# The selection is deliberately about defects rather than style. Turning on the
+# full default set produced 62 findings, most of them taste; the ones that mattered
+# were a dead dict with duplicate keys that silently dropped half its entries, three
+# unused imports, an unused variable and a bare except. Those are all F and E7.
+
+line-length = 100
+
+[lint]
+select = ["F", "E4", "E9", "B", "I"]
+
+# Not enabled, and why:
+#   BLE001  blind except — the generators deliberately catch broadly around network
+#           and third-party writers; the fallbacks are documented at each site
+#   SIM115  open without a context manager — mostly in short-lived read helpers
+#   DTZ     timezone-aware datetimes — this dataset is deliberately naive, matching
+#           the load file format
+#   S       bandit rules — no untrusted input here; the "risky" calls are zip and
+#           urllib against a public bucket
+#   E701/E702  one statement per line — `if x: y` is the house style throughout
+#           generate_mock_metadata.py, 110 findings of pure taste, and rewriting
+#           them would bury real changes in noise
+ignore = []
+
+[lint.isort]
+known-first-party = ["edge_cases", "error_natives"]

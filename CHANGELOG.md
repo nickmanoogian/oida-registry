@@ -6,6 +6,33 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — one quality gate, borrowed from how eci-ui gates a PR
+
+eci-ui's AGENTS.md is explicit: `npm run check:circular-deps` **must pass before raising a PR**,
+and that one command is lint, typecheck, a madge import cycle check and the unit tests. This repo
+had 4,954 lines of Python, five separate check commands a contributor had to know about, and no
+static analysis at all.
+
+`make check` is the equivalent: lint, import cycle check, RULES.md validators, error scenario
+matrix, determinism. Ordered cheapest first so a typo fails in seconds rather than after a two
+minute build. Documented in CONTRIBUTING as the thing to run before a PR, and CI runs the same
+set plus the package builds.
+
+**Lint (`ruff.toml`) found a real defect on the first run.** `RELATIVITY_FIELD_MAP` in
+`build_load_package.py` was dead code that declared `"Control Number"` and `"Family ID"` twice
+each, so half its entries were silently dropped at parse time. Also three unused imports, an
+unused variable, and a bare `except` swallowing everything around a date parse. All fixed.
+
+The selection is about defects, not taste. The full default set produced 62 findings and a wider
+one 127, of which 110 were `E701`/`E702` one-statement-per-line — the house style throughout
+`generate_mock_metadata.py`. Enforcing that would rewrite hundreds of lines and bury real changes
+in noise, so it is off, with the reasoning recorded in `ruff.toml`.
+
+**`scripts/check_imports.py`** is the madge equivalent: these scripts already import each other
+(`build_load_package` and `validate_load_package` both pull in `error_natives`), so the same
+failure mode was available. It parses the AST rather than importing, so a missing third-party
+dependency cannot cause a false failure. No cycles across 14 modules today.
+
 ### Added — Record Type, from the production drill baseline
 
 Checked the dataset against what the ECI drill actually renders

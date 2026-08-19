@@ -21,7 +21,12 @@ Usage:
   python scripts/generate_mock_metadata.py --tier small --seed 99 --out ./custom/
 """
 
-import argparse, csv, json, os, random, sys
+import argparse
+import csv
+import json
+import os
+import random
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -1275,7 +1280,7 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
         children_ids = []
         parent_d["Family ID"] = sfam; parent_d["Email Thread ID"] = sthr
         parent_d["Email Threading Inclusive"] = "No"
-        for j, msg in enumerate(msgs[1:], 1):
+        for msg in msgs[1:]:
             child_d = find_or_stub(msg["ctrl"], msg, all_docs, custs, dr, wf, tier_name)
             child_d["Family ID"]     = sfam
             child_d["Email Thread ID"] = sthr
@@ -1417,7 +1422,7 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
     priv  = sum(1 for d in all_docs if d.get("Privilege")=="Privileged")
     hot   = sum(1 for d in all_docs if d.get("Hot Doc")=="Yes")
     prod  = sum(1 for d in all_docs if d.get("Bates Begin","")!="")
-    print(f"\n  Story summary:")
+    print("\n  Story summary:")
     print(f"    Reviewed:   {len(reviewed):,}   Responsive: {resp:,}   Privileged: {priv:,}")
     print(f"    Hot docs:   {hot:,} ({len(scripted_hot_ids)} scripted)   Produced: {prod:,}")
     print(f"    Families:   {len(families):,}   Batches: {len(batches)}")

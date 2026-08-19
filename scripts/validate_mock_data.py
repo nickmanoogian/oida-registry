@@ -12,7 +12,11 @@ Usage:
   python scripts/validate_mock_data.py --tier large --verbose
 """
 
-import argparse, csv, json, os, sys
+import argparse
+import csv
+import json
+import os
+import sys
 from collections import Counter
 
 PASS = "\033[32mPASS\033[0m"
