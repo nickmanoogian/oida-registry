@@ -404,6 +404,20 @@ def run(tier_name, tier_dir, verbose):
     print("\nRule 15 — attachments")
     attachments = [d for d in docs if d.get("Record Type") == "Attachment"]
     by_ctrl_all = {d["Control Number"]: d for d in docs}
+
+    # An edge tier plants orphans on purpose. Excuse the planted ones and the parents
+    # whose Attachment Count they falsified, so a real break still shows.
+    planted, bereaved = set(), set()
+    _edge = os.path.join(tier_dir, "edge-cases.json")
+    if os.path.exists(_edge):
+        for e in json.load(open(_edge))["scenarios"].get("orphan_attachment", {}).get("documents", []):
+            if isinstance(e, dict):
+                planted.add(e.get("control_number"))
+                if e.get("detached_from"):
+                    bereaved.add(e["detached_from"])
+            else:
+                planted.add(e)
+    attachments = [d for d in attachments if d["Control Number"] not in planted]
     if not attachments:
         print(f"  {WARN}  No attachment records found")
     else:
@@ -429,6 +443,8 @@ def run(tier_name, tier_dir, verbose):
         real = Counter(d.get("Parent Document ID","") for d in attachments)
         mismatched = []
         for d in docs:
+            if d["Control Number"] in bereaved:
+                continue
             claimed = int(d.get("Attachment Count") or 0)
             actual  = real.get(d["Control Number"], 0)
             if claimed != actual or (d.get("Has Attachments") == "Yes") != (actual > 0):

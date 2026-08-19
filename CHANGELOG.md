@@ -36,6 +36,10 @@ with 313 documents still loose.
 Rule 15 requires the parent to resolve and to be an email, the attachment to share its parent's
 custodian and date, and the claim to match reality in both directions.
 
+Edge cases had to learn about families: they now move a family as a unit rather than blanking one
+side's custodian, `broken_family` never removes an attachment, and `orphan_attachment` records
+what it detached from so a planted orphan is distinguishable from a broken one.
+
 **Two bugs found on the way:**
 
 - `Has Attachments` and `Attachment Count` each rolled `random.random() < 0.35` **independently**,

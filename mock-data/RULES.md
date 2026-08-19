@@ -523,6 +523,11 @@ Requirements:
   has three; one saying it has none has none. Where the custodian's pool of loose documents runs
   out, the claim is reset rather than left dangling.
 - Scripted hot documents and thread stubs are never re-parented.
+- **Edge cases move a family as a unit.** Blanking one side's custodian would leave a family
+  straddling two custodians, which no collection produces and which is indistinguishable from a
+  bug. `broken_family` never removes an attachment, since that would falsify its parent's count.
+  `orphan_attachment` records what it detached from, so Rule 15 can tell a planted orphan from a
+  broken one and can excuse the parent whose count it falsified.
 
 - **Only half of each custodian's loose documents may be consumed.** Without a reserve,
   attachments took 595 of 617 and left 22 standalone EDocs, which is not a collection anyone has
