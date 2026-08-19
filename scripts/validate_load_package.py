@@ -33,7 +33,7 @@ FAIL = "\033[31mFAIL\033[0m"
 DAT_SEP   = chr(254)
 DAT_QUOTE = chr(255)
 
-failures = []
+failures: list[str] = []
 
 
 def check(label, ok, detail=""):

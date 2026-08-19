@@ -41,11 +41,12 @@ DATASETS = {
 
 
 def human_size(n: int) -> str:
+    size = float(n)          # the running value stops being an int on the first divide
     for unit in ("B", "KB", "MB", "GB", "TB"):
-        if n < 1024:
-            return f"{n:.1f} {unit}"
-        n /= 1024
-    return f"{n:.1f} PB"
+        if size < 1024:
+            return f"{size:.1f} {unit}"
+        size /= 1024
+    return f"{size:.1f} PB"
 
 
 def download(name: str, out_dir: str = ".") -> None:

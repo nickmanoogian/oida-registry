@@ -3,7 +3,7 @@ OUT       := ./data
 MOCK_OUT  := ./mock-data
 ECI_OUT   := /tmp/oida-large
 
-.PHONY: help check lint imports list get-small get-all manifest verify \
+.PHONY: help check lint typecheck imports list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large mock-small-edge \
         load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-validate \
@@ -14,6 +14,7 @@ help:
 	@echo "  ── Quality gate ──────────────────────────────────────────────"
 	@echo "  make check           Everything a branch must pass before a PR"
 	@echo "  make lint            Ruff only"
+	@echo "  make typecheck       Mypy only"
 	@echo "  make imports         Import cycle check only"
 	@echo ""
 	@echo "  ── Raw OIDA data ─────────────────────────────────────────────"
@@ -57,14 +58,18 @@ help:
 # cheapest first so a typo fails in seconds rather than after a two minute build.
 
 RUFF := $(shell command -v ruff 2>/dev/null || echo .venv/bin/ruff)
+MYPY := $(shell command -v mypy 2>/dev/null || echo .venv/bin/mypy)
 
 lint:
 	@$(RUFF) check . || (echo "  lint failed — run '$(RUFF) check . --fix'" && exit 1)
 
+typecheck:
+	@$(MYPY) scripts/ --ignore-missing-imports
+
 imports:
 	@python3 scripts/check_imports.py
 
-check: lint imports
+check: lint typecheck imports
 	@echo "\n── Rules ──"
 	@python3 scripts/validate_mock_data.py --tier small
 	@echo "\n── Error scenarios ──"

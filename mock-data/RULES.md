@@ -475,10 +475,8 @@ Every document carries a `Record Type`:
 | `Container` | the container parents (Level 0) |
 | `EDoc` | everything else |
 
-**`Attachment` never occurs, by construction.** Family children in this dataset are thread
-replies, which are emails. `Has Attachments` and `Attachment Count` are populated, but no
-attachment is materialised as its own document. Any feature that rolls up families by
-attachment record needs a dataset this one does not yet provide.
+`Attachment` is covered by Rule 15: loose documents re-parented onto the emails that claim them.
+Thread replies remain `Email`, since that is what they are.
 
 ### Custodian count and distribution
 
@@ -502,6 +500,36 @@ every custodian and never read: `random.choice` picked uniformly, so every tier 
 roughly 10% each. Real collections are nothing like that, and a flat one hides every bug that
 depends on one custodian dominating. Assignment is now weighted, and the small tier runs from 23%
 down to 2.4%, a 9.6x spread.
+
+---
+
+## Rule 15 — Attachments
+
+`Has Attachments` and `Attachment Count` were rolled at random and backed by nothing. No
+attachment existed as its own document, so `Record Type` never took the value `Attachment` and
+nothing that rolls up a family by attachment record could be tested against this data.
+
+Attachments are **re-parented from existing loose documents**, not invented. Inventing them would
+inflate the tier and skew the Rule 1 shares; re-parenting keeps both intact, and it is realistic,
+since attachments really are Word, Excel, PDF and image files.
+
+Requirements:
+
+- An attachment is a non-email, non-container document with `Record Type` = `Attachment`, a
+  `Parent Document ID` that resolves to an **email**, and the parent's `Family ID`.
+- **Attachments share their parent's custodian and date.** A collection does not split a family
+  across custodians.
+- **The claim must match reality in both directions.** An email saying it has three attachments
+  has three; one saying it has none has none. Where the custodian's pool of loose documents runs
+  out, the claim is reset rather than left dangling.
+- Scripted hot documents and thread stubs are never re-parented.
+
+- **Only half of each custodian's loose documents may be consumed.** Without a reserve,
+  attachments took 595 of 617 and left 22 standalone EDocs, which is not a collection anyone has
+  ever seen.
+
+In the small tier this yields 304 attachments across 129 emails (16% of email), alongside 313
+documents that stay loose, with the tier size unchanged at 1,439.
 
 ---
 
