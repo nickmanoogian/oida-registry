@@ -175,7 +175,35 @@ drill and Key Relationships actually need from collected data:
   make mock-small-edge      # generates mock-data/small-edge/ and validates it
   ```
 
-### 3.2 Real OIDA data-products and raw archive
+### 3.2 Real-data load package (`small-real`)
+
+A second native-file load package, alongside the synthetic ones in §3.1, built
+entirely from real archive content instead of the MDL 2804 narrative:
+`scripts/build_real_load_package.py` reads the OIDA index parquet directly
+(`collection = 'Insys Litigation Documents'`) and emits a small (default 60
+document), fully real, ready-to-import package at `load-packages/small-real/`.
+
+Every value is real — no synthetic fields and no review decisions, the same
+principle `export_insys_documents.py` applies at full scale (§3.4):
+
+| File | Description |
+|------|-------------|
+| `natives/{id}.pdf` | Real produced PDF (kept under 400 KB each to keep the package small) |
+| `text/{id}.txt` | Real OCR extracted text for the same document |
+| `load-file.dat` | Concordance load file — Control Number, Bates, custodian, email fields, dates, page count, MD5, redaction, `Source URL` back to industrydocuments.ucsf.edu |
+| `IMPORT_README.txt` | Step-by-step Relativity import instructions |
+
+```bash
+pip install -r requirements.txt   # duckdb
+.venv/bin/python scripts/build_real_load_package.py --count 60
+```
+
+There is no Makefile target or `.dvc` release pointer for this package yet — it
+is built and committed straight to git (`load-packages/small-real/`, ~8.5 MB).
+Unlike the synthetic load packages, it has no CHANGELOG entry either; treat the
+committed copy as the current output of the script above.
+
+### 3.3 Real OIDA data-products and raw archive
 
 The real, analysis-ready datasets and the raw document archive that back the whole
 project. Pulled the same way (`dvc get …` or a direct S3 URL).
@@ -195,7 +223,7 @@ project. Pulled the same way (`dvc get …` or a direct S3 URL).
 Column definitions for the structured CSVs are in
 [`../data-products/SCHEMA.md`](../data-products/SCHEMA.md).
 
-### 3.3 ECI real-data export (real processing fields)
+### 3.4 ECI real-data export (real processing fields)
 
 `scripts/export_insys_documents.py` reads `metadata/oida-index.parquet`
 (`collection = 'Insys Litigation Documents'`) and emits **all 1,633,778 real
@@ -279,7 +307,7 @@ these. Full detail is in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.
 ECI (Early Case Intelligence) is a no-LLM, processing-fields-only orientation view
 of a collection. Two datasets from this repo feed it:
 
-- **The ECI real-data export (§3.3)** is what production ECI consumes. It is built
+- **The ECI real-data export (§3.4)** is what production ECI consumes. It is built
   strictly from real OIDA *processing* fields — the same fields ECI computes its
   insights from (custodian × time coverage, file-type mix, date ranges, sizes,
   languages derived from OCR). Because review/analytics fields are absent from a
@@ -373,7 +401,9 @@ the same natives as the clean package so a tester drops one `.dat` in beside an
 unzipped `natives/` folder. Not published as a release artifact — these are built
 locally and are opt-in; the clean package (`small.zip`) remains the default.
 
-**ECI real-data export:** see §3.3 (`make export-insys`).
+**ECI real-data export:** see §3.4 (`make export-insys`).
+
+**Real-data load package (`small-real`):** see §3.2 (`build_real_load_package.py`).
 
 **Full archive manifest:**
 
@@ -396,8 +426,8 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `mock-data/{small,medium,large}/` | The three synthetic tiers (small in git; others via DVC) |
 | `data-products/` | Real OIDA structured datasets (`.dvc` pointers) + `SCHEMA.md` |
 | `metadata/`, `samples/`, `manifest.tsv.gz.dvc` | Real archive index, sample, and full manifest |
-| `load-packages/` | Pre-built Relativity load packages (`small.zip` clean, `small-errors.zip` errored); `make load-broken` builds seven unpublished import-failure variants locally |
-| `scripts/` | `generate_mock_metadata.py` (generator), `validate_mock_data.py` (RULES.md validator), `build_load_package.py` / `validate_load_package.py` (native packages), `build_broken_load_files.py` (import-failure variants), `error_natives.py` / `edge_cases.py` (fabrication), `export_insys_documents.py` (ECI real-data export), `download.py` / `fetch_manifest.py` / `verify_urls.py` (raw-archive tools), `check_imports.py` / `test_error_scenarios.py` (CI gate) |
+| `load-packages/` | Pre-built Relativity load packages (`small.zip` clean, `small-errors.zip` errored); `small-real/` is the real-data package (§3.2), committed to git rather than DVC; `make load-broken` builds seven unpublished import-failure variants locally |
+| `scripts/` | `generate_mock_metadata.py` (generator), `validate_mock_data.py` (RULES.md validator), `build_load_package.py` / `validate_load_package.py` (native packages), `build_real_load_package.py` (real-data package, §3.2), `build_broken_load_files.py` (import-failure variants), `error_natives.py` / `edge_cases.py` (fabrication), `export_insys_documents.py` (ECI real-data export), `download.py` / `fetch_manifest.py` / `verify_urls.py` (raw-archive tools), `check_imports.py` / `test_error_scenarios.py` (CI gate) |
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
 | `CONTRIBUTING.md` | The `make check` gate and how to update rules, custodians, or file types |
 | `CHANGELOG.md` | Version history (current: v1.12.0) |
