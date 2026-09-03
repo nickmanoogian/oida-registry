@@ -1,0 +1,40 @@
+version: 2
+
+# GitHub Actions only. The pip surface here isn't worth managing: every
+# constraint in requirements.txt is open-ended (`dvc[s3]>=3.0`, `duckdb>=1.0`,
+# ...) with no lockfile, so version updates have nothing to bump, and the
+# packages CI actually installs (ruff, mypy, fpdf2) live in inline `pip install`
+# steps inside the workflows, which Dependabot doesn't read. Revisit if this
+# repo ever grows a lockfile or pinned constraints.
+#
+# The action pins below float on major tags (@v4, @v7). Tags do move within a
+# major, so patches arrive on their own, but majors never do: checkout is three
+# majors behind and still on the deprecated Node 20 runner. This is the only
+# thing that closes that gap.
+#
+# Note: Dependabot *alerts* are a separate repo setting, not this file. They
+# need to be enabled in Settings > Advanced Security for CVEs to surface.
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Chicago
+    open-pull-requests-limit: 3
+    commit-message:
+      # Matches the existing `chore(release):` / `feat(mock-data):` commit style.
+      # There's no pr-title-lint workflow on this repo, so this is convention,
+      # not a gate.
+      prefix: chore
+      include: scope
+    labels:
+      - dependencies
+      - github-actions
+    groups:
+      # Two workflows, three pins. One PR is easier to review than three.
+      actions:
+        patterns:
+          - "*"
