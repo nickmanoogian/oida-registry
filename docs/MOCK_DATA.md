@@ -89,26 +89,37 @@ matter, deterministic per random seed (default `42`).
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | ~1,439 | ~9,900 | ~148,000 |
-| **Custodians** | 4 (all Mallinckrodt) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (across all orgs + outside counsel) |
-| **Orgs represented** | 1 | 3 | 4 |
+| **Documents** | 1,439 | ~9,900 | ~148,000 |
+| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 Outside Counsel) |
+| **Orgs represented** | 3 | 3 | 4 |
+| **Internal pairs** (Key Relationships) | 45 | 45 | 780 |
 | **Phases present** | 2–3 | 1–4 | 1–4 |
 | **Scripted hot docs** | 8 | 11 | 13 |
 | **Scripted email threads** | 2 | 5 | 5 |
-| **Sent to review** | ~470 | ~3,600 | ~36,000 |
-| **Responsive** | ~228 | ~1,400 | ~13,000 |
-| **Privileged** | ~33 | ~160 | ~1,700 |
+| **Record Type mix** | Email 806 · EDoc 313 · Attachment 304 · Container 16 | — | — |
+| **Reached review** (Reviewed + In Progress + Queued) | 726 | ~3,600 | ~36,000 |
+| **Responsive** | 214 | ~1,400 | ~13,000 |
+| **Privileged** | 30 | ~160 | ~1,700 |
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR |
 
-Each tier contains four files:
+> **Small tier grew from 4 to 10 custodians (Rule 14, v1.11.0).** Four custodians yielded only 6
+> internal pairs, below the top-25 cut that production's Key Relationships widget applies and
+> tells the user about — a tier that can't reach the cut can't test it. The six added were drawn
+> from the medium roster rather than invented, so the narrative holds and every custodian named
+> in a scripted hot document is an actual custodian. Custodian assignment is also now weighted by
+> each custodian's `doc_target` instead of picked uniformly at random, so the small tier runs a
+> realistic 23%-down-to-2.4% spread instead of a flat ~10% each.
+
+Each tier contains four files, plus `edge-cases.json` in any tier built with `--edge-cases`:
 
 | File | Description |
 |------|-------------|
-| `documents.csv` | One row per document; 109 columns — every Relativity field plus the narrative fields |
+| `documents.csv` | One row per document; 110 columns — every Relativity field plus the narrative fields |
 | `custodians.json` | Custodian profiles: name, email, org, role, dept, narrative, hold status, doc counts |
 | `email-families.json` | Threading structure — organic parent/child families plus the scripted story threads |
 | `batches.json` | Batch assignments — reviewer, status, doc list, dates |
+| `edge-cases.json` | Only in an edge-case build — per scenario, what it starves, the count, and the document list (§3.1.1) |
 
 **Pull the small tier (already in git, instant):**
 
@@ -133,11 +144,66 @@ python scripts/validate_mock_data.py --tier small
 
 The full specification behind the distributions (file-type mix, workflow behaviour
 by file type, container records, dedup methods, processing-error spread, bimodal
-TAR scores, custodian rules, threading, production rules) lives in
-[`../mock-data/RULES.md`](../mock-data/RULES.md). A demo walkthrough of the
-narrative lives in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.md).
+TAR scores, custodian rules, threading, production rules, custodian folder structure,
+native-layer error fidelity, edge cases, the production drill baseline, and attachments)
+is **15 rules**, all in [`../mock-data/RULES.md`](../mock-data/RULES.md). A demo
+walkthrough of the narrative lives in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.md).
 
-### 3.2 Real OIDA data-products and raw archive
+#### 3.1.1 Record Type, attachments, and edge cases
+
+Three fields/behaviors worth calling out specifically, all driven by what the ECI document
+drill and Key Relationships actually need from collected data:
+
+- **`Record Type`** (Rule 14) — every document is `Email`, `EDoc`, `Container`, or `Attachment`.
+  This is one of the universal columns the ECI drill always renders
+  (`docs/widgets/cross-cutting-ux.md` in eci-ui), and the dataset didn't carry it until v1.9.0.
+- **Attachments** (Rule 15) — `Attachment` documents are **re-parented from existing loose
+  EDocs**, not invented: an attachment is a real document with a `Parent Document ID` that
+  resolves to an email, the parent's `Family ID`, and the parent's custodian and date. Inventing
+  new documents would have inflated the tier and skewed the Rule 1 file-type shares; re-parenting
+  keeps both intact. The small tier yields 304 attachments across 129 emails (16% of email),
+  with 313 documents still loose.
+- **Edge cases** (Rule 13, `--edge-cases` flag) — a slice of the tier that processes perfectly
+  and still starves a feature: no custodian, missing/sentinel dates, no extracted text,
+  non-English or mixed language, blank or list-only recipients, orphan attachments, broken
+  families, duplicate MD5, media with no text, and documents with more text than a model context
+  holds (300k/800k/1.5M words). **Off by default** — edge cases run on their own RNG stream after
+  generation, so the committed tiers and the CI determinism check are unaffected. Every edge-case
+  build ships `edge-cases.json` naming exactly which documents were starved and why.
+
+  ```bash
+  make mock-small-edge      # generates mock-data/small-edge/ and validates it
+  ```
+
+### 3.2 Real-data load package (`small-real`)
+
+A second native-file load package, alongside the synthetic ones in §3.1, built
+entirely from real archive content instead of the MDL 2804 narrative:
+`scripts/build_real_load_package.py` reads the OIDA index parquet directly
+(`collection = 'Insys Litigation Documents'`) and emits a small (default 60
+document), fully real, ready-to-import package at `load-packages/small-real/`.
+
+Every value is real — no synthetic fields and no review decisions, the same
+principle `export_insys_documents.py` applies at full scale (§3.4):
+
+| File | Description |
+|------|-------------|
+| `natives/{id}.pdf` | Real produced PDF (kept under 400 KB each to keep the package small) |
+| `text/{id}.txt` | Real OCR extracted text for the same document |
+| `load-file.dat` | Concordance load file — Control Number, Bates, custodian, email fields, dates, page count, MD5, redaction, `Source URL` back to industrydocuments.ucsf.edu |
+| `IMPORT_README.txt` | Step-by-step Relativity import instructions |
+
+```bash
+pip install -r requirements.txt   # duckdb
+.venv/bin/python scripts/build_real_load_package.py --count 60
+```
+
+There is no Makefile target or `.dvc` release pointer for this package yet — it
+is built and committed straight to git (`load-packages/small-real/`, ~8.5 MB).
+Unlike the synthetic load packages, it has no CHANGELOG entry either; treat the
+committed copy as the current output of the script above.
+
+### 3.3 Real OIDA data-products and raw archive
 
 The real, analysis-ready datasets and the raw document archive that back the whole
 project. Pulled the same way (`dvc get …` or a direct S3 URL).
@@ -157,7 +223,7 @@ project. Pulled the same way (`dvc get …` or a direct S3 URL).
 Column definitions for the structured CSVs are in
 [`../data-products/SCHEMA.md`](../data-products/SCHEMA.md).
 
-### 3.3 ECI real-data export (real processing fields)
+### 3.4 ECI real-data export (real processing fields)
 
 `scripts/export_insys_documents.py` reads `metadata/oida-index.parquet`
 (`collection = 'Insys Litigation Documents'`) and emits **all 1,633,778 real
@@ -187,9 +253,11 @@ in-browser.
 
 ## 4. Key custodians
 
-The mock custodian roster grows with the tier. The **small** tier is four
-Mallinckrodt custodians; **medium** adds Insys and McKinsey; **large** fills out
-40 custodians across all four orgs. The people who carry the narrative:
+The mock custodian roster grows with the tier. The **small** tier is now 10 custodians
+spanning all three defendant orgs (8 Mallinckrodt, 1 Insys, 1 McKinsey — see the callout
+in §3.1); **medium** is a different 10-custodian mix (7 Mallinckrodt, 2 Insys, 1 McKinsey);
+**large** fills out 40 custodians across all four orgs including Outside Counsel. The people
+who carry the narrative:
 
 | Name | Org | Role | Role in the story |
 |------|-----|------|-------------------|
@@ -207,11 +275,14 @@ Mallinckrodt custodians; **medium** adds Insys and McKinsey; **large** fills out
 | Richard Galveston | Outside Counsel | Senior Litigation Partner | DEA response, AG subpoena, MDL settlement (large tier) |
 
 **Hold status varies by design** (a key realism rule): most custodians have
-Acknowledged, at least one is Outstanding (e.g. Lisa Torres in small; Tevelow in
-medium/large), and the large tier includes an Escalated hold and several never
-acknowledged. In the small tier the four custodians are Michael Brennan (VP Sales
-& Marketing, key), Sarah Chen (Regional Sales Director), Thomas Bradley (CCO), and
-Lisa Torres (Executive Assistant, hold Outstanding).
+Acknowledged, at least one is Outstanding (Lisa Torres and Bradley Tevelow in the
+small tier; Tevelow in medium/large too), and the large tier includes an Escalated
+hold and several never acknowledged. The small tier's full roster is Michael Brennan
+(VP Sales & Marketing, key), Sarah Chen (Regional Sales Director), Thomas Bradley
+(CCO), Gregory Nash (Director, SOM Compliance), Robert Ashton (VP Sales, key),
+Patricia Morrison (VP Marketing), James Whitfield (CEO, key), Lisa Torres (Executive
+Assistant, hold Outstanding), Dr. Alec Harrington (Insys VP Sales), and Bradley
+Tevelow (McKinsey, hold Outstanding).
 
 ---
 
@@ -236,7 +307,7 @@ these. Full detail is in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.
 ECI (Early Case Intelligence) is a no-LLM, processing-fields-only orientation view
 of a collection. Two datasets from this repo feed it:
 
-- **The ECI real-data export (§3.3)** is what production ECI consumes. It is built
+- **The ECI real-data export (§3.4)** is what production ECI consumes. It is built
   strictly from real OIDA *processing* fields — the same fields ECI computes its
   insights from (custodian × time coverage, file-type mix, date ranges, sizes,
   languages derived from OCR). Because review/analytics fields are absent from a
@@ -267,7 +338,11 @@ python scripts/validate_mock_data.py --tier small                  # verify agai
 
 Two consecutive regenerations are byte-identical (RSMF participant ordering was
 made deterministic in v1.6.0), and CI (`validate.yml`) regenerates the small tier
-on every PR and fails if the output differs from the committed files.
+on every PR and fails if the output differs from the committed files. `make check`
+runs the same determinism check locally, plus lint, typecheck, import-cycle check,
+the RULES.md validators against both the default and edge-case tiers, and the error
+scenario matrix — the full gate, documented in [`../CONTRIBUTING.md`](../CONTRIBUTING.md),
+that must pass before raising a PR.
 
 **Native-file load package** (actual `.eml`/`.docx`/`.xlsx`/`.pptx`/`.pdf`/`.rsmf`
 files plus a Relativity Concordance `.dat` load file, ready for workspace import):
@@ -282,7 +357,53 @@ make load-small-synthetic      # synthetic content only, no network
 The scripted HOT- documents get hand-crafted MDL 2804 content; all other documents
 use real OIDA OCR text pulled from S3 (or synthetic with `--no-oida`).
 
-**ECI real-data export:** see §3.3 (`make export-insys`).
+Natives are written **one folder per custodian** (Rule 11), mirroring the
+`Processing Folder Path` column — `natives/Michael_Brennan/2014/01/DOC-0000318.docx`
+rather than everything loose in one directory. That is what lets the package be
+processed as raw data with one Relativity data source per custodian instead of a
+manual sort; `--flat` opts back into the old single-directory layout. Every package
+ships `custodian-sources.csv` (name, email, org, department, data source folder,
+document count, natives written, total bytes) as the setup sheet for building the
+processing set, and `scripts/validate_load_package.py` / `make load-validate` checks
+a built package against Rule 11.
+
+**Errored package** (natives that genuinely fail Relativity processing, for testing
+the failure paths rather than just the happy path):
+
+```bash
+make load-small-errors
+# pre-built package: dvc get https://github.com/nickmanoogian/oida-registry load-packages/small-errors.zip
+```
+
+This builds from the edge-case tier (§3.1.1) with `--with-errors`, so the published
+package carries **both** kinds of problem: 106 natives fabricated to genuinely fail
+processing (encrypted PDF, truncated file, corrupt OOXML, nested containers, malformed
+RSMF, text-free PDF, unsupported-format stubs, zero-byte files — keyed off
+`Processing Error Type`, Rule 12) and the edge-case tier's starved documents (no
+custodian, no date, no extracted text, broken families, and the rest). It ships
+`EXPECTED_ERRORS.csv` (control number, custodian, native file, scenario, expected
+Relativity error, and whether that outcome is guaranteed) and `edge-cases.json`
+side by side, so a tester can diff the processing report against a manifest instead
+of guessing which failures are deliberate. Nothing fabricates a zip bomb, malware, or
+an MIP-protected file — those exclusions are stated in the package's own
+`IMPORT_README.txt`.
+
+**Broken load files** (opt-in, local-only — exercises the *import* boundary rather
+than anything that happens after import):
+
+```bash
+make load-broken     # builds all 7 variants, then verifies each one carries its fault
+```
+
+Seven variants, one fault each (`missing-native`, `duplicate-control`, `bad-date`,
+`unqualified-delimiter`, `encoding`, `short-row`, `blank-required`), each pointing at
+the same natives as the clean package so a tester drops one `.dat` in beside an
+unzipped `natives/` folder. Not published as a release artifact — these are built
+locally and are opt-in; the clean package (`small.zip`) remains the default.
+
+**ECI real-data export:** see §3.4 (`make export-insys`).
+
+**Real-data load package (`small-real`):** see §3.2 (`build_real_load_package.py`).
 
 **Full archive manifest:**
 
@@ -300,18 +421,19 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `README.md` | Top-level usage for engineers and non-engineers |
 | `docs/MOCK_DATA.md` | **This file** — canonical mock/real data reference |
 | `mock-data/README.md` | Mock-tier usage and key fields |
-| `mock-data/RULES.md` | The 10 rules that define a realistic Relativity dataset |
+| `mock-data/RULES.md` | The 15 rules that define a realistic Relativity dataset |
 | `mock-data/DEMO_GUIDE.md` | Narrative walkthrough for demos |
 | `mock-data/{small,medium,large}/` | The three synthetic tiers (small in git; others via DVC) |
 | `data-products/` | Real OIDA structured datasets (`.dvc` pointers) + `SCHEMA.md` |
 | `metadata/`, `samples/`, `manifest.tsv.gz.dvc` | Real archive index, sample, and full manifest |
-| `load-packages/` | Pre-built Relativity load package (`small.zip`) |
-| `scripts/` | Generator, validator, exporter, downloader, manifest and URL tools |
+| `load-packages/` | Pre-built Relativity load packages (`small.zip` clean, `small-errors.zip` errored); `small-real/` is the real-data package (§3.2), committed to git rather than DVC; `make load-broken` builds seven unpublished import-failure variants locally |
+| `scripts/` | `generate_mock_metadata.py` (generator), `validate_mock_data.py` (RULES.md validator), `build_load_package.py` / `validate_load_package.py` (native packages), `build_real_load_package.py` (real-data package, §3.2), `build_broken_load_files.py` (import-failure variants), `error_natives.py` / `edge_cases.py` (fabrication), `export_insys_documents.py` (ECI real-data export), `download.py` / `fetch_manifest.py` / `verify_urls.py` (raw-archive tools), `check_imports.py` / `test_error_scenarios.py` (CI gate) |
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
-| `CHANGELOG.md` | Version history (current: v1.6.0) |
+| `CONTRIBUTING.md` | The `make check` gate and how to update rules, custodians, or file types |
+| `CHANGELOG.md` | Version history (current: v1.12.0) |
 
-Current release: **v1.6.0** (2026-06-26). See [`../CHANGELOG.md`](../CHANGELOG.md)
-for the full history.
+Current release: **v1.12.0** (2026-08-19) — "Attachments are real documents". See
+[`../CHANGELOG.md`](../CHANGELOG.md) for the full history.
 
 ---
 
