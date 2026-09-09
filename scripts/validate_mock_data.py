@@ -686,6 +686,70 @@ def run(tier_name, tier_dir, verbose):
             if not check("the content-only finding names no custodian in full",
                          not named, f"named: {named}", verbose): failures += 1
 
+    # ── Rule 20 — the entity population ──────────────────────────────────
+    ent_path = os.path.join(tier_dir, "entities.json")
+    if not os.path.exists(ent_path):
+        print(f"\nRule 20 — entity population\n  {WARN}  no entities.json "
+              f"(built with --no-entities: Key Relationships has 15 addresses)")
+    else:
+        print("\nRule 20 — entity population")
+        ent = json.load(open(ent_path, encoding="utf-8"))
+        cust_addrs = {str(c.get("email","")).lower() for c in custs}
+
+        ADDR_FIELDS = ("Email From SMTP","Email To SMTP","Email CC SMTP","Email BCC SMTP")
+        seen: Counter = Counter()
+        for d in docs:
+            for field in ADDR_FIELDS:
+                for token in (d.get(field,"") or "").replace(";", ",").split(","):
+                    token = token.strip().lower()
+                    if token:
+                        seen[token] += 1
+
+        non_cust = {a: n for a, n in seen.items() if a not in cust_addrs}
+        cap = ent.get("production_entity_cap", 25)
+        if not check(f"more non-custodian entities than the production cap of {cap}",
+                     len(non_cust) > cap, f"{len(non_cust)} entities", verbose): failures += 1
+
+        # The tail is the part a top-N cap hides, so it has to be a real tail.
+        singles = [a for a, n in non_cust.items() if n == 1]
+        if not check("a real singleton tail, not one planted document",
+                     len(singles) >= 10, f"{len(singles)} entities on one document",
+                     verbose): failures += 1
+
+        # Every claimed count is checked against the corpus, not against itself.
+        wrong = []
+        for e in ent["externals"]:
+            claimed, actual = e["documents"], seen.get(e["email"].lower(), 0)
+            if claimed != actual:
+                wrong.append(f"{e['email']}: claims {claimed}, found {actual}")
+        if not check("every external's document count matches the corpus", not wrong,
+                     f"{len(wrong)} disagree: {wrong[:2]}" if wrong
+                     else f"{len(ent['externals'])} entities", verbose): failures += 1
+
+        listed_singles = set(ent.get("singletons", []))
+        bad_single = [a for a in listed_singles if seen.get(a.lower(), 0) != 1]
+        if not check("every listed singleton really appears once", not bad_single,
+                     f"{len(bad_single)} do not: {bad_single[:2]}", verbose): failures += 1
+
+        # Aliases: the whole point is that two addresses resolve to one person, so
+        # both have to be present and the person has to be a real custodian.
+        aliases = ent.get("aliases", [])
+        if not check("at least one person sends from two addresses", bool(aliases),
+                     f"{len(aliases)} aliased", verbose): failures += 1
+        cust_names = {c["name"] for c in custs}
+        bad_alias = []
+        for a in aliases:
+            if a["person"] not in cust_names:
+                bad_alias.append(f"{a['person']}: not a custodian")
+            if a["alias"].lower() == a["primary"].lower():
+                bad_alias.append(f"{a['person']}: alias equals primary")
+            for key in ("primary", "alias"):
+                if seen.get(a[key].lower(), 0) < 1:
+                    bad_alias.append(f"{a['person']}: {a[key]} appears 0 times")
+        if not check("every alias resolves to a custodian and both addresses are used",
+                     not bad_alias, f"{len(bad_alias)}: {bad_alias[:2]}", verbose):
+            failures += 1
+
     # ── Summary ───────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if failures == 0:

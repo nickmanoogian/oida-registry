@@ -1109,8 +1109,8 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 # ── Main Generator ────────────────────────────────────────────────────────
 
 def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
-             language_on=True, findings_on=True, ssn_range="9xx",
-             second_language_share=None):
+             language_on=True, findings_on=True, entities_on=True,
+             ssn_range="9xx", second_language_share=None):
     random.seed(seed)
     # xlarge borrows large's narrative: same roster, same scripted content, same
     # phase weighting. Only the volumes and the production shape are its own.
@@ -1512,6 +1512,19 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     for body in (language_report or {}).values():
         protected |= {e["control_number"] for e in body["documents"]}
 
+    entity_report = None
+    if entities_on:
+        import entity_population
+        entity_report = entity_population.apply(all_docs, custs, tier_name, seed,
+                                                protected=protected)
+        print(f"  Rule 20: {entity_report['distinct_external_addresses']} external "
+              f"entities, {len(entity_report['singletons'])} of them on a single "
+              f"document, {len(entity_report['aliases'])} people on two addresses")
+        # The rewritten recipients are ground truth too, so the edge cases leave
+        # them alone: blanking a recipient would falsify the entity's document count.
+        for ext in entity_report["externals"]:
+            protected |= {c for c in ext["document_ids"] if c != "..."}
+
     # ── Edge cases (opt in) ──
     # Applied last, on its own RNG stream, so the default output is byte-identical
     # and the committed tiers plus the CI determinism check are unaffected.
@@ -1522,6 +1535,12 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         affected = sum(len(v) for v in edge_report.values())
         print(f"\n  Edge cases applied: {affected:,} documents across "
               f"{len(edge_report)} scenarios")
+
+    # The entity census is taken last: the edge cases blank recipients, and the
+    # ground truth has to describe the data as it finally stands.
+    if entity_report is not None:
+        import entity_population
+        entity_population.recount(all_docs, entity_report)
 
     # ── Write outputs ──
     Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -1555,6 +1574,8 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
             "note": language_mix.NOTE,
             "languages": language_report,
         }))
+    if entity_report is not None:
+        outputs.append(("entities.json", entity_report))
     if findings is not None:
         import planted_findings
         outputs.append(("findings.json", {
@@ -1606,6 +1627,9 @@ def main():
                         "one bar.")
     p.add_argument("--no-findings", action="store_true",
                    help="Skip the planted findings and decoy (Rule 18).")
+    p.add_argument("--no-entities", action="store_true",
+                   help="Skip the external entity population (Rule 20). Key "
+                        "Relationships then has 15 addresses and no alias to resolve.")
     p.add_argument("--edge-cases", action="store_true",
                    help="Starve a slice of documents of custodian, date, text, or family "
                         "so the failure paths of aggregating features can be tested. "
@@ -1616,6 +1640,7 @@ def main():
              pi_on=not args.no_pi,
              language_on=not args.no_language_mix,
              findings_on=not args.no_findings,
+             entities_on=not args.no_entities,
              ssn_range=args.ssn_range,
              second_language_share=args.second_language_share)
 
