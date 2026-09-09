@@ -802,14 +802,55 @@ def load_plants(tier_dir):
 GROUND_TRUTH_FILES = ("pi-ground-truth.csv", "language-mix.json", "findings.json")
 
 
-def copy_ground_truth(tier_dir, out_dir):
-    """Ship the ground truth beside the natives, the way EXPECTED_ERRORS.csv is."""
+def copy_ground_truth(tier_dir, out_dir, present=None):
+    """Ship the ground truth beside the natives, the way EXPECTED_ERRORS.csv is.
+
+    `present` is the set of control numbers the package actually contains. A
+    --limit build holds a slice of the tier, so copying the tier's manifests
+    verbatim would describe thousands of documents that are not there: the
+    manifests are filtered to the package instead. Without a limit every
+    document is present and the filter is a no-op.
+    """
     copied = []
     for name in GROUND_TRUTH_FILES:
         src = os.path.join(tier_dir, name)
-        if os.path.exists(src):
-            shutil.copyfile(src, os.path.join(out_dir, name))
-            copied.append(name)
+        if not os.path.exists(src):
+            continue
+        dest = os.path.join(out_dir, name)
+        if present is None:
+            shutil.copyfile(src, dest)
+        elif name == "pi-ground-truth.csv":
+            with open(src, encoding="utf-8") as f:
+                rows = [r for r in csv.DictReader(f) if r["Control Number"] in present]
+            import pi_layer
+            with open(dest, "w", newline="", encoding="utf-8") as f:
+                w = csv.DictWriter(f, fieldnames=pi_layer.GROUND_TRUTH_COLUMNS)
+                w.writeheader(); w.writerows(rows)
+        elif name == "language-mix.json":
+            with open(src, encoding="utf-8") as f:
+                payload = json.load(f)
+            kept = {}
+            for lang, body in payload["languages"].items():
+                docs = [e for e in body["documents"] if e["control_number"] in present]
+                if docs:
+                    kept[lang] = {**body, "count": len(docs), "documents": docs}
+            payload["languages"] = kept
+            with open(dest, "w") as f:
+                json.dump(payload, f, indent=2)
+        elif name == "findings.json":
+            with open(src, encoding="utf-8") as f:
+                payload = json.load(f)
+            payload["findings"] = [
+                f_ for f_ in payload["findings"]
+                if f_["control_number"] in present
+                and all(f_.get(k, {}).get("control_number", "") in present
+                        for k in ("attachment", "distinguisher") if isinstance(f_.get(k), dict))
+            ]
+            with open(dest, "w") as f:
+                json.dump(payload, f, indent=2)
+        else:
+            shutil.copyfile(src, dest)
+        copied.append(name)
     return copied
 
 
@@ -1470,7 +1511,11 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     # Carry the ground truth for the planted content across too, for the same
     # reason: a package whose natives hold PI and no manifest saying where is a
     # package a tester cannot score.
-    ground_truth = copy_ground_truth(tier_dir, out_dir)
+    limited = {d["Control Number"] for d in all_docs} if limit else None
+    ground_truth = copy_ground_truth(tier_dir, out_dir, present=limited)
+    if limited:
+        print(f"  Manifests:  filtered to the {len(limited):,} documents this "
+              f"--limit build contains")
 
     # Carry the edge-case manifest across from the metadata tier. Without it the
     # package has the starved documents but no map of which ones are deliberate,
@@ -1514,7 +1559,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
 
 def main():
     p = argparse.ArgumentParser(description="Build Relativity native file load package from mock data")
-    p.add_argument("--tier",     required=True, choices=["small","medium","large"])
+    p.add_argument("--tier",     required=True, choices=["small","medium","large","xlarge"])
     p.add_argument("--dir",      default=None,  help="Source tier directory (default: mock-data/{tier}/)")
     p.add_argument("--out",      default=None,  help="Output directory (default: load-packages/{tier}/)")
     p.add_argument("--no-oida",  action="store_true", help="Use synthetic content instead of OIDA OCR")

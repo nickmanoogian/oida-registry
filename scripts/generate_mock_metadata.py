@@ -49,6 +49,16 @@ PHASE_WEIGHTS = {
     "large":  {1: 0.18, 2: 0.27, 3: 0.30, 4: 0.25},
 }
 
+# Which tier's narrative a tier borrows. xlarge is large's story at a bigger
+# scale: the same custodians, the same scripted documents and threads, the same
+# phase weighting. Only the volumes differ, so there is one roster and one set of
+# scripted content to maintain rather than two that drift apart.
+NARRATIVE_PARENT = {"xlarge": "large"}
+
+
+def narrative_tier(tier_name):
+    return NARRATIVE_PARENT.get(tier_name, tier_name)
+
 PHASE_RESPONSIVE_PCT = {1: 0.12, 2: 0.40, 3: 0.55, 4: 0.35}
 PHASE_PRIVILEGE_PCT  = {1: 0.02, 2: 0.08, 3: 0.15, 4: 0.25}
 
@@ -734,12 +744,16 @@ WORKFLOW = {
     "small":  {"bates_prefix": "MNK", "productions": 1, "hot_pct": 0.02, "redacted_pct": 0.08},
     "medium": {"bates_prefix": "MNK", "productions": 2, "hot_pct": 0.015, "redacted_pct": 0.07},
     "large":  {"bates_prefix": "MNK", "productions": 4, "hot_pct": 0.013, "redacted_pct": 0.10},
+    # More volumes, and a lower hot rate: the reviewed population is nearly twice
+    # large's, and a hot document is a fixed number of real findings, not a share.
+    "xlarge": {"bates_prefix": "MNK", "productions": 6, "hot_pct": 0.008, "redacted_pct": 0.10},
 }
 
 DATE_RANGES = {
     "small":  ("2013-01-01", "2016-12-31"),
     "medium": ("2010-01-01", "2017-12-31"),
     "large":  ("2010-01-01", "2018-06-30"),
+    "xlarge": ("2010-01-01", "2018-06-30"),
 }
 
 # ── File Type Definitions (RULES.md Rule 1 & 2) ───────────────────────────
@@ -814,6 +828,21 @@ TIER_FILE_COUNTS = {
         "Google Workspace - Document":1500,"Google Workspace - Spreadsheet":600,"Google Workspace - Presentation":400,
         "Text / Markup":3500,"Source Code":1500,"Audio / Video":500,"Cellebrite Structured Excel":300,
         "Container - ZIP":200,"Office - Visio":400,"Unsupported":1500,
+    },
+    # Large's composition at 1.86x, which lands the tier above a quarter of a
+    # million documents. The shares are held to the Rule 1 bands, so the mix is
+    # the same matter at a larger collection, not a differently shaped one.
+    "xlarge": {
+        "Email - MSG":97500,"Email - EML":32500,"Email Container - PST":560,"Email Container - MBOX":185,
+        "Calendar - ICS":3700,"Office - Word (DOCX)":20900,"Office - Word (DOC)":6950,
+        "Office - Excel (XLSX)":13900,"Office - Excel (XLS)":4650,"Office - PowerPoint (PPTX)":7400,
+        "Office - PowerPoint (PPT)":1850,"PDF - Text":14850,"PDF - Scanned":3150,"PDF - MIP Protected":28,
+        "Chat - Teams (RSMF)":16700,"Chat - Slack (RSMF)":11150,"Chat - SMS (RSMF)":2800,
+        "Chat - WhatsApp (RSMF)":1300,"Chat - Google Chat (RSMF)":2800,"Bloomberg XML":1850,
+        "Image - JPEG":5000,"Image - HEIC":2250,"Image - PNG":2800,"Image - TIFF":1100,
+        "Google Workspace - Document":2800,"Google Workspace - Spreadsheet":1100,"Google Workspace - Presentation":750,
+        "Text / Markup":6500,"Source Code":2800,"Audio / Video":950,"Cellebrite Structured Excel":560,
+        "Container - ZIP":370,"Office - Visio":750,"Unsupported":2800,
     },
 }
 
@@ -1083,8 +1112,11 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
              language_on=True, findings_on=True, ssn_range="9xx",
              second_language_share=None):
     random.seed(seed)
+    # xlarge borrows large's narrative: same roster, same scripted content, same
+    # phase weighting. Only the volumes and the production shape are its own.
+    nt     = narrative_tier(tier_name)
     wf     = WORKFLOW[tier_name]
-    custs  = CUSTODIANS[tier_name]
+    custs  = CUSTODIANS[nt]
     counts = TIER_FILE_COUNTS[tier_name]
     dr     = DATE_RANGES[tier_name]
 
@@ -1102,7 +1134,7 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
             # collections are heavily skewed, and a flat one hides every bug that
             # depends on one custodian dominating.
             cust  = random.choices(custs, weights=[c["doc_target"] for c in custs])[0]
-            phase = assign_phase(cust, tier_name)
+            phase = assign_phase(cust, nt)
             org   = cust.get("org", "Mallinckrodt")
             d = make_doc(f"DOC-{doc_num:07d}", cust, ft_name, ft_meta, dr, custs, wf, phase, org)
             all_docs.append(d)
@@ -1129,9 +1161,9 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     scripted_hot_ids = set()
     for hd in SCRIPTED_HOT_DOCS:
         tiers_for = hd.get("tiers", ["small","medium","large"])
-        if tier_name not in tiers_for:
+        if nt not in tiers_for:
             continue
-        cust_name = hd["custodian_by_tier"].get(tier_name)
+        cust_name = hd["custodian_by_tier"].get(nt)
         cust = next((c for c in custs if c["name"] == cust_name), custs[0])
         org  = cust.get("org", hd.get("org", "Mallinckrodt"))
 
@@ -1258,10 +1290,10 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     # Scripted threads first — build O(1) lookup to avoid scanning all_docs per call
     doc_by_ctrl = {d["Control Number"]: d for d in all_docs}
 
-    def find_or_stub(ctrl, msg, all_docs, custs, dr, wf, tier_name):
+    def find_or_stub(ctrl, msg, all_docs, custs, dr, wf, narrative):
         existing = doc_by_ctrl.get(ctrl)
         if existing: return existing
-        cust_name = msg["from_name_tier"].get(tier_name, custs[0]["name"])
+        cust_name = msg["from_name_tier"].get(narrative, custs[0]["name"])
         cust = next((c for c in custs if c["name"]==cust_name), custs[0])
         org  = cust.get("org","Mallinckrodt")
         d = make_doc(ctrl, cust, "Email - MSG", FILE_TYPES["Email - MSG"], dr, custs, wf, msg["phase"], org)
@@ -1280,15 +1312,15 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         return d
 
     for thread in SCRIPTED_THREADS:
-        if tier_name not in thread.get("tiers",["small","medium","large"]): continue
+        if nt not in thread.get("tiers",["small","medium","large"]): continue
         msgs     = thread["messages"]
-        parent_d = find_or_stub(msgs[0]["ctrl"], msgs[0], all_docs, custs, dr, wf, tier_name)
+        parent_d = find_or_stub(msgs[0]["ctrl"], msgs[0], all_docs, custs, dr, wf, nt)
         sfam     = thread["family_id"]; sthr = thread["thread_id"]
         children_ids = []
         parent_d["Family ID"] = sfam; parent_d["Email Thread ID"] = sthr
         parent_d["Email Threading Inclusive"] = "No"
         for msg in msgs[1:]:
-            child_d = find_or_stub(msg["ctrl"], msg, all_docs, custs, dr, wf, tier_name)
+            child_d = find_or_stub(msg["ctrl"], msg, all_docs, custs, dr, wf, nt)
             child_d["Family ID"]     = sfam
             child_d["Email Thread ID"] = sthr
             child_d["Parent Document ID"] = parent_d["Control Number"]
@@ -1385,16 +1417,20 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         "small":  [("First Pass Review",0.85),("QC Review",0.15)],
         "medium": [("First Pass Review",0.70),("Privilege Review",0.15),("QC Review",0.10),("Hot Docs",0.05)],
         "large":  [("First Pass Review",0.60),("Privilege Review",0.15),("QC Review",0.12),("Hot Docs",0.05),("Second Pass",0.05),("Clawback Review",0.03)],
-    }[tier_name]
+    }[nt]
     reviewer_pool = {
         "small":  ["Jordan Lee","Sam Rivera","Taylor Kim"],
         "medium": ["Jordan Lee","Sam Rivera","Taylor Kim","Morgan Chen","Alex Patel","Casey Wu"],
         "large":  ["Jordan Lee","Sam Rivera","Taylor Kim","Morgan Chen","Alex Patel","Casey Wu",
                    "Riley Zhao","Devon Scott","Avery Nguyen","Quinn Torres","Blake Fisher","Skylar Osei","Jamie Brooks"],
-    }[tier_name]
+    }[nt]
+    if tier_name == "xlarge":
+        reviewer_pool = reviewer_pool + ["Rowan Diallo","Marisol Vega","Toby Ellery",
+                                         "Priya Anand","Elliot Marsh","Noor Haddad"]
 
     batches  = []; batch_id = 0
-    bsz_min, bsz_max = (150,350) if tier_name=="small" else (200,500) if tier_name=="medium" else (300,800)
+    bsz_min, bsz_max = ((150,350) if tier_name=="small" else (200,500) if tier_name=="medium"
+                        else (400,1000) if tier_name=="xlarge" else (300,800))
     rev_pool = reviewed[:]; random.shuffle(rev_pool); cursor = 0
     for bset, pct in batch_sets:
         bdocs = rev_pool[cursor:cursor+int(len(rev_pool)*pct)]; cursor += len(bdocs)
@@ -1420,14 +1456,17 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     # not show the column it always shows.
     for d in all_docs:
         ft = d.get("File Type Category", "")
-        # Note: "Attachment" never occurs. Family children here are thread replies,
-        # which are emails; the dataset flags Has Attachments but never materialises
-        # an attachment as its own document.
         if str(d.get("Level","")) == "0":
             d["Record Type"] = "Container"
         elif ft in ("Email - MSG", "Email - EML"):
             d["Record Type"] = "Email"
-        elif d.get("Parent Document ID", ""):
+        # A member of a scripted thread is a message in that thread, and its
+        # Parent Document ID is thread structure rather than an attachment
+        # relationship. HOT-0000002, the deck Tevelow sent as the third message of
+        # STHR-0002, was typed Attachment on that basis: it then had to share
+        # Whitfield's custodian to satisfy Rule 15, which is not what happened, and
+        # it inflated a parent that claims no attachments.
+        elif d.get("Parent Document ID", "") and not str(d.get("Email Thread ID","")).startswith("STHR-"):
             d["Record Type"] = "Attachment"
         else:
             d["Record Type"] = "EDoc"
@@ -1550,7 +1589,7 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
 
 def main():
     p = argparse.ArgumentParser(description="Generate MDL 2804 OIDA Relativity mock data")
-    p.add_argument("--tier",  required=True, choices=["small","medium","large"])
+    p.add_argument("--tier",  required=True, choices=["small","medium","large","xlarge"])
     p.add_argument("--out",   default=None)
     p.add_argument("--seed",  type=int, default=DEFAULT_SEED)
     p.add_argument("--ssn-range", choices=["9xx", "666"], default="9xx",

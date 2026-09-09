@@ -87,19 +87,19 @@ OIDA files — they are structured CSV/JSON with every Relativity field populate
 privilege, email threading, and the narrative fields above). Built to mirror a real
 matter, deterministic per random seed (default `42`).
 
-| | Small | Medium | Large |
-|---|---|---|---|
-| **Documents** | 1,439 | 9,980 | 148,235 |
-| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) |
-| **Orgs represented** | 3 | 3 | 4 |
-| **Phases present** | 2–3 | 1–4 | 1–4 |
-| **Scripted hot docs** | 8 | 11 | 13 |
-| **Scripted email threads** | 2 | 5 | 5 |
-| **Sent to review** | 724 | 4,002 | 56,344 |
-| **Responsive** | 213 | 1,089 | 14,434 |
-| **Privileged** | 30 | 146 | 1,991 |
-| **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) |
-| **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR |
+| | Small | Medium | Large | Extra large |
+|---|---|---|---|---|
+| **Documents** | 1,439 | 9,980 | 148,235 | 275,273 |
+| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) | 40, the same roster as large |
+| **Orgs represented** | 3 | 3 | 4 | 4 |
+| **Phases present** | 2–3 | 1–4 | 1–4 | 1–4 |
+| **Scripted hot docs** | 8 | 11 | 13 | 13 |
+| **Scripted email threads** | 2 | 5 | 5 | 5 |
+| **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
+| **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
+| **Privileged** | 30 | 146 | 1,991 | 3,654 |
+| **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | generated on demand |
+| **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR | scale past a quarter of a million documents |
 
 Each tier contains seven files:
 

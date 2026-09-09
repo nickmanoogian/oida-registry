@@ -24,6 +24,7 @@ LANGUAGE_MIX = {
     "small":  {"German": 0.020},
     "medium": {"German": 0.015, "Polish": 0.010},
     "large":  {"German": 0.012, "Polish": 0.008, "Spanish": 0.004},
+    "xlarge": {"German": 0.012, "Polish": 0.008, "Spanish": 0.004},
 }
 
 # One line per document. Real sentences: a language classifier fed lorem ipsum

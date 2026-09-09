@@ -18,21 +18,22 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 
 ## Tiers at a glance
 
-| | Small | Medium | Large |
-|---|---|---|---|
-| **Documents** | 1,439 | 9,980 | 148,235 |
-| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) |
-| **Orgs** | 3 | 3 | 4 (+ outside counsel) |
-| **Phases** | 2–3 | 1–4 | 1–4 |
-| **Scripted hot docs** | 8 | 11 | 13 |
-| **Scripted threads** | 2 | 5 | 5 |
-| **Planted findings** | 4 | 4 | 4 |
-| **PI instances** | 102 | 443 | 3,326 |
-| **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% |
-| **Sent to review** | 724 | 4,002 | 56,344 |
-| **Responsive** | 213 | 1,089 | 14,434 |
-| **Privileged** | 30 | 146 | 1,991 |
-| **In git** | ✅ | via DVC | via DVC |
+| | Small | Medium | Large | Extra large |
+|---|---|---|---|---|
+| **Documents** | 1,439 | 9,980 | 148,235 | 275,273 |
+| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) | 40, the same roster as large |
+| **Orgs** | 3 | 3 | 4 (+ outside counsel) | 4 (+ outside counsel) |
+| **Phases** | 2–3 | 1–4 | 1–4 | 1–4 |
+| **Scripted hot docs** | 8 | 11 | 13 | 13 |
+| **Scripted threads** | 2 | 5 | 5 | 5 |
+| **Planted findings** | 4 | 4 | 4 | 4 |
+| **PI instances** | 102 | 443 | 3,326 | 6,048 |
+| **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% | German 1.2%, Polish 0.8%, Spanish 0.4% |
+| **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
+| **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
+| **Privileged** | 30 | 146 | 1,991 | 3,654 |
+| **`documents.csv`** | 1.4 MB | 9 MB | 130 MB | 260 MB |
+| **In git** | ✅ | via DVC | via DVC | generate on demand |
 
 ---
 
@@ -48,7 +49,15 @@ are building, so this is the table to read first. Measured on the **small** tier
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6) | — |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, and one document dense with PI and irrelevant to the matter | No population deliberately straddling two obvious categories. |
 | **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against | — |
-| **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large adds Spanish. |
+| **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large and extra large add Spanish. |
+
+For scale rather than coverage, the **extra large** tier is the same matter at 275,273
+documents, above a quarter of a million. It is generated on demand rather than published,
+because it takes about two minutes and writes a 260 MB `documents.csv`:
+
+```bash
+make mock-regen-xlarge
+```
 
 Add `--edge-cases` to starve any of them on purpose: no custodian, no date, a 1601 date, no
 extracted text, an unexpected language, an orphan attachment, more text than a model
@@ -94,9 +103,10 @@ gunzip documents.csv.gz
 ### Or use the Makefile
 
 ```bash
-make mock-small    # pull small tier
-make mock-medium   # pull medium tier
-make mock-large    # pull large tier (compressed)
+make mock-small        # pull small tier
+make mock-medium       # pull medium tier
+make mock-large        # pull large tier (compressed)
+make mock-regen-xlarge # generate the extra large tier locally (not published)
 ```
 
 ### Validate after pulling

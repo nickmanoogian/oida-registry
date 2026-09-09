@@ -24,6 +24,12 @@ jobs:
       - name: Import cycle check
         run: python3 scripts/check_imports.py
 
+      - name: Tier configuration is complete and in band
+        # Generating xlarge takes two minutes, so CI does not. This checks the
+        # declarations instead: every tier-keyed table covers every tier, and every
+        # file type share sits inside the band Rule 1 sets.
+        run: python3 scripts/check_tier_config.py
+
       - name: Validate small tier against RULES.md
         run: python3 scripts/validate_mock_data.py --tier small
 

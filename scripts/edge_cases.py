@@ -189,6 +189,14 @@ def apply(all_docs, families, custodians, seed=42, protected=None):
             claimed.add(e.get("control_number") if isinstance(e, dict) else e)
 
     by_ctrl = {d["Control Number"]: d for d in all_docs}
+    # This scenario is the only one that removes a document rather than degrading
+    # it, so it has to answer for everything that pointed at the document. Anything
+    # that is itself a parent would leave its children orphaned, and anything a
+    # ground-truth file names would leave that file describing a document nobody
+    # can open. At the small tier this removes five documents and rarely collided;
+    # at 275,000 it removes a thousand and orphaned 602 attachments.
+    parents = {d.get("Parent Document ID", "") for d in all_docs
+               if d.get("Parent Document ID")}
     broken = []
     for fam in families:
         if len(broken) >= count("broken_family"):
@@ -197,8 +205,10 @@ def apply(all_docs, families, custodians, seed=42, protected=None):
         if len(kids) < 2:
             continue
         lost = kids[-1]
-        if lost.startswith("HOT-") or lost in claimed:
-            continue                          # scripted, or already spoken for
+        if lost.startswith("HOT-") or lost in claimed or lost in protected:
+            continue                          # scripted, spoken for, or seeded
+        if lost in parents:
+            continue                          # removing it would orphan its children
         if by_ctrl.get(lost, {}).get("Record Type") == "Attachment":
             continue                          # its parent's Attachment Count would lie
         kids.pop()                            # the family record still references it
