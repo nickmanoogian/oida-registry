@@ -7,6 +7,7 @@ ECI_OUT   := /tmp/oida-large
         mock-small mock-medium mock-large mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large mock-small-edge \
         load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-validate \
+        load-release \
         export-insys
 
 help:
@@ -43,6 +44,7 @@ help:
 	@echo "  make load-broken         Build load files that fail at IMPORT (opt in, .dat only)"
 	@echo "  make load-large          Build large tier load package"
 	@echo "  make load-validate       Check a built package against RULES.md Rule 11"
+	@echo "  make load-release        Build, validate and zip both release assets"
 	@echo ""
 	@echo "  ── ECI real-data export (real OIDA processing fields) ────────"
 	@echo "  make export-insys    Export ALL real Insys docs + custodians.json -> $(ECI_OUT)/"
@@ -192,3 +194,13 @@ load-large:
 load-validate:
 	python3 scripts/validate_load_package.py load-packages/small
 	@test ! -d load-packages/small-errors || python3 scripts/validate_load_package.py load-packages/small-errors
+
+# The release assets. Zipped from the repo root so the archive holds
+# load-packages/{small,small-errors}/, which is the shape every published
+# version has had. Validate before zipping: a package that fails the gate is
+# not a release candidate.
+load-release: load-small load-small-errors load-validate
+	@rm -f load-packages/small-load-package.zip load-packages/small-errors-load-package.zip
+	cd $(CURDIR) && zip -qr load-packages/small-load-package.zip load-packages/small
+	cd $(CURDIR) && zip -qr load-packages/small-errors-load-package.zip load-packages/small-errors
+	@ls -la load-packages/*.zip

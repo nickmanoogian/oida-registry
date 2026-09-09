@@ -303,7 +303,14 @@ unzip small-errors.zip
 
 Each contains ~1,423 native files in per-custodian folders, `load-file.dat`,
 `custodian-sources.csv` and `IMPORT_README.txt`. Ready to import immediately. The errored
-package adds `EXPECTED_ERRORS.csv`.
+package adds `EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`,
+`language-mix.json` and `findings.json`.
+
+> **The v1.12.0 release assets predate Rule 19.** Every `.xlsx` and `.pdf` in them is
+> stamped with the build date and every `.pptx` with python-pptx's 2013 template date, which
+> lands in Collection Coverage as a spike in the future. They also have no PI, one language
+> and no planted findings. Until the assets are republished, build the package instead: it
+> is one command and about five seconds (Option B).
 
 ### Option B — Build from scratch
 

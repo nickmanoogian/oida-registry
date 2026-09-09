@@ -1382,7 +1382,17 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     print(f"{'='*60}\n")
 
     Path(out_dir).mkdir(parents=True, exist_ok=True)
-    Path(os.path.join(out_dir, "natives")).mkdir(exist_ok=True)
+
+    # The builder owns natives/ entirely, so clear it first. Building over an older
+    # package left its files behind and mixed two generations: the custodian sheet
+    # and the load file describe this build, while the folder holds both. The
+    # validator catches the mismatch, which is how this was found.
+    nat_root = os.path.join(out_dir, "natives")
+    if os.path.isdir(nat_root) and os.listdir(nat_root):
+        stale = sum(len(files) for _, _, files in os.walk(nat_root))
+        shutil.rmtree(nat_root)
+        print(f"  Cleared:    {stale:,} files from a previous build of {nat_root}")
+    Path(nat_root).mkdir(exist_ok=True)
 
     # Load OCR content
     cache = load_or_fetch_ocr_cache(use_oida, MANIFEST_PATH)

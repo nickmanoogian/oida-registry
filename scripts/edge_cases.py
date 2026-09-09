@@ -225,7 +225,15 @@ def apply(all_docs, families, custodians, seed=42, protected=None):
     # ── more text than anything downstream expects to read ────────────────
     # Word Count is the contract: build_load_package writes a native with this
     # much text, so the metadata and the file agree without a second lookup.
-    docs = _take(pool, max(len(OVERSIZED_WORD_COUNTS), count("oversized_text")))
+    # A document already flagged with a processing error is off limits here: Rule 12
+    # fabricates its native, and the Corrupt File scenario truncates the file to 40%
+    # of its bytes, so a document claiming 800,000 words would hold 320,000. The
+    # native is this scenario's whole contract, so it cannot share a document with
+    # one that is meant to be broken.
+    healthy = [d for d in pool if not (d.get("Processing Error Type", "") or "").strip()]
+    docs = healthy[:max(len(OVERSIZED_WORD_COUNTS), count("oversized_text"))]
+    taken_ids = {d["Control Number"] for d in docs}
+    pool[:] = [d for d in pool if d["Control Number"] not in taken_ids]
     oversized = []
     for n, d in enumerate(docs):
         words = OVERSIZED_WORD_COUNTS[n % len(OVERSIZED_WORD_COUNTS)]

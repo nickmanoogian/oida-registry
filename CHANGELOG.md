@@ -55,6 +55,24 @@ claims it, decoding base64 email bodies, OOXML zips and compressed PDF streams t
 a pass that starves one has to be asked for. `--no-pi --no-language-mix --no-findings`
 reproduces the v1.12.0 output byte for byte.
 
+### Fixed — two ways a build could quietly produce a wrong package
+
+- **Building over an older package left its files behind.** `natives/` was created with
+  `exist_ok=True` and never cleared, so a rebuild mixed two generations: the custodian sheet
+  and the load file described the new build while the folder held both. Found by
+  `validate_load_package.py`, which reported 1,543 files on disk against 1,418 in the sheet.
+  The builder now clears the tree it owns and says how many stale files it removed.
+- **`oversized_text` could land on a document flagged as a processing error.** Rule 12's
+  Corrupt File scenario truncates a native to 40% of its bytes, so a document claiming
+  800,000 words held 319,998. The native is that scenario's whole contract, so it now draws
+  only from documents with no error flag.
+
+### Added — `make load-release`
+
+Builds both packages, validates them, and zips the release assets. They were assembled by
+hand, which is how the date defect above reached a published artifact without anything
+failing.
+
 ### Added — a widget coverage table, and an intake form
 
 `mock-data/README.md` now opens with what each of the six widgets can be tested against, and
