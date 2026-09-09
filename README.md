@@ -199,7 +199,7 @@ datasets realistic and how the distributions were chosen.
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | 1,439 | ~9,900 | ~148,000 |
+| **Documents** | 1,439 | 9,980 | 148,235 |
 | **Best for** | Quick tests, CI fixtures, component dev | Feature dev, analytics, full workflow | Scale testing, performance, TAR |
 | **Custodians** | 10 | 10 | 40 |
 | **File types** | 25 types | 30 types | 30+ types |

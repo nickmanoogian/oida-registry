@@ -20,18 +20,18 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | 1,439 | ~9,900 | ~148,000 |
-| **Custodians** | 10 (7 MNK + 2 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (across all orgs) |
+| **Documents** | 1,439 | 9,980 | 148,235 |
+| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) |
 | **Orgs** | 3 | 3 | 4 (+ outside counsel) |
 | **Phases** | 2–3 | 1–4 | 1–4 |
 | **Scripted hot docs** | 8 | 11 | 13 |
 | **Scripted threads** | 2 | 5 | 5 |
 | **Planted findings** | 4 | 4 | 4 |
-| **PI instances** | 102 | ~440 | ~3,900 |
-| **Second languages** | German 2.0% | +Polish | +Spanish |
-| **Sent to review** | 724 | ~3,600 | ~36,000 |
-| **Responsive** | 213 | ~1,400 | ~13,000 |
-| **Privileged** | 30 | ~160 | ~1,700 |
+| **PI instances** | 102 | 443 | 3,326 |
+| **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% |
+| **Sent to review** | 724 | 4,002 | 56,344 |
+| **Responsive** | 213 | 1,089 | 14,434 |
+| **Privileged** | 30 | 146 | 1,991 |
 | **In git** | ✅ | via DVC | via DVC |
 
 ---

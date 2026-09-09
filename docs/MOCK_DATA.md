@@ -89,15 +89,15 @@ matter, deterministic per random seed (default `42`).
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | 1,439 | ~9,900 | ~148,000 |
-| **Custodians** | 10 (7 MNK + 2 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (across all orgs + outside counsel) |
+| **Documents** | 1,439 | 9,980 | 148,235 |
+| **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) |
 | **Orgs represented** | 3 | 3 | 4 |
 | **Phases present** | 2–3 | 1–4 | 1–4 |
 | **Scripted hot docs** | 8 | 11 | 13 |
 | **Scripted email threads** | 2 | 5 | 5 |
-| **Sent to review** | 724 | ~3,600 | ~36,000 |
-| **Responsive** | 213 | ~1,400 | ~13,000 |
-| **Privileged** | 30 | ~160 | ~1,700 |
+| **Sent to review** | 724 | 4,002 | 56,344 |
+| **Responsive** | 213 | 1,089 | 14,434 |
+| **Privileged** | 30 | 146 | 1,991 |
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR |
 
