@@ -24,6 +24,7 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | Ground truth emitted at generation time | all of the above; nothing is reconstructed afterward |
 | Build-time assertions that fail loudly | `make check`, `validate_mock_data.py`, `validate_load_package.py` |
 | Fixed calendar dates, deterministic output | seed 42 by default; two runs are byte-identical |
+| A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. Generated on demand with `make mock-regen-xlarge` rather than published |
 
 ## What does not exist yet
 
@@ -37,7 +38,6 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | A deliberate collection gap or spike in the date distribution | Not modelled. Dates have a real shape but no planted anomaly. |
 | A population straddling two obvious document categories | Not modelled. |
 | Custodian Entity load files for Import/Export | Not produced. `custodian-sources.csv` is a setup sheet, not an Entity object load file. |
-| A tier near the 250,000 document cap | Not produced. The large tier is ~148,000. |
 | MIP-protected natives | Cannot be fabricated without a real tenant to apply the label. Rule 12 says so out loud rather than pretending coverage exists. |
 
 ---

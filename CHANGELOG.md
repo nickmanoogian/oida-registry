@@ -6,6 +6,72 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — an extra large tier (~275,000 documents)
+
+`--tier xlarge`: 275,273 documents, above a quarter of a million, for scale and
+performance work past what the large tier reaches.
+
+| | Large | Extra large |
+|---|---|---|
+| Documents | 148,235 | 275,273 |
+| Sent to review | 56,344 | 104,618 |
+| Responsive | 14,434 | 26,653 |
+| Privileged | 1,991 | 3,654 |
+| PI instances | 3,326 | 6,048 |
+| Productions | 4 | 6 |
+| Custodians | 40 | 40, the same roster |
+| `documents.csv` | 130 MB | 260 MB |
+
+It is **large's matter at 1.86x**, not a second story: `NARRATIVE_PARENT` points xlarge at
+large, so the two share one custodian roster, one set of scripted hot documents and one
+set of scripted threads. Only the volumes, the production count and the reviewer pool are
+its own. Every file type share stays inside the band the validator checks.
+
+Generated on demand rather than published, because two minutes of generation costs less
+than shipping 260 MB:
+
+```bash
+make mock-regen-xlarge
+```
+
+`make load-xlarge` builds a load package from it.
+
+### Fixed — three defects the new tier's scale exposed
+
+- **`broken_family` removed documents that other records pointed at.** It is the only
+  edge-case scenario that deletes rather than degrades, and it excused scripted documents
+  but nothing else. At the small tier it removes five documents and rarely collided; at
+  275,000 it removes a thousand, which orphaned 602 attachments and deleted 7 documents
+  that `pi-ground-truth.csv` named. It now skips any document that is itself a parent, and
+  any document the seeded content claims.
+- **`Record Type` typed a scripted thread member as an attachment.** HOT-0000002, the deck
+  Tevelow sent as the third message of STHR-0002, has a `Parent Document ID` from the
+  thread structure rather than an attachment relationship. Typing it `Attachment` required
+  it to carry Whitfield's custodian to satisfy Rule 15, and inflated a parent that claims
+  no attachments. `validate_mock_data.py --tier medium` and `--tier large` both failed on
+  it; both pass now.
+- **The short message share band contradicted Rule 1.** `FAMILY_SHARE` capped RSMF at 6%
+  of any tier while Rule 1's own tables specify roughly 2% for small, 6.5% for medium and
+  12.7% for large. Medium failed at 6.4% and large at 12.6%, both correct against the
+  rule. The band is per tier now, and Rule 1 states the progression explicitly.
+
+### Fixed — two checks that only ever failed a partial package
+
+- **`--limit` copied the tier's full ground truth into a package holding a slice of it.**
+  A 400 document build of xlarge shipped manifests naming 7,908 seeded documents, 6,045 of
+  which were not in the package. The manifests are filtered to what the package actually
+  contains, and the build says so.
+- **The PI distribution claim moved to the tier validator.** "Seeded PI spans at least four
+  places" is a property of the tier, not of a package, and asserting it against a slice
+  only ever failed the slice. `validate_mock_data.py` still checks it; the package
+  validator prints what it found.
+
+### Fixed — the Rule 17 share check double counted on an edge tier
+
+Rule 13's `non_english` scenario hands out German, Polish and Spanish at random, and the
+Rule 17 check counted those against its requested share. It counts the documents Rule 17
+actually seeded now, which is the claim the report makes.
+
 ### Fixed — tier counts in the docs were estimates, and several had drifted
 
 The tier tables carried round numbers from earlier versions. Medium and large were

@@ -443,11 +443,11 @@ def main():
               else f"{checked:,} instances across {len(cache)} natives"
                    + (f", {broken} skipped as fabricated errors" if broken else ""))
 
-        # Rule 16's distribution claim, checked against the package rather than the
-        # generator: PI in one spreadsheet is the easy case.
+        # The distribution claim (PI in one spreadsheet is the easy case) belongs to
+        # validate_mock_data.py, which sees the whole tier. A --limit package holds a
+        # slice, so asserting the spread here only ever failed the slice.
         places = {r["Where It Lives"] for r in pi_rows}
-        check("seeded PI spans at least four places", len(places) >= 4,
-              ", ".join(sorted(places)))
+        print(f"       seeded PI places in this package: {', '.join(sorted(places))}")
 
     if os.path.exists(find_path):
         print("\n  Rule 18 — planted findings\n")

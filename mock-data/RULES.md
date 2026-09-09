@@ -16,6 +16,7 @@ The three tiers are:
 | **Small** | ~1,500 | Single-plaintiff employment, small contract, targeted investigation |
 | **Medium** | ~10,000 | Commercial litigation, regulatory response, mid-size matter |
 | **Large** | ~150,000 | Mass tort, antitrust, securities fraud, large regulatory matter |
+| **Extra large** | ~275,000 | The same matter above a quarter of a million documents: scale and performance work past what the large tier reaches |
 
 The sweet spot for most product development is **medium**. Large enough to make analytics,
 TAR, batching, and production meaningful. Small enough to load and query without performance issues.
@@ -94,6 +95,45 @@ Use these exact counts per tier. Do not simplify to "email and docs" — the var
 | Unsupported / error types | 1,500 | 1% | |
 | Visio / Project / Access | 700 | 0.5% | |
 
+### Extra large (~275,000 docs)
+
+Large's composition at 1.86x, so the mix is the same matter at a larger collection
+rather than a differently shaped one. Every share stays inside the band the validator
+checks.
+
+| File Type | Count | % | Notes |
+|-----------|-------|---|-------|
+| Email (MSG/EML) | 130,000 | 47.2% | |
+| PST/MBOX containers | 745 parents | — | |
+| ICS (calendar invites) | 3,700 | 1.3% | |
+| Word (DOCX/DOC) | 27,850 | 10.1% | |
+| Excel (XLSX/XLS) | 18,550 | 6.7% | |
+| PowerPoint (PPTX/PPT) | 9,250 | 3.4% | |
+| PDF | 18,028 | 6.5% | includes 3,150 scanned and 28 MIP protected |
+| Teams (RSMF) | 16,700 | 6.1% | |
+| Slack (RSMF) | 11,150 | 4.1% | |
+| SMS/WhatsApp/Mobile (RSMF) | 4,100 | 1.5% | |
+| Google Chat (RSMF) | 2,800 | 1.0% | |
+| Bloomberg/Financial XML | 1,850 | 0.7% | |
+| Images | 11,150 | 4.1% | |
+| Google Workspace Docs | 4,650 | 1.7% | |
+| Text/RTF/HTML/CSV | 6,500 | 2.4% | |
+| Source code / technical | 2,800 | 1.0% | |
+| Audio/Video | 950 | — | |
+| Cellebrite structured Excel | 560 | 0.2% | |
+| Unsupported / error types | 2,800 | 1.0% | |
+| Visio / Project / Access | 750 | 0.3% | |
+| ZIP containers | 370 | 0.1% | |
+
+### A note on short message share
+
+Short message is the one family whose share of a tier genuinely moves with the size of
+the matter, because the tables above add channels as the tier grows: small has Teams and
+Slack only, and large and extra large add SMS, WhatsApp and Google Chat on top. The
+totals are roughly **2% for small, 6.5% for medium, and 12.7% for large and extra
+large**. A single validator band across all four tiers contradicted the very tables it
+was checking, and failed medium and large for years; the band is per tier now.
+
 ---
 
 ## Rule 2 — Workflow Behavior by File Type
@@ -145,6 +185,7 @@ Rules for container records:
 | Small | 8 | 5–10 |
 | Medium | 40 | 20–40 |
 | Large | 400 | 200+ |
+| Extra large | 745 | 370 |
 
 **Per-custodian:** show 3–5 PST parent records per custodian, with 1–2 password errors across the dataset.
 
@@ -489,6 +530,12 @@ test it.
 | Small | 10 | 45 |
 | Medium | 10 | 45 |
 | Large | 40 | 780 |
+| Extra large | 40 | 780 |
+
+Extra large borrows large's roster rather than inventing a second one, so there is one
+set of custodians and one set of scripted documents to keep true. Its volumes run from
+14.8% of the collection down to 0.02%, the same skew large has, since the weights are
+the same and only the totals differ.
 
 The small tier ran on 4 custodians, giving 6 pairs, and 4 is not a realistic collection at ~1,500
 documents anyway. It is now 10, roughly 150 documents each, spanning Mallinckrodt, Insys and
@@ -553,14 +600,14 @@ Two things matter more than volume:
 - **Irrelevance.** One document per tier is dense with PI and has nothing to do with the
   matter, so the widget has to surface something nobody asked about.
 
-| Scenario | Where the PI lives | Small | Medium | Large |
-|---|---|---|---|---|
-| `email_body_ssn` | email body | 6 | 30 | 300 |
-| `email_body_card` | email body | 3 | 15 | 150 |
-| `spreadsheet_roster` | spreadsheet cells | 2 | 8 | 60 |
-| `benefits_form_pdf` | pdf body | 3 | 12 | 90 |
-| `chat_phone_numbers` | chat message | 3 | 12 | 90 |
-| `irrelevant_high_sensitivity` | document body | 1 | 2 | 4 |
+| Scenario | Where the PI lives | Small | Medium | Large | Extra large |
+|---|---|---|---|---|---|
+| `email_body_ssn` | email body | 6 | 30 | 300 | 560 |
+| `email_body_card` | email body | 3 | 15 | 150 | 280 |
+| `spreadsheet_roster` | spreadsheet cells | 2 | 8 | 60 | 110 |
+| `benefits_form_pdf` | pdf body | 3 | 12 | 90 | 170 |
+| `chat_phone_numbers` | chat message | 3 | 12 | 90 | 170 |
+| `irrelevant_high_sensitivity` | document body | 1 | 2 | 4 | 7 |
 
 ### Every value must be non-issuable
 
@@ -627,6 +674,7 @@ secretly responsive. This one answers that question up front.
 | Small | German 2.0% |
 | Medium | German 1.5%, Polish 1.0% |
 | Large | German 1.2%, Polish 0.8%, Spanish 0.4% |
+| Extra large | German 1.2%, Polish 0.8%, Spanish 0.4% |
 
 ```bash
 python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
@@ -751,7 +799,11 @@ To regenerate any tier with these rules enforced:
 python scripts/generate_mock_metadata.py --tier small
 python scripts/generate_mock_metadata.py --tier medium
 python scripts/generate_mock_metadata.py --tier large
+python scripts/generate_mock_metadata.py --tier xlarge
 ```
+
+The extra large tier takes about two minutes and writes a 260 MB `documents.csv`, so it
+is generated on demand rather than committed.
 
 Rules 16, 17 and 18 are on by default. To turn one off, or to change what it seeds:
 

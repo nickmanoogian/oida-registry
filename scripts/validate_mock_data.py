@@ -32,13 +32,27 @@ FAMILY_SHARE = {
     "excel":       (0.03, 0.12),
     "powerpoint":  (0.01, 0.08),
     "pdf":         (0.03, 0.12),
-    "rsmf":        (0.005, 0.06),
+    "rsmf":        (0.005, 0.16),
     "image":       (0.01, 0.08),
     "text":        (0.01, 0.08),
     "unsupported": (0.002, 0.03),
 }
 
-MIN_FILE_TYPES = {"small": 20, "medium": 25, "large": 25}
+# Short message volume is the one family whose share genuinely changes with the
+# size of the matter, because Rule 1 adds channels as the tier grows: the small
+# tier has Teams and Slack only, and the large tier adds SMS, WhatsApp and Google
+# Chat on top. A single band across all tiers therefore contradicted the rule it
+# was checking. Rule 1's own tables total roughly 2%, 6.5% and 12.7%.
+FAMILY_SHARE_BY_TIER = {
+    "rsmf": {
+        "small":  (0.005, 0.04),
+        "medium": (0.03,  0.09),
+        "large":  (0.09,  0.16),
+        "xlarge": (0.09,  0.16),
+    },
+}
+
+MIN_FILE_TYPES = {"small": 20, "medium": 25, "large": 25, "xlarge": 25}
 
 # The ECI document drill always shows Control Number, Custodian, Primary Date/Time,
 # Record Type, Unified Title, Topic (AI) and Summary (AI). The AI columns are produced
@@ -158,7 +172,8 @@ def run(tier_name, tier_dir, verbose):
     if not check(f"At least {MIN_FILE_TYPES[tier_name]} distinct file type categories", ok,
                  f"got {len(ft_counts)}", verbose): failures += 1
 
-    for family, (lo, hi) in FAMILY_SHARE.items():
+    for family, band in FAMILY_SHARE.items():
+        lo, hi = FAMILY_SHARE_BY_TIER.get(family, {}).get(tier_name, band)
         share = sum(n for cat, n in ft_counts.items() if in_family(cat, family)) / total
         ok = lo <= share <= hi
         if not check(f"{family} is {lo:.0%}–{hi:.0%} of the tier", ok,
@@ -575,9 +590,15 @@ def run(tier_name, tier_dir, verbose):
             if not check(f"{lang}: every listed document carries the language",
                          not wrong, f"{len(wrong)} do not: {wrong[:3]}", verbose): failures += 1
 
-            got = langs.get(lang, 0) / len(docs)
+            # Count the slice Rule 17 seeded, not every document that happens to
+            # carry the language: on an edge tier Rule 13's non_english scenario
+            # hands out the same languages at random, and counting those against
+            # Rule 17's requested share failed a tier that was behaving correctly.
+            seeded = sum(1 for c in listed
+                         if c in by_ctrl_l and by_ctrl_l[c].get("Language") == lang)
+            got = seeded / len(docs)
             near = abs(got - body["requested"]) <= max(0.005, body["requested"] * 0.5)
-            if not check(f"{lang}: share is near the requested {body['requested']:.1%}",
+            if not check(f"{lang}: seeded share is near the requested {body['requested']:.1%}",
                          near, f"got {got:.1%}", verbose): failures += 1
 
             # The slice is unrelated to the matter on purpose, so none of it should
@@ -677,7 +698,7 @@ def run(tier_name, tier_dir, verbose):
 
 def main():
     p = argparse.ArgumentParser(description="Validate OIDA mock data against RULES.md")
-    p.add_argument("--tier",    required=True, choices=["small","medium","large"])
+    p.add_argument("--tier",    required=True, choices=["small","medium","large","xlarge"])
     p.add_argument("--dir",     default=None, help="Path to tier directory (default: mock-data/{tier}/)")
     p.add_argument("--verbose", action="store_true", help="Show detail on passing checks too")
     args = p.parse_args()

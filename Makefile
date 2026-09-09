@@ -3,10 +3,10 @@ OUT       := ./data
 MOCK_OUT  := ./mock-data
 ECI_OUT   := /tmp/oida-large
 
-.PHONY: help check lint typecheck imports list get-small get-all manifest verify \
+.PHONY: help check lint typecheck imports tiers list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-validate \
-        mock-regen-small mock-regen-medium mock-regen-large mock-small-edge \
-        load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-validate \
+        mock-regen-small mock-regen-medium mock-regen-large mock-regen-xlarge mock-small-edge \
+        load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-xlarge load-validate \
         load-release \
         export-insys
 
@@ -17,6 +17,7 @@ help:
 	@echo "  make lint            Ruff only"
 	@echo "  make typecheck       Mypy only"
 	@echo "  make imports         Import cycle check only"
+	@echo "  make tiers           Tier configuration check only (no generation)"
 	@echo ""
 	@echo "  ── Raw OIDA data ─────────────────────────────────────────────"
 	@echo "  make list            List all available OIDA datasets with sizes"
@@ -34,6 +35,7 @@ help:
 	@echo "  make mock-regen-small   Regenerate small tier from the generator script"
 	@echo "  make mock-regen-medium  Regenerate medium tier"
 	@echo "  make mock-regen-large   Regenerate large tier"
+	@echo "  make mock-regen-xlarge  Generate the extra large tier (~275K docs, not published)"
 	@echo ""
 	@echo "  ── Native file load packages (Relativity import) ─────────────"
 	@echo "  make load-small          Build small tier: native files + .dat load file"
@@ -43,6 +45,7 @@ help:
 	@echo "                           (separate package: load-packages/small-errors/)"
 	@echo "  make load-broken         Build load files that fail at IMPORT (opt in, .dat only)"
 	@echo "  make load-large          Build large tier load package"
+	@echo "  make load-xlarge         Build extra large tier load package (~270K natives)"
 	@echo "  make load-validate       Check a built package against RULES.md Rule 11"
 	@echo "  make load-release        Build, validate and zip both release assets"
 	@echo ""
@@ -71,7 +74,10 @@ typecheck:
 imports:
 	@python3 scripts/check_imports.py
 
-check: lint typecheck imports
+tiers:
+	@python3 scripts/check_tier_config.py
+
+check: lint typecheck imports tiers
 	@echo "\n── Rules ──"
 	@python3 scripts/validate_mock_data.py --tier small
 	@echo "\n── Edge case tier ──"
@@ -165,6 +171,12 @@ mock-regen-large:
 	python3 scripts/generate_mock_metadata.py --tier large
 	python3 scripts/validate_mock_data.py --tier large
 
+# Not published as an artifact: about two minutes to generate and a 260 MB
+# documents.csv, so rebuilding it costs less than shipping it.
+mock-regen-xlarge:
+	python3 scripts/generate_mock_metadata.py --tier xlarge
+	python3 scripts/validate_mock_data.py --tier xlarge
+
 # ── Native file load packages ──────────────────────────────────────────────
 
 load-small:
@@ -190,6 +202,10 @@ load-medium:
 load-large:
 	python3 scripts/build_load_package.py --tier large
 	@echo "Package ready at load-packages/large/"
+
+load-xlarge:
+	python3 scripts/build_load_package.py --tier xlarge
+	@echo "Package ready at load-packages/xlarge/"
 
 load-validate:
 	python3 scripts/validate_load_package.py load-packages/small

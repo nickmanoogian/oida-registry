@@ -33,12 +33,12 @@ import random
 
 # Documents per scenario per tier. Counted, not sampled: the ground truth is exact.
 SCENARIOS = {
-    "email_body_ssn":              {"small": 6, "medium": 30, "large": 300},
-    "email_body_card":             {"small": 3, "medium": 15, "large": 150},
-    "spreadsheet_roster":          {"small": 2, "medium": 8,  "large": 60},
-    "benefits_form_pdf":           {"small": 3, "medium": 12, "large": 90},
-    "chat_phone_numbers":          {"small": 3, "medium": 12, "large": 90},
-    "irrelevant_high_sensitivity": {"small": 1, "medium": 2,  "large": 4},
+    "email_body_ssn":              {"small": 6, "medium": 30, "large": 300, "xlarge": 560},
+    "email_body_card":             {"small": 3, "medium": 15, "large": 150, "xlarge": 280},
+    "spreadsheet_roster":          {"small": 2, "medium": 8,  "large": 60,  "xlarge": 110},
+    "benefits_form_pdf":           {"small": 3, "medium": 12, "large": 90,  "xlarge": 170},
+    "chat_phone_numbers":          {"small": 3, "medium": 12, "large": 90,  "xlarge": 170},
+    "irrelevant_high_sensitivity": {"small": 1, "medium": 2,  "large": 4,   "xlarge": 7},
 }
 
 WHERE = {

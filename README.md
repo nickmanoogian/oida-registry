@@ -197,14 +197,14 @@ datasets realistic and how the distributions were chosen.
 
 ### Choose your tier
 
-| | Small | Medium | Large |
-|---|---|---|---|
-| **Documents** | 1,439 | 9,980 | 148,235 |
-| **Best for** | Quick tests, CI fixtures, component dev | Feature dev, analytics, full workflow | Scale testing, performance, TAR |
-| **Custodians** | 10 | 10 | 40 |
-| **File types** | 25 types | 30 types | 30+ types |
-| **Includes** | Emails, Office, PDF, Teams, Slack, images | + Google Workspace, Bloomberg, mobile chat | + full distribution across all types |
-| **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) |
+| | Small | Medium | Large | Extra large |
+|---|---|---|---|---|
+| **Documents** | 1,439 | 9,980 | 148,235 | 275,273 |
+| **Best for** | Quick tests, CI fixtures, component dev | Feature dev, analytics, full workflow | Scale testing, performance, TAR | Scale past a quarter of a million documents |
+| **Custodians** | 10 | 10 | 40 | 40 |
+| **File types** | 25 types | 33 types | 34 types | 34 types |
+| **Includes** | Emails, Office, PDF, Teams, Slack, images | + Google Workspace, Bloomberg, mobile chat | + full distribution across all types | same distribution as large |
+| **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) | Generated on demand |
 
 ### Get the small tier (fastest — already in the repo)
 
@@ -230,6 +230,20 @@ dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/custodia
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/email-families.json
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/batches.json
 ```
+
+### Get the extra large tier (above a quarter of a million documents)
+
+Not published as an artifact: it takes about two minutes to generate and writes a 260 MB
+`documents.csv`, so shipping it costs more than rebuilding it.
+
+```bash
+make mock-regen-xlarge
+# or: python scripts/generate_mock_metadata.py --tier xlarge
+```
+
+It is large's matter at 1.86x: the same 40 custodians, the same scripted documents and
+threads, the same file type mix, with the volumes and the production shape scaled up.
+`mock-data/xlarge/` is gitignored.
 
 ### Get the large tier (scale and performance testing)
 
