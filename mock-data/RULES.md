@@ -538,6 +538,211 @@ documents that stay loose, with the tier size unchanged at 1,439.
 
 ---
 
+## Rule 16 — Personal Information
+
+Rules 1 through 15 build a corpus with no personal information in it at all. PI Detect
+could therefore only ever be tested by starving it (Rule 13's `no_extracted_text`) or by
+hand-editing a native. A widget whose whole job is finding PI had never been run against
+a corpus that has any.
+
+Two things matter more than volume:
+
+- **Distribution.** PI concentrated in one spreadsheet is the easy case. Most instances
+  sit in **email bodies**, which is where PI really accumulates and the harder catch.
+  The rest spread across a roster, a benefits form and a chat.
+- **Irrelevance.** One document per tier is dense with PI and has nothing to do with the
+  matter, so the widget has to surface something nobody asked about.
+
+| Scenario | Where the PI lives | Small | Medium | Large |
+|---|---|---|---|---|
+| `email_body_ssn` | email body | 6 | 30 | 300 |
+| `email_body_card` | email body | 3 | 15 | 150 |
+| `spreadsheet_roster` | spreadsheet cells | 2 | 8 | 60 |
+| `benefits_form_pdf` | pdf body | 3 | 12 | 90 |
+| `chat_phone_numbers` | chat message | 3 | 12 | 90 |
+| `irrelevant_high_sensitivity` | document body | 1 | 2 | 4 |
+
+### Every value must be non-issuable
+
+Nothing seeded here can collide with a real person:
+
+| Type | Value space | Why it is safe |
+|---|---|---|
+| SSN | area 900-999 | the SSA has never issued an area number above 899 |
+| SSN (toggle) | area 666 | the SSA has never allocated area 666 |
+| Payment card | the published test numbers | the card networks hand these out for testing |
+| Phone | `555-01xx` | the block reserved for fiction |
+| Personal email | `.invalid` TLD | reserved by RFC 2606; it cannot resolve |
+
+**The SSN range is a config toggle**, because the never-issued 9xx block is exactly the
+kind of value some detectors score as low confidence, which makes a widget look like it
+is under-reporting when it is behaving as designed:
+
+```bash
+python scripts/generate_mock_metadata.py --tier small --ssn-range 9xx   # default
+python scripts/generate_mock_metadata.py --tier small --ssn-range 666   # standard format
+```
+
+Rows seeded from the 9xx block carry `Expected To Detect = maybe` and say why. Rows in
+the 666 range carry `yes`.
+
+Requirements:
+
+- **On by default.** A pass that *feeds* a widget belongs in the tier; a pass that
+  *starves* one (Rule 13) has to be asked for. `--no-pi` turns it off.
+- **Every tier ships `pi-ground-truth.csv`**: one row per instance, with control number,
+  custodian, scenario, type, where it lives, the literal value, whether it is expected to
+  be detected, and the caveat. One row per instance, not per document, so it diffs
+  straight against a PI Detect export.
+- **The native text is rendered *from* those rows**, by `pi_layer.render`. There is no
+  second copy of the values. A corpus and a ground truth that could disagree make the
+  ground truth worthless.
+- **`PI Seeded` on `documents.csv`** lists the types on that document, so the coded field
+  and the ground truth can be checked against each other in both directions.
+- **PI never lands on a document the edge cases starve**, on a fabricated error, or on a
+  produced document that a recode would contradict (Rule 10).
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier small          # values are non-issuable
+python scripts/validate_load_package.py load-packages/small # values are in the natives
+```
+
+---
+
+## Rule 17 — Language Composition
+
+Every row in every tier carried `Language = English`, so Primary Language Composition had
+one bar: no second slice, no minor slice that has to stay legible next to a major one, and
+no sort order to get wrong.
+
+The second-language documents are **deliberately unrelated to the matter**: facilities
+notices, canteen closures, parking markings. A German slice about suspicious order
+monitoring would leave a reviewer wondering whether the foreign-language population is
+secretly responsive. This one answers that question up front.
+
+| Tier | Mix |
+|---|---|
+| Small | German 2.0% |
+| Medium | German 1.5%, Polish 1.0% |
+| Large | German 1.2%, Polish 0.8%, Spanish 0.4% |
+
+```bash
+python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
+python scripts/generate_mock_metadata.py --tier small --no-language-mix
+```
+
+Requirements:
+
+- **Real sentences.** A classifier fed lorem ipsum reports Latin, and a classifier fed one
+  word reports nothing. The bodies are ordinary office prose in the target language, and
+  the load package writes them into the natives.
+- **Text-bearing documents only.** Setting `Language` on a media file or a container claims
+  a classification nothing could have produced.
+- **Non-responsive or unreviewed documents only**, and never coded onto an issue. Rewriting
+  a document a reviewer coded Responsive into a canteen notice contradicts its own coding.
+- **Every tier ships `language-mix.json`**: the requested share, the achieved share, the
+  document list with each body, and the note saying why the slice is irrelevant.
+- Rule 13's `non_english` and `mixed_language` remain the *unexpected* language cases, and
+  stay opt in. Rule 17 is the expected one.
+
+---
+
+## Rule 18 — Planted Findings, and a Decoy
+
+The thirteen scripted hot documents (Rule 4 and the narrative) are all the same kind of
+finding: surface the document, read it, and the story is on the page. That tests review. It
+cannot test the claim early case assessment actually makes, which is about what metadata
+surfaces *before* anyone reads anything.
+
+So each tier plants a matched pair, a decoy, and one extraction-depth case:
+
+| Finding | Findable by | Invisible to |
+|---|---|---|
+| `metadata_only` | one outbound message to an address that appears exactly once in the corpus, carrying an encrypted attachment | content analysis: the body is three words and the attachment will not open |
+| `content_only` | reading it | every keyword filter on the matter, and every metadata cut |
+| `decoy` | the same filter that catches the principal, and it is innocent | nothing: it is meant to be caught |
+| `buried_deep` | full extraction: the payload is on tab 11 of 12 | any extraction that stops at the first sheet |
+
+The decoy's distinguisher is **buried in the record, not stated**: a second message to the
+same address shows it belongs to an external assurance provider on an internal controls
+review. So the decoy's address appears twice and the principal's appears once, and the
+right answer comes from walking the entity rather than from reading either document.
+
+Requirements:
+
+- **Ground truth at generation time.** Every tier ships `findings.json` with, per finding,
+  what it is findable by, what it is invisible to, the expected answer and how to verify
+  it. A tester who gets a negative result needs to know whether that is the right answer.
+- **The unique address appears exactly once**, across `Email From SMTP`, `Email To SMTP`,
+  `Email CC SMTP`, `Email BCC SMTP` and `Rsmf/Participants`. One stray message shifts the
+  entity's active range and invalidates the finding, so it is asserted, not assumed.
+- **No document names a planted correspondent before its seeded date.** Also asserted.
+- **The content-only finding hits zero matter keywords** and names no custodian in full.
+  `planted_findings.MATTER_KEYWORDS` is the list, and the check runs against it.
+- **The encrypted attachment is a real one.** It is flagged `Password Protected`, so
+  `--with-errors` fabricates a genuinely encrypted native for it (Rule 12).
+- **Families stay true.** The attachment is re-parented from a loose document of the same
+  custodian, and both sides' claims are updated together (Rule 15).
+- **Planted documents are off limits to the edge cases.** Starving one falsifies its own
+  ground truth.
+
+Known gap: the prompt this rule came from also asks for a communicator pair with zero
+topical overlap, so that a negative result in Key Relationships is expected rather than a
+gap. That is not planted yet.
+
+---
+
+## Rule 19 — The Native Date Layer
+
+Rule 12 governs whether a native fails the way its metadata claims. This governs the dates
+on the ones that succeed.
+
+**Every date on a native must come from the manifest.** python-docx, python-pptx, openpyxl
+and fpdf2 each stamp their own date on every file they write, and those stamps are what
+Relativity reads at processing time. The `.dat` carried no `Date Created` column to override
+them, so the leak landed straight in Collection Coverage.
+
+Measured on the package shipped in v1.12.0, `load-packages/small-load-package.zip`:
+
+| What | What it carried |
+|---|---|
+| every `.xlsx` | created and modified `2026-08-19`, creator `openpyxl` |
+| every `.pdf` | `CreationDate 2026-08-19` |
+| every `.pptx` | created `2013-01-27`, `lastModifiedBy` "Steve Canny", on every file |
+| every `.docx` | created correct, modified `2013-12-23`, the python-docx template default, which precedes its own created date |
+| every native | filesystem mtime set to the build clock |
+
+299 of 448 Office and PDF natives carried a date outside the matter window, 403 carried a
+library's name in their document properties, and 448 filesystem mtimes were adrift.
+
+Requirements:
+
+- **Both Office core properties are set**, created and modified, from `Date Created` and
+  `Date Last Modified`. Setting only created leaves the library's default in the other one.
+- **`Date Created` and `Date Last Modified` are in `DAT_COLUMNS`.** Without them Relativity
+  derives both from the file, which is the whole failure mode.
+- **Filesystem mtimes are stamped** from `Date Last Modified`, with the same fallback chain
+  the properties use. Skipped outside 1971-2100, since `os.utime` cannot represent a 1601
+  sentinel; the document properties still carry it, which is where the test wants it.
+- **No library name survives in document properties.** `openpyxl`, `python-docx`,
+  `python-pptx` and "Steve Canny" are all asserted absent. openpyxl overwrites
+  `properties.modified` inside `save_workbook`, so the workbook is written through
+  `ExcelWriter` directly.
+- **A document with no date still gets one**, from the midpoint of the tier's window. Every
+  real file has a date; it is the load file that is missing one (Rule 13 `missing_date`).
+- **Documented wrong dates stay wrong.** Rule 4's 1980-01-01 ZIP marker and Rule 13's
+  sentinels are exempted by name, not by widening the window.
+
+Verify with:
+
+```bash
+python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
@@ -547,6 +752,17 @@ python scripts/generate_mock_metadata.py --tier small
 python scripts/generate_mock_metadata.py --tier medium
 python scripts/generate_mock_metadata.py --tier large
 ```
+
+Rules 16, 17 and 18 are on by default. To turn one off, or to change what it seeds:
+
+```bash
+python scripts/generate_mock_metadata.py --tier small --ssn-range 666
+python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings
+```
+
+With all three off the output is byte-identical to v1.12.0, so a tier used as clean
+fixture data stays clean fixture data.
 
 To verify a dataset conforms to these rules:
 

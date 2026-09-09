@@ -1,0 +1,103 @@
+Control Number,Custodian,Scenario,PI Type,Where It Lives,Subject,Value,Expected To Detect,Caveat
+DOC-0000141,Sarah Chen,email_body_ssn,SSN,email body,Hana Sato,976-21-7578,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000141,Sarah Chen,email_body_ssn,Date of Birth,email body,Hana Sato,08/24/1959,yes,
+DOC-0000309,Thomas Bradley,email_body_ssn,SSN,email body,Colin Ashworth,936-26-7273,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000309,Thomas Bradley,email_body_ssn,Date of Birth,email body,Colin Ashworth,07/03/1978,yes,
+DOC-0000739,Gregory Nash,email_body_ssn,SSN,email body,Devon Mbeki,993-23-3626,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000739,Gregory Nash,email_body_ssn,Date of Birth,email body,Devon Mbeki,05/27/1985,yes,
+DOC-0000304,Bradley Tevelow,email_body_ssn,SSN,email body,Priya Raman,968-77-3513,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000304,Bradley Tevelow,email_body_ssn,Date of Birth,email body,Priya Raman,09/25/1984,yes,
+DOC-0000381,Bradley Tevelow,email_body_ssn,SSN,email body,Alice Okonkwo,936-99-9392,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000381,Bradley Tevelow,email_body_ssn,Date of Birth,email body,Alice Okonkwo,08/15/1989,yes,
+DOC-0000762,James Whitfield,email_body_ssn,SSN,email body,Teresa Vance,918-94-7570,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000762,James Whitfield,email_body_ssn,Date of Birth,email body,Teresa Vance,11/11/1985,yes,
+DOC-0000232,Michael Brennan,email_body_card,Payment Card,email body,Mastercard,5555 5555 5555 4444,yes,
+DOC-0000782,Thomas Bradley,email_body_card,Payment Card,email body,Visa,4012 8888 8888 1881,yes,
+DOC-0000628,Michael Brennan,email_body_card,Payment Card,email body,Discover,6011 1111 1111 1117,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Marcus Feeney,947-93-7425,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Marcus Feeney,(617) 555-0181,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Marcus Feeney,marcus.feeney@homemail.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Nina Petrov,906-05-1779,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Nina Petrov,(212) 555-0125,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Nina Petrov,nina.petrov@personal.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Omar Haddad,958-44-8998,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Omar Haddad,(314) 555-0155,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Omar Haddad,omar.haddad@mailbox.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Hana Sato,948-79-7396,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Hana Sato,(314) 555-0138,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Hana Sato,hana.sato@personal.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Priya Raman,999-58-8882,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Priya Raman,(212) 555-0173,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Priya Raman,priya.raman@mailbox.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Grant Mueller,937-58-0993,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Grant Mueller,(212) 555-0125,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Grant Mueller,grant.mueller@mailbox.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Karin Lindqvist,980-12-6033,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Karin Lindqvist,(602) 555-0164,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Karin Lindqvist,karin.lindqvist@personal.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Ruben Cortes,942-44-3587,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Ruben Cortes,(602) 555-0191,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Ruben Cortes,ruben.cortes@homemail.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Colin Ashworth,919-42-3465,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Colin Ashworth,(602) 555-0116,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Colin Ashworth,colin.ashworth@personal.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Dana Whitlock,952-90-8471,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Dana Whitlock,(314) 555-0146,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Dana Whitlock,dana.whitlock@personal.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Alice Okonkwo,981-95-8070,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Alice Okonkwo,(617) 555-0178,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Alice Okonkwo,alice.okonkwo@homemail.invalid,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,SSN,spreadsheet cells,Maya Tran,934-33-1828,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001041,Gregory Nash,spreadsheet_roster,Phone,spreadsheet cells,Maya Tran,(602) 555-0101,yes,
+DOC-0001041,Gregory Nash,spreadsheet_roster,Personal Email,spreadsheet cells,Maya Tran,maya.tran@mailbox.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Grant Mueller,991-08-5826,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Grant Mueller,(617) 555-0144,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Grant Mueller,grant.mueller@personal.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Priya Raman,977-57-3452,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Priya Raman,(617) 555-0136,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Priya Raman,priya.raman@personal.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Nina Petrov,926-98-4849,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Nina Petrov,(314) 555-0110,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Nina Petrov,nina.petrov@personal.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Ethan Boyle,956-78-2201,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Ethan Boyle,(212) 555-0149,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Ethan Boyle,ethan.boyle@mailbox.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Maya Tran,969-34-5788,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Maya Tran,(212) 555-0111,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Maya Tran,maya.tran@mailbox.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Hana Sato,985-64-9750,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Hana Sato,(602) 555-0107,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Hana Sato,hana.sato@personal.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Alice Okonkwo,935-53-9920,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Alice Okonkwo,(617) 555-0158,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Alice Okonkwo,alice.okonkwo@mailbox.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Ruben Cortes,914-43-1075,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Ruben Cortes,(314) 555-0171,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Ruben Cortes,ruben.cortes@mailbox.invalid,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,SSN,spreadsheet cells,Colin Ashworth,980-41-2879,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001027,Sarah Chen,spreadsheet_roster,Phone,spreadsheet cells,Colin Ashworth,(314) 555-0131,yes,
+DOC-0001027,Sarah Chen,spreadsheet_roster,Personal Email,spreadsheet cells,Colin Ashworth,colin.ashworth@homemail.invalid,yes,
+DOC-0001207,Robert Ashton,benefits_form_pdf,SSN,pdf body,Teresa Vance,940-69-1572,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001207,Robert Ashton,benefits_form_pdf,Date of Birth,pdf body,Teresa Vance,07/08/1990,yes,
+DOC-0001207,Robert Ashton,benefits_form_pdf,Phone,pdf body,Teresa Vance,(602) 555-0149,yes,
+DOC-0001257,Michael Brennan,benefits_form_pdf,SSN,pdf body,Karin Lindqvist,917-83-1991,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001257,Michael Brennan,benefits_form_pdf,Date of Birth,pdf body,Karin Lindqvist,03/16/1992,yes,
+DOC-0001257,Michael Brennan,benefits_form_pdf,Phone,pdf body,Karin Lindqvist,(314) 555-0199,yes,
+DOC-0001251,Gregory Nash,benefits_form_pdf,SSN,pdf body,Maya Tran,971-15-2904,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0001251,Gregory Nash,benefits_form_pdf,Date of Birth,pdf body,Maya Tran,06/01/1977,yes,
+DOC-0001251,Gregory Nash,benefits_form_pdf,Phone,pdf body,Maya Tran,(212) 555-0198,yes,
+DOC-0001274,Thomas Bradley,chat_phone_numbers,Phone,chat message,Alice Okonkwo,(617) 555-0180,yes,
+DOC-0001274,Thomas Bradley,chat_phone_numbers,Phone,chat message,Teresa Vance,(314) 555-0132,yes,
+DOC-0001274,Thomas Bradley,chat_phone_numbers,Phone,chat message,Devon Mbeki,(314) 555-0155,yes,
+DOC-0001280,Gregory Nash,chat_phone_numbers,Phone,chat message,Grant Mueller,(602) 555-0167,yes,
+DOC-0001280,Gregory Nash,chat_phone_numbers,Phone,chat message,Nina Petrov,(602) 555-0180,yes,
+DOC-0001280,Gregory Nash,chat_phone_numbers,Phone,chat message,Colin Ashworth,(617) 555-0134,yes,
+DOC-0001288,Michael Brennan,chat_phone_numbers,Phone,chat message,Ethan Boyle,(212) 555-0183,yes,
+DOC-0001288,Michael Brennan,chat_phone_numbers,Phone,chat message,Colin Ashworth,(314) 555-0136,yes,
+DOC-0001288,Michael Brennan,chat_phone_numbers,Phone,chat message,Marcus Feeney,(314) 555-0182,yes,
+DOC-0001288,Michael Brennan,chat_phone_numbers,Phone,chat message,Sofia Duarte,(212) 555-0189,yes,
+DOC-0000961,Sarah Chen,irrelevant_high_sensitivity,SSN,document body,Grant Mueller,997-95-8328,maybe,"area 900-999 is never issued, and some detectors score it low confidence. Rebuild with --ssn-range 666 to test a standard-format area instead."
+DOC-0000961,Sarah Chen,irrelevant_high_sensitivity,Date of Birth,document body,Grant Mueller,11/22/1975,yes,
+DOC-0000961,Sarah Chen,irrelevant_high_sensitivity,Phone,document body,Grant Mueller,(602) 555-0147,yes,
+DOC-0000961,Sarah Chen,irrelevant_high_sensitivity,Personal Email,document body,Grant Mueller,grant.mueller@mailbox.invalid,yes,
+DOC-0000961,Sarah Chen,irrelevant_high_sensitivity,Member ID,document body,Cordell Mutual,MBR-92894206,yes,

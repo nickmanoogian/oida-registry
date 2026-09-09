@@ -3463,5 +3463,29 @@
     ],
     "subject": "FW: DEA Suspicious Order Monitoring \u2014 January 2014 \u2014 Threshold Review",
     "family_size": 3
+  },
+  {
+    "family_id": "FAM-000087",
+    "thread_id": "",
+    "parent_doc_id": "DOC-0000345",
+    "children": [
+      "DOC-0001139"
+    ],
+    "subject": "Per our call",
+    "family_size": 2,
+    "scripted": true,
+    "planted": true
+  },
+  {
+    "family_id": "FAM-000074",
+    "thread_id": "",
+    "parent_doc_id": "DOC-0000252",
+    "children": [
+      "DOC-0001325"
+    ],
+    "subject": "As discussed",
+    "family_size": 2,
+    "scripted": true,
+    "planted": true
   }
 ]

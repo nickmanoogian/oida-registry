@@ -23,6 +23,8 @@ import os
 import re
 import sys
 import zipfile
+import zlib
+from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import error_natives
@@ -110,6 +112,103 @@ def is_broken(row, path):
             pass
         return data.startswith(b"\x00\x01\x02\x03")
     return True                               # unknown scenario: do not fail the run
+
+
+# ── Planted content (Rules 16-18) ─────────────────────────────────────────
+
+def native_text(path):
+    """Readable text from a native, whatever wrapper it is in.
+
+    A raw grep is not enough: .eml bodies are base64, OOXML is a zip, and fpdf2
+    compresses its content streams. Checking the wrapper instead of the text is how
+    a ground-truth file ends up claiming something the native does not hold.
+    """
+    ext = os.path.splitext(path)[1].lower()
+    try:
+        raw = open(path, "rb").read()
+    except OSError:
+        return ""
+    if ext in (".docx", ".xlsx", ".pptx"):
+        try:
+            with zipfile.ZipFile(path) as z:
+                return " ".join(z.read(n).decode("utf-8", "replace")
+                                for n in z.namelist() if n.endswith(".xml"))
+        except (zipfile.BadZipFile, KeyError, OSError):
+            return ""
+    if ext == ".eml":
+        import email as _email
+        msg = _email.message_from_bytes(raw)
+        parts = []
+        for part in msg.walk():
+            if part.get_content_type() == "text/plain":
+                payload = part.get_payload(decode=True) or b""
+                parts.append(payload.decode("utf-8", "replace"))
+        return " ".join(parts)
+    if ext == ".pdf":
+        out = []
+        for m in re.finditer(rb"stream\r?\n(.*?)\r?\nendstream", raw, re.S):
+            blob = m.group(1)
+            try:
+                blob = zlib.decompress(blob)
+            except zlib.error:
+                pass
+            for token in re.findall(rb"\((?:\\.|[^\\()])*\)", blob):
+                out.append(token[1:-1].replace(b"\\(", b"(").replace(b"\\)", b")")
+                           .decode("latin-1"))
+        return " ".join(out)
+    return raw.decode("utf-8", "replace")
+
+
+# ── Rule 19: the date layer ───────────────────────────────────────────────
+
+_OOXML_DATE = re.compile(r"<dcterms:(created|modified)[^>]*>([0-9T:\-]+)Z?</dcterms:\1>")
+_PDF_DATE   = re.compile(rb"/CreationDate\s*\(D:(\d{14})")
+
+# Every library that writes one of these formats stamps its own name and its own
+# date unless told otherwise. Finding one of these in a package means the file
+# was written with library defaults, which is how a 2013 or a build-clock date
+# reaches Collection Coverage.
+LIBRARY_TELLS = ("Steve Canny", "openpyxl", "python-docx", "python-pptx")
+
+# Rule 4 gives ZIP children a deliberately unreliable date, because the ZIP
+# format carries no time zone. It is a documented wrong answer, so it neither
+# widens the matter window nor counts as a leak.
+DOCUMENTED_BAD_DATES = {"1980-01-01"}
+
+
+def ooxml_dates(path):
+    """(created, modified) as YYYY-MM-DD strings, plus the raw core.xml."""
+    try:
+        with zipfile.ZipFile(path) as z:
+            xml = z.read("docProps/core.xml").decode("utf-8", "replace")
+    except (zipfile.BadZipFile, KeyError, OSError):
+        return None, None, ""          # deliberately broken files are Rule 12's problem
+    found = {k: v[:10] for k, v in _OOXML_DATE.findall(xml)}
+    return found.get("created"), found.get("modified"), xml
+
+
+def expected_mtime(row, i_date, i_created, i_modified):
+    """The date the builder stamps on disk, from the load file's own columns."""
+    def val(i):
+        return row[i][:10] if i is not None and row[i].strip() else ""
+    primary  = val(i_date)
+    created  = val(i_created)  or primary
+    modified = val(i_modified) or primary
+    if not modified:
+        return ""
+    return max(modified, created) if created else modified
+
+
+def pdf_creation_date(path):
+    try:
+        with open(path, "rb") as f:
+            m = _PDF_DATE.search(f.read())
+    except OSError:
+        return None
+    if not m:
+        return None
+    d = m.group(1).decode()
+    return f"{d[0:4]}-{d[4:6]}-{d[6:8]}"
 
 
 def main():
@@ -233,6 +332,173 @@ def main():
                     bad.append(r[i_ctrl])
             check("File Size in the load file matches bytes on disk", not bad,
                   f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
+
+    # ── Rule 19: no native carries a library's date or a library's name ───
+    print("\n  Date layer (Rule 19)\n")
+
+    i_date     = header.index("Date")
+    i_created  = header.index("Date Created")      if "Date Created"       in header else None
+    i_modified = header.index("Date Last Modified") if "Date Last Modified" in header else None
+    has_both = i_created is not None and i_modified is not None
+    check("load file carries Date Created and Date Last Modified", has_both,
+          "both present" if has_both
+          else "without them Relativity derives both from the file itself")
+    edge_path = os.path.join(pkg, "edge-cases.json")
+    sentinels = set()
+    if os.path.exists(edge_path):
+        scen = json.load(open(edge_path, encoding="utf-8"))["scenarios"]
+        sentinels = {e if isinstance(e, str) else e.get("control_number")
+                     for e in scen.get("sentinel_date", {}).get("documents", [])}
+
+    # The window comes from the load file itself, across every date column it
+    # carries, minus the documents whose whole purpose is to sit outside it. A
+    # document last modified after the last email is normal in a real
+    # collection; a document stamped by a library is not.
+    date_cols = [header.index(c) for c in
+                 ("Date","Date Created","Date Last Modified","Date Sent","Date Received")
+                 if c in header]
+    dated = [r[i][:10] for r in rows if r[i_ctrl] not in sentinels
+             for i in date_cols
+             if r[i].strip() and r[i][:10] not in DOCUMENTED_BAD_DATES]
+    lo, hi = (min(dated), max(dated)) if dated else ("", "")
+    check("load file declares a matter window", bool(lo and hi),
+          f"{lo} to {hi}, across {len(date_cols)} date columns")
+
+    outside, tells, drift, inspected = [], [], [], 0
+    for r in rows:
+        rel = r[i_nat]
+        if not rel or r[i_ctrl] in sentinels:
+            continue
+        target = os.path.join(pkg, rel.replace("\\", os.sep))
+        ext = os.path.splitext(target)[1].lower()
+        stamps = []
+        if ext in (".docx", ".xlsx", ".pptx"):
+            created, modified, xml = ooxml_dates(target)
+            stamps = [d for d in (created, modified) if d]
+            for tell in LIBRARY_TELLS:
+                if tell in xml:
+                    tells.append(f"{r[i_ctrl]}: {tell}")
+        elif ext == ".pdf":
+            created = pdf_creation_date(target)
+            stamps = [created] if created else []
+        if not stamps:
+            continue
+        inspected += 1
+        for d in stamps:
+            if lo and not (lo <= d <= hi) and d not in DOCUMENTED_BAD_DATES:
+                outside.append(f"{r[i_ctrl]}: {d}")
+
+        # The filesystem stamp is what an unprocessed folder shows, and Relativity
+        # falls back to it when a format carries no date of its own. The contract
+        # is Date Last Modified, with the same fallback chain the builder uses.
+        want = expected_mtime(r, i_date, i_created, i_modified)
+        if want:
+            got = date.fromtimestamp(os.path.getmtime(target)).isoformat()
+            if abs((date.fromisoformat(got) - date.fromisoformat(want)).days) > 1:
+                drift.append(f"{r[i_ctrl]}: file {got}, expected {want}")
+
+    check("no document property dates outside the matter window", not outside,
+          f"{len(outside)} outside: {outside[:3]}" if outside
+          else f"{inspected:,} Office/PDF natives inspected")
+    check("no library default names in document properties", not tells,
+          f"{len(tells)} tells: {tells[:3]}" if tells else "docx, xlsx, pptx clean")
+    check("filesystem mtimes match the load file dates", not drift,
+          f"{len(drift)} adrift: {drift[:2]}" if drift else "within a day")
+    if sentinels:
+        check("sentinel-date documents are exempted by name", True,
+              f"{len(sentinels)} listed in edge-cases.json")
+
+    # ── Rules 16-18: the planted content is in the files, not just the manifest ──
+    pi_path   = os.path.join(pkg, "pi-ground-truth.csv")
+    find_path = os.path.join(pkg, "findings.json")
+    i_err     = header.index("Processing Error Type") if "Processing Error Type" in header else None
+    paths     = {r[i_ctrl]: r[i_nat] for r in rows if r[i_nat]}
+    err_type  = {r[i_ctrl]: (r[i_err] if i_err is not None else "") for r in rows}
+
+    def full(rel):
+        return os.path.join(pkg, rel.replace("\\", os.sep))
+
+    if os.path.exists(pi_path):
+        print("\n  Rule 16 — seeded personal information\n")
+        with open(pi_path, encoding="utf-8") as f:
+            pi_rows = list(csv.DictReader(f))
+
+        cache, absent, broken, checked = {}, [], 0, 0
+        for r in pi_rows:
+            ctrl = r["Control Number"]
+            rel  = paths.get(ctrl)
+            if not rel:
+                absent.append(f"{ctrl}: no native"); continue
+            # A document promoted to a processing error has a native that was
+            # deliberately mangled afterwards, so its text is gone by design.
+            if (err_type.get(ctrl) or "").strip():
+                broken += 1; continue
+            if rel not in cache:
+                cache[rel] = native_text(full(rel))
+            checked += 1
+            if r["Value"] not in cache[rel]:
+                absent.append(f"{ctrl} {r['PI Type']}: {r['Value']}")
+        check("every seeded PI value is in its native", not absent,
+              f"{len(absent)} missing: {absent[:3]}" if absent
+              else f"{checked:,} instances across {len(cache)} natives"
+                   + (f", {broken} skipped as fabricated errors" if broken else ""))
+
+        # Rule 16's distribution claim, checked against the package rather than the
+        # generator: PI in one spreadsheet is the easy case.
+        places = {r["Where It Lives"] for r in pi_rows}
+        check("seeded PI spans at least four places", len(places) >= 4,
+              ", ".join(sorted(places)))
+
+    if os.path.exists(find_path):
+        print("\n  Rule 18 — planted findings\n")
+        with open(find_path, encoding="utf-8") as f:
+            payload = json.load(f)
+        findings = {f["id"]: f for f in payload["findings"]}
+
+        missing_body = []
+        for finding in payload["findings"]:
+            for ctrl, body in (
+                (finding["control_number"], finding.get("body")),
+                ((finding.get("distinguisher") or {}).get("control_number"),
+                 finding.get("distinguisher_body")),
+            ):
+                if not ctrl or not body:
+                    continue
+                rel = paths.get(ctrl)
+                if not rel:
+                    missing_body.append(f"{ctrl}: no native"); continue
+                probe = body.strip().split("\n")[-1][:40]
+                if probe not in native_text(full(rel)):
+                    missing_body.append(f"{ctrl}: body not in native")
+        check("every planted body reached its native", not missing_body,
+              "; ".join(missing_body[:2]) if missing_body else "bodies verified")
+
+        buried = findings.get("buried_deep")
+        if buried:
+            rel = paths.get(buried["control_number"])
+            ok_sheet, detail = False, "no native"
+            if rel and full(rel).endswith(".xlsx"):
+                try:
+                    with zipfile.ZipFile(full(rel)) as z:
+                        names = re.findall(r'name="([^"]+)"',
+                                           z.read("xl/workbook.xml").decode("utf-8", "replace"))
+                    text = native_text(full(rel))
+                    depth = names.index(buried["payload_sheet"]) + 1 if buried["payload_sheet"] in names else 0
+                    ok_sheet = depth >= 2 and "without documented justification" in text
+                    detail = f"tab {depth} of {len(names)}"
+                except (zipfile.BadZipFile, KeyError, OSError, ValueError) as exc:
+                    detail = str(exc)
+            check("the buried payload is on a late tab of the workbook", ok_sheet, detail)
+
+        meta = findings.get("metadata_only")
+        if meta:
+            addr  = meta["unique_address"].lower()
+            hits  = sum(1 for r in rows for v in r if addr in v.lower())
+            check("the unique address appears once in the load file", hits == 1,
+                  f"{hits} rows mention it")
+            child = meta["attachment"]["control_number"]
+            check("the encrypted attachment has a native in the package",
+                  child in paths, paths.get(child, "absent"))
 
     # ── Edge-case manifest, when the package carries starved documents ────
     edge_file = os.path.join(pkg, "edge-cases.json")

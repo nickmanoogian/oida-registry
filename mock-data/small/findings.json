@@ -1,0 +1,116 @@
+{
+  "note": "Known-answer findings, one per detection method. Each says what it is findable by and what it is invisible to, so a negative result can be told apart from a missed one.",
+  "matter_keywords": [
+    "som",
+    "suspicious order",
+    "override",
+    "opioid",
+    "oxycodone",
+    "fentanyl",
+    "subsys",
+    "dea",
+    "diversion",
+    "speaker bureau",
+    "prior authorization",
+    "prior auth",
+    "subpoena",
+    "whistleblower",
+    "legal hold",
+    "quota",
+    "mallinckrodt",
+    "insys",
+    "mckinsey",
+    "cardinal",
+    "mdl",
+    "kol"
+  ],
+  "findings": [
+    {
+      "id": "metadata_only",
+      "control_number": "DOC-0000345",
+      "custodian": "Michael Brennan",
+      "date": "2013-11-02 00:00:00",
+      "findable_by": "metadata: one message to an address that appears once in the corpus",
+      "invisible_to": "content analysis: a two-word body and an attachment that will not open",
+      "unique_address": "m.delacroix@harbor-line-consulting.invalid",
+      "attachment": {
+        "control_number": "DOC-0001139",
+        "error_type": "Password Protected"
+      },
+      "expected_answer": "m.delacroix@harbor-line-consulting.invalid is a single-document entity in Key Relationships, on one outbound message from Michael Brennan carrying an encrypted attachment. Nothing in the text says so.",
+      "how_to_verify": "Key Relationships: the address appears as a non-custodian entity with exactly one document. Searching the extracted text for it returns the one email and nothing else.",
+      "body": "Per our call. Attached."
+    },
+    {
+      "id": "content_only",
+      "control_number": "DOC-0000894",
+      "custodian": "Michael Brennan",
+      "date": "2013-09-23 00:00:00",
+      "findable_by": "reading it",
+      "invisible_to": "every keyword filter on the matter, and every metadata cut",
+      "expected_answer": "A contemporaneous note describing a decision kept out of writing. It names no company, no file and no person in full, and hits none of the matter's search terms.",
+      "how_to_verify": "Search the extracted text for any matter keyword: this document is not in the results. It is reachable only through a topic or summary pass, or by a reviewer opening it.",
+      "keywords_checked": 22,
+      "body": "Notes from Thursday.\n\nHe was clear that the number should not move again before the end of the quarter,\nand that nobody outside the room needs to see the working. I said I would keep my\nown copy of the earlier version. J. will take the part that touches the field team,\nso it stays out of my folder.\n\nIf anyone asks later, the decision was made in the room and not in writing. That\nwas the point of doing it that way.\n\nI am not putting the rest of this in an email."
+    },
+    {
+      "id": "decoy",
+      "control_number": "DOC-0000252",
+      "custodian": "Sarah Chen",
+      "date": "2014-01-12 00:00:00",
+      "findable_by": "the same filter that catches the principal",
+      "invisible_to": "nothing \u2014 it is meant to be caught",
+      "decoy_address": "r.okafor@ledgerline-assurance.invalid",
+      "attachment": {
+        "control_number": "DOC-0001325",
+        "error_type": "Password Protected"
+      },
+      "distinguisher": {
+        "control_number": "DOC-0000352",
+        "why": "A second message to the same address explains it: an external assurance provider on an internal controls review, working papers returned encrypted. The address therefore appears twice, and the principal's appears once."
+      },
+      "expected_answer": "r.okafor@ledgerline-assurance.invalid matches the principal's pattern and is innocent. The right answer is reached by walking the entity's other documents, not by reading this one.",
+      "how_to_verify": "Key Relationships: this entity carries two documents, not one. Open the second and the encrypted attachment is accounted for.",
+      "body": "As discussed. Attached, same password as last time.",
+      "distinguisher_body": "Confirming the walkthrough for Thursday at 2pm.\n\nOur external assurance provider will attend. Their engagement letter for the\ninternal controls review is on file with the finance team, and the working papers\ncome back to us encrypted as usual. Nothing in scope for the litigation hold.\n\nPlease have the reconciliation ready."
+    },
+    {
+      "id": "buried_deep",
+      "control_number": "DOC-0001046",
+      "custodian": "Thomas Bradley",
+      "date": "2014-02-02 00:00:00",
+      "findable_by": "full extraction: the payload is on tab 11 of 12, 'Reconciliation'",
+      "invisible_to": "any extraction that stops at the first sheet",
+      "sheet_count": 12,
+      "payload_sheet": "Reconciliation",
+      "expected_answer": "Three released orders with no documented justification, on the 'Reconciliation' tab. The first tab is a clean summary.",
+      "how_to_verify": "Search the extracted text for 'without documented justification'. A hit means the whole workbook was read.",
+      "payload_rows": [
+        [
+          "Row",
+          "Order",
+          "Account",
+          "Note"
+        ],
+        [
+          "41",
+          "SO-114872",
+          "Butner NC cluster",
+          "Released without documented justification \u2014 flag cleared manually"
+        ],
+        [
+          "42",
+          "SO-114910",
+          "Butner NC cluster",
+          "Released without documented justification \u2014 flag cleared manually"
+        ],
+        [
+          "43",
+          "SO-115003",
+          "Chillicothe OH",
+          "Threshold raised after release, no approval on file"
+        ]
+      ]
+    }
+  ]
+}

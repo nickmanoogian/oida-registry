@@ -6,6 +6,84 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — every native carried a library's date, not the manifest's (Rule 19)
+
+python-docx, python-pptx, openpyxl and fpdf2 each stamp their own date on every file they
+write, and those stamps are what Relativity reads at processing time. The `.dat` carried no
+`Date Created` column to override them, so the leak landed straight in Collection Coverage.
+
+Measured on `load-packages/small-load-package.zip` as shipped in v1.12.0:
+
+| | Before | After |
+|---|---|---|
+| `.xlsx` core properties | created and modified `2026-08-19`, creator `openpyxl` | the row's `Date Created` and `Date Last Modified` |
+| `.pdf` `CreationDate` | `2026-08-19` | the row's `Date Created` |
+| `.pptx` core properties | created `2013-01-27`, `lastModifiedBy` "Steve Canny", on every file | the row's dates, the custodian as author |
+| `.docx` modified | `2013-12-23`, python-docx's template default, preceding its own created date | the row's `Date Last Modified` |
+| filesystem mtimes | the build clock | the row's `Date Last Modified` |
+| `.dat` date columns | `Date`, `Date Sent`, `Date Received` | + `Date Created`, `Date Last Modified` |
+
+299 of 448 Office and PDF natives carried a date outside the matter window, 403 carried a
+library's name in their document properties, and all 448 mtimes were adrift. openpyxl needed
+`ExcelWriter` directly, because `save_workbook` overwrites `properties.modified` with the
+clock on the line before it writes.
+
+`validate_load_package.py` now asserts all of it, and fails on the v1.12.0 package.
+
+### Added — PI, a second language, and known-answer findings (Rules 16, 17, 18)
+
+Two of the six Early Insights widgets had nothing to work with. `Language` was `English` on
+all 1,439 rows of the small tier, and there was no personal information anywhere in the
+repository, so PI Detect could only be tested by starving it.
+
+| Rule | Seeds | Ground truth |
+|---|---|---|
+| **16** PI | 102 instances across 18 documents in the small tier: email bodies (the harder catch), a roster's cells, a PDF form, a chat, and one high-sensitivity document with nothing to do with the matter | `pi-ground-truth.csv`, one row per instance |
+| **17** Language | German at 2.0%, on facilities notices deliberately unrelated to the matter, with real prose in the natives. Medium adds Polish, large adds Spanish | `language-mix.json` |
+| **18** Findings | a matched pair, a decoy and an extraction-depth case: metadata-only, content-only, an innocent lookalike whose distinguisher is buried in a second record, and a workbook whose payload sits on tab 11 of 12 | `findings.json` |
+
+Every PI value is non-issuable: SSN areas the SSA has never issued, published test card
+numbers, the `555-01xx` fiction block, the `.invalid` TLD. `--ssn-range 666` switches to the
+other never-allocated area, because the 9xx block is exactly what some detectors score as low
+confidence, which makes a widget look like it is under-reporting when it is not.
+
+The native text is rendered *from* the ground truth rather than beside it, so the two cannot
+drift, and `validate_load_package.py` confirms every seeded value is really in the file that
+claims it, decoding base64 email bodies, OOXML zips and compressed PDF streams to do it.
+
+**On by default**, unlike the edge cases: a pass that feeds a widget belongs in the tier, and
+a pass that starves one has to be asked for. `--no-pi --no-language-mix --no-findings`
+reproduces the v1.12.0 output byte for byte.
+
+### Fixed — two ways a build could quietly produce a wrong package
+
+- **Building over an older package left its files behind.** `natives/` was created with
+  `exist_ok=True` and never cleared, so a rebuild mixed two generations: the custodian sheet
+  and the load file described the new build while the folder held both. Found by
+  `validate_load_package.py`, which reported 1,543 files on disk against 1,418 in the sheet.
+  The builder now clears the tree it owns and says how many stale files it removed.
+- **`oversized_text` could land on a document flagged as a processing error.** Rule 12's
+  Corrupt File scenario truncates a native to 40% of its bytes, so a document claiming
+  800,000 words held 319,998. The native is that scenario's whole contract, so it now draws
+  only from documents with no error flag.
+
+### Added — `make load-release`
+
+Builds both packages, validates them, and zips the release assets. They were assembled by
+hand, which is how the date defect above reached a published artifact without anything
+failing.
+
+### Added — a widget coverage table, and an intake form
+
+`mock-data/README.md` now opens with what each of the six widgets can be tested against, and
+where the tiers still fall short: 15 distinct addresses so the 25-entity production cap cannot
+be reached, no person using two addresses, no `Data Source` dimension, no planted collection
+gap. `docs/REQUEST_TEMPLATE.md` is the intake form, mapping each common ask to the flag that
+already serves it and listing what is not modelled.
+
+The catalogue was indexed by volume. Nobody asks for 9,900 documents at 52% email; they ask
+whether a dataset can exercise the thing they are building.
+
 ### Changed — v1.12.0 packages
 
 Republished with the attachment records. The v1.11.0 artifacts had no `Attachment` rows at all,

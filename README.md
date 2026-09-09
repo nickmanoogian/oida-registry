@@ -199,9 +199,9 @@ datasets realistic and how the distributions were chosen.
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | ~1,430 | ~9,800 | ~148,000 |
+| **Documents** | 1,439 | ~9,900 | ~148,000 |
 | **Best for** | Quick tests, CI fixtures, component dev | Feature dev, analytics, full workflow | Scale testing, performance, TAR |
-| **Custodians** | 4 | 10 | 40 |
+| **Custodians** | 10 | 10 | 40 |
 | **File types** | 25 types | 30 types | 30+ types |
 | **Includes** | Emails, Office, PDF, Teams, Slack, images | + Google Workspace, Bloomberg, mobile chat | + full distribution across all types |
 | **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) |
@@ -303,7 +303,14 @@ unzip small-errors.zip
 
 Each contains ~1,423 native files in per-custodian folders, `load-file.dat`,
 `custodian-sources.csv` and `IMPORT_README.txt`. Ready to import immediately. The errored
-package adds `EXPECTED_ERRORS.csv`.
+package adds `EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`,
+`language-mix.json` and `findings.json`.
+
+> **The v1.12.0 release assets predate Rule 19.** Every `.xlsx` and `.pdf` in them is
+> stamped with the build date and every `.pptx` with python-pptx's 2013 template date, which
+> lands in Collection Coverage as a spike in the future. They also have no PI, one language
+> and no planted findings. Until the assets are republished, build the package instead: it
+> is one command and about five seconds (Option B).
 
 ### Option B — Build from scratch
 
@@ -359,6 +366,37 @@ count, natives written and total bytes:
 
 If you want the old single-directory layout, pass `--flat`. It cannot support per-custodian
 data sources, and the generated `IMPORT_README.txt` says so.
+
+### Seeded content: PI, a second language, and known-answer findings
+
+The tiers used to have no personal information in them, one language, and only one kind of
+finding: a document you surface and read. Two of the six Early Insights widgets therefore
+had nothing to work with, and nothing tested what metadata surfaces before anyone reads.
+
+| Rule | What it seeds | Ground truth |
+|---|---|---|
+| **16** | 102 PI instances across 18 documents in the small tier, spread over email bodies, spreadsheet cells, a PDF form and a chat. Every value non-issuable: never-issued SSN areas, published test card numbers, the 555-01xx block, the `.invalid` TLD | `pi-ground-truth.csv`, one row per instance |
+| **17** | A second language at ~2%, on facilities notices deliberately unrelated to the matter, with real prose in the natives | `language-mix.json` |
+| **18** | A matched pair and a decoy: one finding visible on metadata alone and unreadable, one visible only by reading with zero keyword hits, one innocent lookalike whose distinguisher is buried in a second record, and one workbook whose payload sits on tab 11 of 12 | `findings.json`, with what each is findable by and invisible to |
+
+**On by default**, unlike the edge cases below: a pass that feeds a widget belongs in the
+tier, and a pass that starves one has to be asked for.
+
+```bash
+# a standard-format SSN area, for detectors that score the never-issued 9xx block low
+python scripts/generate_mock_metadata.py --tier small --ssn-range 666
+
+# a second-language slice under 1%
+python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
+
+# back to the v1.12.0 shape
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings
+```
+
+The load package renders all of it into the natives and copies the three manifests in beside
+them, and `validate_load_package.py` checks that every seeded value is really in the file it
+is claimed to be in. See Rules 16 to 18, and the widget coverage table at the top of
+[`mock-data/README.md`](mock-data/README.md).
 
 ### Edge cases: documents that starve a feature
 
@@ -477,6 +515,16 @@ python scripts/generate_mock_metadata.py --tier large --out ./my-test-data/
 ---
 
 ## Common scenarios
+
+### "I need a corpus that tests a specific widget"
+
+Start with the widget coverage table at the top of [`mock-data/README.md`](mock-data/README.md):
+six widgets, what each tier gives them, and where the tiers still fall short. Then
+[`docs/REQUEST_TEMPLATE.md`](docs/REQUEST_TEMPLATE.md) is the intake form, with a map from
+each thing people usually ask for to the flag that already serves it, and an honest list of
+what does not exist yet.
+
+Most requests turn out to be a flag on an existing tier rather than a build from scratch.
 
 ### "I just want to explore the data before committing to a download"
 

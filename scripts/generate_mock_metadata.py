@@ -1079,7 +1079,9 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
 # ── Main Generator ────────────────────────────────────────────────────────
 
-def generate(tier_name, out_dir, seed, edge_cases_on=False):
+def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
+             language_on=True, findings_on=True, ssn_range="9xx",
+             second_language_share=None):
     random.seed(seed)
     wf     = WORKFLOW[tier_name]
     custs  = CUSTODIANS[tier_name]
@@ -1430,13 +1432,54 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
         else:
             d["Record Type"] = "EDoc"
 
+    # ── Rules 16, 17 and 18: feed the widgets that had nothing ──
+    # Each pass runs on its own RNG stream after the narrative is complete, so the
+    # story, the file type shares and the review coding are all untouched. These
+    # are on by default, unlike the edge cases below: a pass that *feeds* a widget
+    # belongs in the tier, and a pass that *starves* one has to be asked for.
+    language_report = None
+    if language_on:
+        import language_mix
+        language_report = language_mix.apply(all_docs, tier_name, seed,
+                                             override=second_language_share)
+        for lang, body in language_report.items():
+            print(f"  Rule 17: {body['count']:,} documents in {lang} "
+                  f"({body['share']:.1%} of the tier)")
+
+    pi_rows = None
+    if pi_on:
+        import pi_layer
+        pi_rows = pi_layer.apply(all_docs, tier_name, seed, ssn_range=ssn_range)
+        pi_docs = len({r["Control Number"] for r in pi_rows})
+        print(f"  Rule 16: {len(pi_rows):,} PI instances across {pi_docs} documents "
+              f"(SSN area {ssn_range})")
+
+    findings = None
+    if findings_on:
+        import planted_findings
+        findings = planted_findings.apply(all_docs, families, custs, tier_name, seed)
+        print(f"  Rule 18: {len(findings)} planted findings — "
+              + ", ".join(f["id"] for f in findings))
+
+    # Documents carrying a planted finding, a PI instance or a second language are
+    # off limits to the edge cases: starving one would falsify its own ground truth.
+    protected = set()
+    for f in (findings or []):
+        protected.add(f["control_number"])
+        for key in ("attachment", "distinguisher"):
+            if isinstance(f.get(key), dict):
+                protected.add(f[key]["control_number"])
+    protected |= {r["Control Number"] for r in (pi_rows or [])}
+    for body in (language_report or {}).values():
+        protected |= {e["control_number"] for e in body["documents"]}
+
     # ── Edge cases (opt in) ──
     # Applied last, on its own RNG stream, so the default output is byte-identical
     # and the committed tiers plus the CI determinism check are unaffected.
     edge_report = None
     if edge_cases_on:
         import edge_cases as edge
-        edge_report = edge.apply(all_docs, families, custs, seed)
+        edge_report = edge.apply(all_docs, families, custs, seed, protected=protected)
         affected = sum(len(v) for v in edge_report.values())
         print(f"\n  Edge cases applied: {affected:,} documents across "
               f"{len(edge_report)} scenarios")
@@ -1454,11 +1497,32 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False):
         writer.writeheader(); writer.writerows(all_docs)
     print(f"  Written {docs_path} ({os.path.getsize(docs_path)/1e6:.1f} MB, {len(all_docs):,} docs)")
 
+    if pi_rows is not None:
+        import pi_layer
+        pi_path = os.path.join(out_dir, "pi-ground-truth.csv")
+        with open(pi_path, "w", newline="", encoding="utf-8") as f:
+            w = csv.DictWriter(f, fieldnames=pi_layer.GROUND_TRUTH_COLUMNS)
+            w.writeheader(); w.writerows(pi_rows)
+        print(f"  Written {pi_path} ({len(pi_rows):,} instances)")
+
     outputs = [
         ("custodians.json",     [{**c,"actual_doc_count":sum(1 for d in all_docs if d["Custodian"]==c["name"])} for c in custs]),
         ("email-families.json", families),
         ("batches.json",        batches),
     ]
+    if language_report is not None:
+        import language_mix
+        outputs.append(("language-mix.json", {
+            "note": language_mix.NOTE,
+            "languages": language_report,
+        }))
+    if findings is not None:
+        import planted_findings
+        outputs.append(("findings.json", {
+            "note": planted_findings.NOTE,
+            "matter_keywords": planted_findings.MATTER_KEYWORDS,
+            "findings": findings,
+        }))
     if edge_report is not None:
         import edge_cases as edge
         outputs.append(("edge-cases.json", {
@@ -1489,13 +1553,32 @@ def main():
     p.add_argument("--tier",  required=True, choices=["small","medium","large"])
     p.add_argument("--out",   default=None)
     p.add_argument("--seed",  type=int, default=DEFAULT_SEED)
+    p.add_argument("--ssn-range", choices=["9xx", "666"], default="9xx",
+                   help="Which never-issued SSN area to seed (Rule 16). 9xx is never "
+                        "issued but scores low confidence in some detectors; 666 is "
+                        "never allocated and scores as a standard-format SSN.")
+    p.add_argument("--second-language-share", type=float, default=None,
+                   help="Override the second language's share of the tier (Rule 17), "
+                        "e.g. 0.008 for a slice under 1%%.")
+    p.add_argument("--no-pi", action="store_true",
+                   help="Skip the PI layer (Rule 16). PI Detect then has nothing to find.")
+    p.add_argument("--no-language-mix", action="store_true",
+                   help="Skip the second language (Rule 17). Primary Language then has "
+                        "one bar.")
+    p.add_argument("--no-findings", action="store_true",
+                   help="Skip the planted findings and decoy (Rule 18).")
     p.add_argument("--edge-cases", action="store_true",
                    help="Starve a slice of documents of custodian, date, text, or family "
                         "so the failure paths of aggregating features can be tested. "
                         "Off by default; the default output is byte-identical without it.")
     args = p.parse_args()
     generate(args.tier, args.out or os.path.join("mock-data", args.tier), args.seed,
-             args.edge_cases)
+             args.edge_cases,
+             pi_on=not args.no_pi,
+             language_on=not args.no_language_mix,
+             findings_on=not args.no_findings,
+             ssn_range=args.ssn_range,
+             second_language_share=args.second_language_share)
 
 if __name__ == "__main__":
     main()
