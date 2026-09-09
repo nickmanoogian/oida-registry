@@ -802,8 +802,8 @@ python scripts/generate_mock_metadata.py --tier large
 python scripts/generate_mock_metadata.py --tier xlarge
 ```
 
-The extra large tier takes about two minutes and writes a 260 MB `documents.csv`, so it
-is generated on demand rather than committed.
+The extra large tier takes about two minutes and writes a 260 MB `documents.csv`, so it is
+published as a release artifact rather than committed. `make mock-xlarge` pulls it.
 
 Rules 16, 17 and 18 are on by default. To turn one off, or to change what it seeds:
 

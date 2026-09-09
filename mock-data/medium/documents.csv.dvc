@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-medium-documents.csv
-  size: 9447470
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.14.0/medium-documents.csv
+  size: 9646059
 outs:
 - path: documents.csv
-  size: 9447470
+  size: 9646059
   isexec: false

@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.3.0/v13-large-batches.json
-  size: 782923
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.14.0/large-batches.json
+  size: 786573
 outs:
 - path: batches.json
-  size: 782923
+  size: 786573
   isexec: false

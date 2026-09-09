@@ -98,10 +98,10 @@ matter, deterministic per random seed (default `42`).
 | **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
-| **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | generated on demand |
+| **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR | scale past a quarter of a million documents |
 
-Each tier contains seven files:
+Each tier contains seven files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all seven:
 
 | File | Description |
 |------|-------------|

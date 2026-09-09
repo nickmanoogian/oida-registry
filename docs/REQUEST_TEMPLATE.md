@@ -24,7 +24,7 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | Ground truth emitted at generation time | all of the above; nothing is reconstructed afterward |
 | Build-time assertions that fail loudly | `make check`, `validate_mock_data.py`, `validate_load_package.py` |
 | Fixed calendar dates, deterministic output | seed 42 by default; two runs are byte-identical |
-| A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. Generated on demand with `make mock-regen-xlarge` rather than published |
+| A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. `make mock-xlarge` pulls it |
 
 ## What does not exist yet
 

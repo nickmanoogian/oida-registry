@@ -4,7 +4,7 @@ MOCK_OUT  := ./mock-data
 ECI_OUT   := /tmp/oida-large
 
 .PHONY: help check lint typecheck imports tiers list get-small get-all manifest verify \
-        mock-small mock-medium mock-large mock-validate \
+        mock-small mock-medium mock-large mock-xlarge mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large mock-regen-xlarge mock-small-edge \
         load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-xlarge load-validate \
         load-release \
@@ -30,12 +30,13 @@ help:
 	@echo "  make mock-small      Pull pre-built small tier (~1,430 docs) into $(MOCK_OUT)/small/"
 	@echo "  make mock-medium     Pull pre-built medium tier (~9,900 docs) into $(MOCK_OUT)/medium/"
 	@echo "  make mock-large      Pull pre-built large tier (~148K docs) into $(MOCK_OUT)/large/"
+	@echo "  make mock-xlarge     Pull pre-built extra large tier (~275K docs) into $(MOCK_OUT)/xlarge/"
 	@echo "  make mock-validate   Validate the small tier against RULES.md"
 	@echo "  make mock-small-edge Generate a small tier with edge cases (starved documents)"
 	@echo "  make mock-regen-small   Regenerate small tier from the generator script"
 	@echo "  make mock-regen-medium  Regenerate medium tier"
 	@echo "  make mock-regen-large   Regenerate large tier"
-	@echo "  make mock-regen-xlarge  Generate the extra large tier (~275K docs, not published)"
+	@echo "  make mock-regen-xlarge  Regenerate the extra large tier locally (~2 min)"
 	@echo ""
 	@echo "  ── Native file load packages (Relativity import) ─────────────"
 	@echo "  make load-small          Build small tier: native files + .dat load file"
@@ -127,12 +128,18 @@ mock-small:
 	dvc get $(REGISTRY) mock-data/small/batches.json       --out $(MOCK_OUT)/small/batches.json
 	@echo "Small tier ready at $(MOCK_OUT)/small/"
 
+# The ground truth files are part of a tier, not extras: without them the seeded
+# PI, the second language and the planted findings are in the data with nothing
+# to score them against.
 mock-medium:
 	@mkdir -p $(MOCK_OUT)/medium
-	dvc get $(REGISTRY) mock-data/medium/documents.csv      --out $(MOCK_OUT)/medium/documents.csv
-	dvc get $(REGISTRY) mock-data/medium/custodians.json    --out $(MOCK_OUT)/medium/custodians.json
-	dvc get $(REGISTRY) mock-data/medium/email-families.json --out $(MOCK_OUT)/medium/email-families.json
-	dvc get $(REGISTRY) mock-data/medium/batches.json       --out $(MOCK_OUT)/medium/batches.json
+	dvc get $(REGISTRY) mock-data/medium/documents.csv        --out $(MOCK_OUT)/medium/documents.csv
+	dvc get $(REGISTRY) mock-data/medium/custodians.json      --out $(MOCK_OUT)/medium/custodians.json
+	dvc get $(REGISTRY) mock-data/medium/email-families.json  --out $(MOCK_OUT)/medium/email-families.json
+	dvc get $(REGISTRY) mock-data/medium/batches.json         --out $(MOCK_OUT)/medium/batches.json
+	dvc get $(REGISTRY) mock-data/medium/pi-ground-truth.csv  --out $(MOCK_OUT)/medium/pi-ground-truth.csv
+	dvc get $(REGISTRY) mock-data/medium/language-mix.json    --out $(MOCK_OUT)/medium/language-mix.json
+	dvc get $(REGISTRY) mock-data/medium/findings.json        --out $(MOCK_OUT)/medium/findings.json
 	@echo "Medium tier ready at $(MOCK_OUT)/medium/"
 
 mock-large:
@@ -141,9 +148,25 @@ mock-large:
 	dvc get $(REGISTRY) mock-data/large/custodians.json        --out $(MOCK_OUT)/large/custodians.json
 	dvc get $(REGISTRY) mock-data/large/email-families.json.gz --out $(MOCK_OUT)/large/email-families.json.gz
 	dvc get $(REGISTRY) mock-data/large/batches.json           --out $(MOCK_OUT)/large/batches.json
+	dvc get $(REGISTRY) mock-data/large/pi-ground-truth.csv    --out $(MOCK_OUT)/large/pi-ground-truth.csv
+	dvc get $(REGISTRY) mock-data/large/language-mix.json      --out $(MOCK_OUT)/large/language-mix.json
+	dvc get $(REGISTRY) mock-data/large/findings.json          --out $(MOCK_OUT)/large/findings.json
 	gunzip -f $(MOCK_OUT)/large/documents.csv.gz
 	gunzip -f $(MOCK_OUT)/large/email-families.json.gz
 	@echo "Large tier ready at $(MOCK_OUT)/large/"
+
+mock-xlarge:
+	@mkdir -p $(MOCK_OUT)/xlarge
+	dvc get $(REGISTRY) mock-data/xlarge/documents.csv.gz      --out $(MOCK_OUT)/xlarge/documents.csv.gz
+	dvc get $(REGISTRY) mock-data/xlarge/custodians.json        --out $(MOCK_OUT)/xlarge/custodians.json
+	dvc get $(REGISTRY) mock-data/xlarge/email-families.json.gz --out $(MOCK_OUT)/xlarge/email-families.json.gz
+	dvc get $(REGISTRY) mock-data/xlarge/batches.json           --out $(MOCK_OUT)/xlarge/batches.json
+	dvc get $(REGISTRY) mock-data/xlarge/pi-ground-truth.csv    --out $(MOCK_OUT)/xlarge/pi-ground-truth.csv
+	dvc get $(REGISTRY) mock-data/xlarge/language-mix.json      --out $(MOCK_OUT)/xlarge/language-mix.json
+	dvc get $(REGISTRY) mock-data/xlarge/findings.json          --out $(MOCK_OUT)/xlarge/findings.json
+	gunzip -f $(MOCK_OUT)/xlarge/documents.csv.gz
+	gunzip -f $(MOCK_OUT)/xlarge/email-families.json.gz
+	@echo "Extra large tier ready at $(MOCK_OUT)/xlarge/"
 
 mock-validate:
 	python3 scripts/validate_mock_data.py --tier small
@@ -171,8 +194,8 @@ mock-regen-large:
 	python3 scripts/generate_mock_metadata.py --tier large
 	python3 scripts/validate_mock_data.py --tier large
 
-# Not published as an artifact: about two minutes to generate and a 260 MB
-# documents.csv, so rebuilding it costs less than shipping it.
+# Published as a release artifact like the other tiers. Regenerate it locally only
+# if you are changing the generator, or you want a different seed.
 mock-regen-xlarge:
 	python3 scripts/generate_mock_metadata.py --tier xlarge
 	python3 scripts/validate_mock_data.py --tier xlarge
