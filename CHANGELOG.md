@@ -6,6 +6,51 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — the published medium and large tiers were ten releases out of date
+
+`make mock-medium` and `make mock-large` resolved to the **v1.3.0** assets. Those files
+predate the custodian folder structure, the real attachment records, `Record Type`, the
+seeded PI, the second language, the planted findings and the native date layer. The
+pointers were internally consistent (a URL and a byte count that agreed with each other),
+so nothing caught it.
+
+**v1.14.0 publishes every tier from the current generator**, and each tier now ships seven
+files rather than four. The three additions are the ground truth for the seeded content,
+without which the PI, the second language and the planted findings sit in the data with
+nothing to score them against:
+
+| Tier | Documents | Pointers |
+|---|---|---|
+| Medium | 9,980 | 7, all at v1.14.0 |
+| Large | 148,235 | 7, all at v1.14.0 |
+| Extra large | 275,273 | 7, all at v1.14.0 |
+
+The extra large tier is **published now** rather than generate-on-demand: 59 MB gzipped is
+cheaper than asking everyone to spend two minutes and 260 MB of disk. `make mock-xlarge`.
+
+The two load packages are unchanged from v1.13.0 and re-attached to v1.14.0, because the
+click-to-download links use `releases/latest/download/…` and would otherwise have broken
+the moment a newer release existed.
+
+### Fixed — `.gitignore` was swallowing the pointers it needed to keep
+
+`/mock-data/medium/` and its siblings excluded the whole directory, and git cannot
+re-include a file whose parent directory is excluded. So the four pointers that predated
+the rule stayed tracked while thirteen new ones were silently ignored, and a pointer that
+is not committed is a `make mock-*` target that cannot resolve. The patterns exclude the
+directory *contents* now, with a negation for `*.dvc`, which is the form that works. The
+data files themselves stay ignored, which is checked in both directions.
+
+### Added — `scripts/write_dvc_pointers.py`
+
+Writes every `mock-data/*.dvc` pointer from the files being published, so the URL, the byte
+count and the tier they describe cannot disagree. The pointers were hand maintained, which
+is how they drifted ten versions. `--check` reports without writing.
+
+Verified: all 21 pointers resolve against the live release with a content length matching
+the pointer, and both `releases/latest/download/…` links still serve the same bytes as
+v1.13.0.
+
 ### Added — an extra large tier (~275,000 documents)
 
 `--tier xlarge`: 275,273 documents, above a quarter of a million, for scale and

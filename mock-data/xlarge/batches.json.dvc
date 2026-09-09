@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.14.0/xlarge-batches.json
+  size: 1454969
+outs:
+- path: batches.json
+  size: 1454969
+  isexec: false

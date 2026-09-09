@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.14.0/large-findings.json
+  size: 5609
+outs:
+- path: findings.json
+  size: 5609
+  isexec: false

@@ -33,7 +33,7 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
 | **`documents.csv`** | 1.4 MB | 9 MB | 130 MB | 260 MB |
-| **In git** | ✅ | via DVC | via DVC | generate on demand |
+| **Where it lives** | in git | v1.14.0 release, via DVC | v1.14.0 release, via DVC | v1.14.0 release, via DVC |
 
 ---
 
@@ -52,11 +52,10 @@ are building, so this is the table to read first. Measured on the **small** tier
 | **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large and extra large add Spanish. |
 
 For scale rather than coverage, the **extra large** tier is the same matter at 275,273
-documents, above a quarter of a million. It is generated on demand rather than published,
-because it takes about two minutes and writes a 260 MB `documents.csv`:
+documents, above a quarter of a million:
 
 ```bash
-make mock-regen-xlarge
+make mock-xlarge
 ```
 
 Add `--edge-cases` to starve any of them on purpose: no custodian, no date, a 1601 date, no
@@ -106,7 +105,7 @@ gunzip documents.csv.gz
 make mock-small        # pull small tier
 make mock-medium       # pull medium tier
 make mock-large        # pull large tier (compressed)
-make mock-regen-xlarge # generate the extra large tier locally (not published)
+make mock-xlarge      # pull extra large tier (compressed)
 ```
 
 ### Validate after pulling

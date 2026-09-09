@@ -11,10 +11,18 @@
 .ocr-content-cache.json
 
 # generated mock data for medium/large tiers (too large for git — hosted as releases)
-/mock-data/medium/
+# The generated tiers themselves are too large for git, but their .dvc pointers
+# are the only thing that says where a tier lives, so they have to be tracked.
+# Ignoring the directory outright silently swallowed thirteen new pointers, and a
+# pointer that is not committed is a `make mock-*` target that cannot resolve.
+# Excluding the contents rather than the directory is what lets the negation work.
+/mock-data/medium/*
+!/mock-data/medium/*.dvc
+/mock-data/large/*
+!/mock-data/large/*.dvc
+/mock-data/xlarge/*
+!/mock-data/xlarge/*.dvc
 /mock-data/small-edge/
-/mock-data/large/
-/mock-data/xlarge/
 
 # actual data files — tracked by DVC, not git
 /data-products/*.csv

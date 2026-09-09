@@ -204,7 +204,7 @@ datasets realistic and how the distributions were chosen.
 | **Custodians** | 10 | 10 | 40 | 40 |
 | **File types** | 25 types | 33 types | 34 types | 34 types |
 | **Includes** | Emails, Office, PDF, Teams, Slack, images | + Google Workspace, Bloomberg, mobile chat | + full distribution across all types | same distribution as large |
-| **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) | Generated on demand |
+| **Stored in** | Git (instant) | Release artifact | Release artifact (compressed) | Release artifact (compressed) |
 
 ### Get the small tier (fastest — already in the repo)
 
@@ -225,25 +225,32 @@ git clone https://github.com/nickmanoogian/oida-registry
 ### Get the medium tier (recommended for most feature work)
 
 ```bash
+make mock-medium
+```
+
+That pulls all seven files. By hand, if you only want some of them:
+
+```bash
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/documents.csv
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/custodians.json
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/email-families.json
 dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/batches.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/pi-ground-truth.csv
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/language-mix.json
+dvc get https://github.com/nickmanoogian/oida-registry mock-data/medium/findings.json
 ```
 
 ### Get the extra large tier (above a quarter of a million documents)
 
-Not published as an artifact: it takes about two minutes to generate and writes a 260 MB
-`documents.csv`, so shipping it costs more than rebuilding it.
-
 ```bash
-make mock-regen-xlarge
-# or: python scripts/generate_mock_metadata.py --tier xlarge
+make mock-xlarge
 ```
 
-It is large's matter at 1.86x: the same 40 custodians, the same scripted documents and
-threads, the same file type mix, with the volumes and the production shape scaled up.
-`mock-data/xlarge/` is gitignored.
+275,273 documents. It is large's matter at 1.86x: the same 40 custodians, the same scripted
+documents and threads, the same file type mix, with the volumes and the production shape
+scaled up. `documents.csv` is 260 MB open and arrives gzipped at 59 MB.
+
+To build it yourself with a different seed instead, `make mock-regen-xlarge`.
 
 ### Get the large tier (scale and performance testing)
 
