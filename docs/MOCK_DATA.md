@@ -89,26 +89,36 @@ matter, deterministic per random seed (default `42`).
 
 | | Small | Medium | Large |
 |---|---|---|---|
-| **Documents** | ~1,439 | ~9,900 | ~148,000 |
-| **Custodians** | 4 (all Mallinckrodt) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (across all orgs + outside counsel) |
-| **Orgs represented** | 1 | 3 | 4 |
+| **Documents** | 1,439 | ~9,900 | ~148,000 |
+| **Custodians** | 10 (7 MNK + 2 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (across all orgs + outside counsel) |
+| **Orgs represented** | 3 | 3 | 4 |
 | **Phases present** | 2–3 | 1–4 | 1–4 |
 | **Scripted hot docs** | 8 | 11 | 13 |
 | **Scripted email threads** | 2 | 5 | 5 |
-| **Sent to review** | ~470 | ~3,600 | ~36,000 |
-| **Responsive** | ~228 | ~1,400 | ~13,000 |
-| **Privileged** | ~33 | ~160 | ~1,700 |
+| **Sent to review** | 724 | ~3,600 | ~36,000 |
+| **Responsive** | 213 | ~1,400 | ~13,000 |
+| **Privileged** | 30 | ~160 | ~1,700 |
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR |
 
-Each tier contains four files:
+Each tier contains seven files:
 
 | File | Description |
 |------|-------------|
-| `documents.csv` | One row per document; 109 columns — every Relativity field plus the narrative fields |
+| `documents.csv` | One row per document; 111 columns — every Relativity field plus the narrative fields and `PI Seeded` |
 | `custodians.json` | Custodian profiles: name, email, org, role, dept, narrative, hold status, doc counts |
 | `email-families.json` | Threading structure — organic parent/child families plus the scripted story threads |
 | `batches.json` | Batch assignments — reviewer, status, doc list, dates |
+| `pi-ground-truth.csv` | One row per seeded PI instance, with the value and whether it is expected to be detected (Rule 16) |
+| `language-mix.json` | The second-language slice and why it is irrelevant to the matter (Rule 17) |
+| `findings.json` | Known-answer findings and the decoy (Rule 18) |
+
+`docs/REQUEST_TEMPLATE.md` is the intake form for a corpus request, with a map from each
+common ask to the flag that serves it and an honest list of what is not modelled yet.
+
+`mock-data/README.md` opens with a table of what each of the six Early Insights widgets can
+be tested against, and where the tiers still fall short. Read that before picking a tier:
+volume is rarely the thing that decides it.
 
 **Pull the small tier (already in git, instant):**
 

@@ -1,0 +1,129 @@
+{
+  "note": "Facilities and office administration notices, deliberately unrelated to the matter. A reviewer who reads one learns nothing about the case, which is what makes the language slice safe to test against.",
+  "languages": {
+    "German": {
+      "share": 0.0202,
+      "requested": 0.02,
+      "count": 29,
+      "note": "Facilities and office administration notices, deliberately unrelated to the matter. A reviewer who reads one learns nothing about the case, which is what makes the language slice safe to test against.",
+      "documents": [
+        {
+          "control_number": "DOC-0000878",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000076",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000213",
+          "body": "Hinweis zur Brandschutzuebung am kommenden Dienstag um 10 Uhr. Bitte verlassen Sie das Gebaeude ueber den naechstgelegenen Ausgang und sammeln Sie sich auf dem Parkplatz. Die Uebung dauert etwa zwanzig Minuten."
+        },
+        {
+          "control_number": "DOC-0000765",
+          "body": "Hinweis zur Brandschutzuebung am kommenden Dienstag um 10 Uhr. Bitte verlassen Sie das Gebaeude ueber den naechstgelegenen Ausgang und sammeln Sie sich auf dem Parkplatz. Die Uebung dauert etwa zwanzig Minuten."
+        },
+        {
+          "control_number": "DOC-0001245",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000835",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000786",
+          "body": "Sehr geehrte Kolleginnen und Kollegen, die Kantine bleibt am Freitag wegen Wartungsarbeiten geschlossen. Warme Getraenke stehen im Foyer bereit. Wir bitten um Ihr Verstaendnis. Mit freundlichen Gruessen, Facility Management"
+        },
+        {
+          "control_number": "DOC-0001173",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0000228",
+          "body": "Hinweis zur Brandschutzuebung am kommenden Dienstag um 10 Uhr. Bitte verlassen Sie das Gebaeude ueber den naechstgelegenen Ausgang und sammeln Sie sich auf dem Parkplatz. Die Uebung dauert etwa zwanzig Minuten."
+        },
+        {
+          "control_number": "DOC-0000231",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0001052",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0001080",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0000360",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000264",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0000927",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0000257",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0000212",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0000914",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0000547",
+          "body": "Sehr geehrte Kolleginnen und Kollegen, die Kantine bleibt am Freitag wegen Wartungsarbeiten geschlossen. Warme Getraenke stehen im Foyer bereit. Wir bitten um Ihr Verstaendnis. Mit freundlichen Gruessen, Facility Management"
+        },
+        {
+          "control_number": "DOC-0000092",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000341",
+          "body": "Sehr geehrte Kolleginnen und Kollegen, die Kantine bleibt am Freitag wegen Wartungsarbeiten geschlossen. Warme Getraenke stehen im Foyer bereit. Wir bitten um Ihr Verstaendnis. Mit freundlichen Gruessen, Facility Management"
+        },
+        {
+          "control_number": "DOC-0000080",
+          "body": "Sehr geehrte Kolleginnen und Kollegen, die Kantine bleibt am Freitag wegen Wartungsarbeiten geschlossen. Warme Getraenke stehen im Foyer bereit. Wir bitten um Ihr Verstaendnis. Mit freundlichen Gruessen, Facility Management"
+        },
+        {
+          "control_number": "DOC-0001268",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0000661",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        },
+        {
+          "control_number": "DOC-0001138",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0000349",
+          "body": "Hinweis zur Brandschutzuebung am kommenden Dienstag um 10 Uhr. Bitte verlassen Sie das Gebaeude ueber den naechstgelegenen Ausgang und sammeln Sie sich auf dem Parkplatz. Die Uebung dauert etwa zwanzig Minuten."
+        },
+        {
+          "control_number": "DOC-0000601",
+          "body": "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell bereit. Die Reinigung erfolgt weiterhin taeglich."
+        },
+        {
+          "control_number": "DOC-0000941",
+          "body": "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die Arbeiten dauern voraussichtlich drei Tage."
+        },
+        {
+          "control_number": "DOC-0001097",
+          "body": "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen Lichtbildausweis mit."
+        }
+      ]
+    }
+  }
+}

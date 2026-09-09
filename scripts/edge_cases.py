@@ -60,7 +60,7 @@ def _take(pool, n):
     return taken
 
 
-def apply(all_docs, families, custodians, seed=42):
+def apply(all_docs, families, custodians, seed=42, protected=None):
     """Mutate `all_docs` in place. Returns a report keyed by scenario.
 
     Every scenario draws from a disjoint pool, so no document carries two faults and
@@ -73,9 +73,13 @@ def apply(all_docs, families, custodians, seed=42):
     # Scripted hot documents carry the narrative; leave them intact. Container
     # records are excluded too: rewriting one's file type or custodian would leave
     # its children pointing at something that is no longer a container (Rule 3).
+    # Documents carrying a planted finding, a PI instance or a Rule 17 language
+    # are off limits: starving one falsifies the ground truth that names it.
+    protected = protected or set()
     pool = [d for d in all_docs
             if not d["Control Number"].startswith("HOT-")
-            and str(d.get("Level","")) != "0"]
+            and str(d.get("Level","")) != "0"
+            and d["Control Number"] not in protected]
     rng.shuffle(pool)
 
     def count(key):

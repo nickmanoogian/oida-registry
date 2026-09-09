@@ -490,6 +490,181 @@ def run(tier_name, tier_dir, verbose):
         if not check("edge-cases.json counts match its own document lists",
                      counts_ok, "", verbose): failures += 1
 
+    # ── Rule 16 — personal information ────────────────────────────────────
+    pi_path = os.path.join(tier_dir, "pi-ground-truth.csv")
+    if not os.path.exists(pi_path):
+        print(f"\nRule 16 — personal information\n  {WARN}  no pi-ground-truth.csv "
+              f"(built with --no-pi: PI Detect has nothing to find)")
+    else:
+        print("\nRule 16 — personal information")
+        with open(pi_path, encoding="utf-8") as f:
+            pi_rows = list(csv.DictReader(f))
+        by_ctrl_pi = {d["Control Number"]: d for d in docs}
+
+        ghosts = [r["Control Number"] for r in pi_rows
+                  if r["Control Number"] not in by_ctrl_pi]
+        if not check("every document in pi-ground-truth.csv exists", not ghosts,
+                     f"{len(ghosts)} missing: {ghosts[:3]}", verbose): failures += 1
+
+        # Every value has to be non-issuable. A generator that quietly drifts into
+        # a real-looking SSN or a live card number is worse than one with no PI.
+        bad_ssn = [r["Value"] for r in pi_rows if r["PI Type"] == "SSN"
+                   and not (r["Value"][:3].isdigit()
+                            and (int(r["Value"][:3]) >= 900 or r["Value"][:3] == "666"))]
+        if not check("every SSN uses a never-issued area number", not bad_ssn,
+                     f"{len(bad_ssn)} issuable: {bad_ssn[:3]}", verbose): failures += 1
+
+        import pi_layer
+        test_cards = {n.replace(" ", "") for _, n in pi_layer.TEST_CARDS}
+        bad_card = [r["Value"] for r in pi_rows if r["PI Type"] == "Payment Card"
+                    and r["Value"].replace(" ", "") not in test_cards]
+        if not check("every payment card is a published test number", not bad_card,
+                     f"{len(bad_card)} unknown: {bad_card[:3]}", verbose): failures += 1
+
+        bad_phone = [r["Value"] for r in pi_rows if r["PI Type"] == "Phone"
+                     and "555-01" not in r["Value"]]
+        if not check("every phone is in the 555-01xx fiction block", not bad_phone,
+                     f"{len(bad_phone)} outside: {bad_phone[:3]}", verbose): failures += 1
+
+        bad_email = [r["Value"] for r in pi_rows if r["PI Type"] == "Personal Email"
+                     and not r["Value"].endswith(".invalid")]
+        if not check("every personal email uses the .invalid TLD", not bad_email,
+                     f"{len(bad_email)} resolvable: {bad_email[:3]}", verbose): failures += 1
+
+        # Rule 16's point is distribution: PI in one spreadsheet is the easy case.
+        where = Counter(r["Where It Lives"] for r in pi_rows)
+        body_share = where["email body"] / len(pi_rows) if pi_rows else 0
+        if not check("PI is spread across at least four places", len(where) >= 4,
+                     f"places: {dict(where)}", verbose): failures += 1
+        if not check("some PI sits in email bodies, not only in spreadsheets",
+                     where["email body"] > 0, f"{body_share:.0%} of instances", verbose):
+            failures += 1
+
+        irrelevant = [r for r in pi_rows if r["Scenario"] == "irrelevant_high_sensitivity"]
+        if not check("a high-sensitivity document irrelevant to the matter is seeded",
+                     bool(irrelevant),
+                     f"{len({r['Control Number'] for r in irrelevant})} documents", verbose):
+            failures += 1
+
+        # The column has to agree with the ground truth in both directions.
+        seeded_col = {d["Control Number"] for d in docs if d.get("PI Seeded","").strip()}
+        seeded_gt  = {r["Control Number"] for r in pi_rows}
+        if not check("the PI Seeded column matches pi-ground-truth.csv",
+                     seeded_col == seeded_gt,
+                     f"column {len(seeded_col)}, ground truth {len(seeded_gt)}", verbose):
+            failures += 1
+
+    # ── Rule 17 — language composition ────────────────────────────────────
+    lang_path = os.path.join(tier_dir, "language-mix.json")
+    if not os.path.exists(lang_path):
+        print(f"\nRule 17 — language composition\n  {WARN}  no language-mix.json "
+              f"(built with --no-language-mix: Primary Language has one bar)")
+    else:
+        print("\nRule 17 — language composition")
+        mix = json.load(open(lang_path, encoding="utf-8"))["languages"]
+        by_ctrl_l = {d["Control Number"]: d for d in docs}
+        langs = Counter(d.get("Language","") for d in docs)
+
+        if not check("more than one language is present", len(langs) > 1,
+                     f"{dict(langs)}", verbose): failures += 1
+
+        for lang, body in mix.items():
+            listed = [e["control_number"] for e in body["documents"]]
+            wrong  = [c for c in listed
+                      if c in by_ctrl_l and by_ctrl_l[c].get("Language") != lang]
+            if not check(f"{lang}: every listed document carries the language",
+                         not wrong, f"{len(wrong)} do not: {wrong[:3]}", verbose): failures += 1
+
+            got = langs.get(lang, 0) / len(docs)
+            near = abs(got - body["requested"]) <= max(0.005, body["requested"] * 0.5)
+            if not check(f"{lang}: share is near the requested {body['requested']:.1%}",
+                         near, f"got {got:.1%}", verbose): failures += 1
+
+            # The slice is unrelated to the matter on purpose, so none of it should
+            # be coded onto an issue.
+            tagged = [c for c in listed
+                      if c in by_ctrl_l and by_ctrl_l[c].get("Issue Tags","").strip()]
+            if not check(f"{lang}: no document is coded onto a matter issue",
+                         not tagged, f"{len(tagged)} tagged: {tagged[:3]}", verbose):
+                failures += 1
+
+    # ── Rule 18 — planted findings ────────────────────────────────────────
+    find_path = os.path.join(tier_dir, "findings.json")
+    if not os.path.exists(find_path):
+        print(f"\nRule 18 — planted findings\n  {WARN}  no findings.json "
+              f"(built with --no-findings)")
+    else:
+        print("\nRule 18 — planted findings")
+        payload  = json.load(open(find_path, encoding="utf-8"))
+        findings = {f["id"]: f for f in payload["findings"]}
+        by_ctrl_f = {d["Control Number"]: d for d in docs}
+
+        if not check("the matched pair and the decoy are all present",
+                     {"metadata_only", "content_only", "decoy"} <= set(findings),
+                     f"present: {sorted(findings)}", verbose): failures += 1
+
+        ghosts = [f["control_number"] for f in payload["findings"]
+                  if f["control_number"] not in by_ctrl_f]
+        if not check("every planted finding names a document that exists", not ghosts,
+                     f"{len(ghosts)} missing: {ghosts}", verbose): failures += 1
+
+        # Every address field in the corpus, so "appears exactly once" means once.
+        ADDR_FIELDS = ("Email From SMTP","Email To SMTP","Email CC SMTP","Email BCC SMTP",
+                       "Rsmf/Participants")
+        appearances: Counter = Counter()
+        for d in docs:
+            for field in ADDR_FIELDS:
+                for token in (d.get(field,"") or "").replace(";", ",").split(","):
+                    token = token.strip().lower()
+                    if token:
+                        appearances[token] += 1
+
+        meta = findings.get("metadata_only")
+        if meta:
+            addr = meta["unique_address"].lower()
+            n    = appearances.get(addr, 0)
+            if not check("the unique address appears exactly once in the corpus",
+                         n == 1, f"{n} appearances of {addr}", verbose): failures += 1
+
+            child = meta["attachment"]["control_number"]
+            row   = by_ctrl_f.get(child, {})
+            if not check("the encrypted attachment is flagged Password Protected",
+                         row.get("Processing Error Type") == "Password Protected",
+                         f"got {row.get('Processing Error Type','')!r}", verbose): failures += 1
+
+            # A planted correspondent that turns up before its seeded date would
+            # stretch the entity's active range and invalidate the finding.
+            seeded = meta.get("date","")[:10]
+            earlier = [d["Control Number"] for d in docs
+                       if addr in " ".join((d.get(f,"") or "") for f in ADDR_FIELDS).lower()
+                       and d.get("Primary Date","")[:10] < seeded]
+            if not check("no document names the planted address before its seeded date",
+                         not earlier, f"{len(earlier)} earlier: {earlier[:3]}", verbose):
+                failures += 1
+
+        decoy = findings.get("decoy")
+        if decoy:
+            addr = decoy["decoy_address"].lower()
+            n    = appearances.get(addr, 0)
+            if not check("the decoy address appears more than once, which is the tell",
+                         n >= 2, f"{n} appearances of {addr}", verbose): failures += 1
+            if not check("the decoy's distinguishing document exists",
+                         decoy["distinguisher"]["control_number"] in by_ctrl_f,
+                         decoy["distinguisher"]["control_number"], verbose): failures += 1
+
+        content = findings.get("content_only")
+        if content:
+            import planted_findings
+            body = planted_findings.CONTENT_ONLY_BODY.lower()
+            hits = [k for k in payload["matter_keywords"] if k in body]
+            if not check("the content-only finding hits zero matter keywords", not hits,
+                         f"hits: {hits}", verbose): failures += 1
+
+            # It must also name no person in full, or a name search would reach it.
+            named = [c["name"] for c in custs if c["name"].lower() in body]
+            if not check("the content-only finding names no custodian in full",
+                         not named, f"named: {named}", verbose): failures += 1
+
     # ── Summary ───────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if failures == 0:
