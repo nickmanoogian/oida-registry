@@ -6,6 +6,28 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.13.0 packages
+
+Republished. Every native in the v1.12.0 assets was stamped with a library's date rather than
+the manifest's, so a processing run of the download put every spreadsheet and every PDF in
+August 2026 and every deck in January 2013. Both packages also now carry the seeded content
+and its ground truth.
+
+| | v1.12.0 | v1.13.0 |
+|---|---|---|
+| Office and PDF dates | the build clock, or a 2013 template | the row's `Date Created` / `Date Last Modified` |
+| Filesystem mtimes | the build clock | the row's `Date Last Modified` |
+| `load-file.dat` fields | 56 | 58 (`Date Created`, `Date Last Modified`) |
+| PI instances | none | 102 across 18 documents, in `pi-ground-truth.csv` |
+| Languages | English only | + German 2.0%, in `language-mix.json` |
+| Planted findings | none | 4, in `findings.json` |
+| Fabricated errors | 100 | 102 |
+| Starved documents | 210 | 221 |
+
+Built and zipped with `make load-release`, which validates before it packages. The previous
+assets were assembled by hand, which is how the date defect reached a published artifact
+without anything failing.
+
 ### Fixed — every native carried a library's date, not the manifest's (Rule 19)
 
 python-docx, python-pptx, openpyxl and fpdf2 each stamp their own date on every file they
