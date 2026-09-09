@@ -6,6 +6,15 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — tier counts in the docs were estimates, and several had drifted
+
+The tier tables carried round numbers from earlier versions. Medium and large were
+regenerated and measured, and the values that were wrong are now the measured ones: medium
+is 9,980 documents rather than ~9,900 and sends 4,002 to review rather than ~3,600; large
+sends 56,344 rather than ~36,000 and has 14,434 responsive rather than ~13,000. The small
+tier's custodian split was listed as 7 Mallinckrodt when it is 8. The PI counts introduced
+in this release were themselves estimates for medium and large; they are 443 and 3,326.
+
 ### Changed — v1.13.0 packages
 
 Republished. Every native in the v1.12.0 assets was stamped with a library's date rather than
