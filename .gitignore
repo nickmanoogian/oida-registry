@@ -2,6 +2,10 @@
 /load-packages/small/
 /load-packages/small-errors/
 /load-packages/broken-load-files/
+# An extracted package, committed by accident in d7e464c because the unzip ran
+# from inside load-packages/ and the archive carries its own load-packages/
+# prefix. Ignored so the same slip cannot re-add 1,426 files.
+/load-packages/load-packages/
 /load-packages/medium/
 /load-packages/large/
 /load-packages/xlarge/

@@ -6,6 +6,26 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Removed — a stray nested load package, 1,426 files tracked in git
+
+`load-packages/load-packages/small/` was committed by accident in d7e464c, the repository
+rename: the unzip ran from inside `load-packages/`, and the archive carries its own
+`load-packages/` prefix, so the whole extracted package landed one level too deep. It came
+in with 1,570 other files and nobody noticed.
+
+It was stale as well as misplaced. All 1,414 natives sat directly under `natives/` in the
+old flat layout, with none in custodian folders, so anyone who found it got a package that
+Rule 11 has not produced since August. It also carried a `load-file.opt` placeholder from
+before the native-only import path.
+
+Nothing referenced it: `.gitignore` already covered `/load-packages/small/` and
+`/load-packages/*.zip`, the `small.zip.dvc` and `small-errors.zip.dvc` pointers import the
+release assets, and the README tells you to `dvc get` the zips. The path is ignored now, so
+the same slip cannot re-add it.
+
+`load-packages/small-real/` stays tracked. Those 122 files are real OIDA PDFs rather than
+generated output, so they are not reproducible from a `make` target.
+
 ### Fixed — the published medium and large tiers were ten releases out of date
 
 `make mock-medium` and `make mock-large` resolved to the **v1.3.0** assets. Those files
