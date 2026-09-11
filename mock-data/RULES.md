@@ -932,6 +932,66 @@ python scripts/validate_load_package.py load-packages/small
 
 ---
 
+## Rule 22 — Collection Shape: a Gap, a Spike, and an Ambiguous Population
+
+The last two gaps in the widget coverage table, and they share a shape: both are about
+giving a widget something **hard** rather than something more.
+
+**The date axis had nothing to detect.** Measured on the small tier before this rule: 48
+months running 15 to 48 documents, a 3.2x spread with no anomaly in it. That is organic
+variation, and a feature claiming to surface collection gaps could not be tested against it
+either way, because there was no gap to find and no spike to explain.
+
+**Document Categories had no ambiguous case.** Every document sat squarely in one topic, so
+categorisation was only ever asked easy questions. A population that plausibly belongs to
+two categories is the one that tells you whether a classifier commits, hedges, or guesses.
+
+### What it plants
+
+| | Small tier |
+|---|---|
+| **A gap** | The highest-volume custodian has **zero** documents across a three month window, while every other custodian's volume over those months is unchanged |
+| **A spike** | One month carries **3.9x** the median, 108 documents against a median of 28 and a next-highest of 48 |
+| **An ambiguous population** | 25 documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
+
+The gap is **one custodian's, not the collection's**. That is how a real hole appears: one
+person's mailbox preserved late, or a migration that lost a period, while everybody else's
+data is fine. A collection-wide dip is a different thing and a much easier one to spot.
+
+The ambiguous population is a speaker-bureau honorarium to a practice whose prior
+authorisation numbers moved afterwards. There is no single right category, so a classifier
+that commits to one is not wrong and one that reports both is not hedging. Both categories
+also occur **on their own** elsewhere in the tier, asserted, because an overlap only means
+something if the two categories exist separately.
+
+### Requirements
+
+- **Nothing is deleted or invented.** The gap and the spike are made by **moving dates**, so
+  the tier keeps its size and its Rule 1 file type shares.
+- **Every move stays inside the matter window and inside the document's own narrative
+  phase.** A document that moves does not change what it is about, and Rule 19's window
+  assertions still hold afterwards, which is checked on the built package.
+- **Every date on a document moves together**: `Primary Date`, `Sort Date`, `Date Sent`,
+  `Date Received`, `Date Created`, `Date Last Modified`, `Date Taken` and the RSMF range.
+  Moving one and not the others would plant an inconsistency nobody asked for.
+- **The spike draws from eight surrounding months, not two.** Pulling eighty documents from
+  two neighbours halved them, which is its own anomaly; spread wide, the dip is a few
+  documents each.
+- **Runs first of all**, before Rule 21, because `Processing Folder Path` carries year and
+  month and Rule 11 makes that path a contract with the tree on disk.
+- **Every tier ships `collection-shape.json`**: the gap's custodian and months, the spike's
+  month and multiple, the ambiguous categories, and for each one what to expect and how to
+  verify it.
+- **On by default.** `--no-shape` turns it off and leaves the date axis with nothing to find.
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
@@ -951,7 +1011,7 @@ Rules 16, 17 and 18 are on by default. To turn one off, or to change what it see
 ```bash
 python scripts/generate_mock_metadata.py --tier small --ssn-range 666
 python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
-python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities --no-sources
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities --no-sources --no-shape
 ```
 
 With all three off the output is byte-identical to v1.12.0, so a tier used as clean

@@ -1115,7 +1115,8 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
 def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
              language_on=True, findings_on=True, entities_on=True,
-             sources_on=True, ssn_range="9xx", second_language_share=None):
+             sources_on=True, shape_on=True, ssn_range="9xx",
+             second_language_share=None):
     random.seed(seed)
     # xlarge borrows large's narrative: same roster, same scripted content, same
     # phase weighting. Only the volumes and the production shape are its own.
@@ -1481,8 +1482,20 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     # story, the file type shares and the review coding are all untouched. These
     # are on by default, unlike the edge cases below: a pass that *feeds* a widget
     # belongs in the tier, and a pass that *starves* one has to be asked for.
-    # Rule 21 runs before the others: Processing Folder Path depends on the source,
-    # and Rule 11 makes that path a contract with the package on disk.
+    # Rule 22 runs first of all: it moves dates, and Processing Folder Path carries
+    # year and month, so the path has to be built after the dates are final.
+    shape_report = None
+    if shape_on:
+        import collection_shape
+        shape_report = collection_shape.apply(all_docs, tier_name, seed)
+        g, sp = shape_report.get("gap", {}), shape_report["spike"]
+        print(f"  Rule 22: a {len(g.get('months', []))} month gap for "
+              f"{g.get('custodian','?')} ({g.get('documents_moved_out',0)} documents moved), "
+              f"a spike in {sp['month']} at {sp['multiple_of_median']}x the median, "
+              f"{shape_report['straddling_categories']['documents']} documents in two categories")
+
+    # Rule 21 runs next: Processing Folder Path depends on the source, and Rule 11
+    # makes that path a contract with the package on disk.
     source_report = None
     if sources_on:
         import data_sources
@@ -1559,11 +1572,15 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         print(f"\n  Edge cases applied: {affected:,} documents across "
               f"{len(edge_report)} scenarios")
 
-    # The entity census is taken last: the edge cases blank recipients, and the
-    # ground truth has to describe the data as it finally stands.
+    # Both censuses are taken last: the edge cases blank recipients and move dates
+    # off the axis entirely, and ground truth has to describe the data as it finally
+    # stands rather than as the rule that planted it left it.
     if entity_report is not None:
         import entity_population
         entity_population.recount(all_docs, entity_report)
+    if shape_report is not None:
+        import collection_shape
+        collection_shape.recount(all_docs, shape_report)
 
     # ── Write outputs ──
     Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -1602,6 +1619,8 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     if source_report is not None:
         import data_sources
         outputs.append(("data-sources.json", data_sources.manifest(all_docs)))
+    if shape_report is not None:
+        outputs.append(("collection-shape.json", shape_report))
     if findings is not None:
         import planted_findings
         outputs.append(("findings.json", {
@@ -1653,6 +1672,9 @@ def main():
                         "one bar.")
     p.add_argument("--no-findings", action="store_true",
                    help="Skip the planted findings and decoy (Rule 18).")
+    p.add_argument("--no-shape", action="store_true",
+                   help="Skip the planted collection gap, spike and ambiguous population "
+                        "(Rule 22). The date axis then has nothing to detect.")
     p.add_argument("--no-sources", action="store_true",
                    help="Skip the data source dimension (Rule 21). Collection Coverage "
                         "then has custodian as its only axis.")
@@ -1671,6 +1693,7 @@ def main():
              findings_on=not args.no_findings,
              entities_on=not args.no_entities,
              sources_on=not args.no_sources,
+             shape_on=not args.no_shape,
              ssn_range=args.ssn_range,
              second_language_share=args.second_language_share)
 

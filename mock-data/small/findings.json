@@ -78,7 +78,7 @@
       "id": "buried_deep",
       "control_number": "DOC-0001046",
       "custodian": "Thomas Bradley",
-      "date": "2014-02-02 00:00:00",
+      "date": "2014-04-02 00:00:00",
       "findable_by": "full extraction: the payload is on tab 11 of 12, 'Reconciliation'",
       "invisible_to": "any extraction that stops at the first sheet",
       "sheet_count": 12,

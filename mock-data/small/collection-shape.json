@@ -1,0 +1,74 @@
+{
+  "note": "A planted gap and a planted spike on the date axis, and a population that belongs to two categories at once. Made by moving dates and adding a second tag, so the tier keeps its size and its file type shares.",
+  "baseline_median_documents_per_month": 28,
+  "gap": {
+    "custodian": "Michael Brennan",
+    "months": [
+      "2014-05",
+      "2014-06",
+      "2014-07"
+    ],
+    "documents_moved_out": 21,
+    "expected": "Michael Brennan has no documents at all in 2014-05 to 2014-07, while every other custodian's volume over those months is unchanged. A real hole looks like this: one person's mailbox preserved late, not a collection-wide dip.",
+    "how_to_verify": "Collection Coverage, custodian by month: the row for Michael Brennan is empty across those three columns and the column totals stay normal.",
+    "document_ids": [
+      "DOC-0001014",
+      "DOC-0000526",
+      "DOC-0000130",
+      "DOC-0001336",
+      "DOC-0001267",
+      "DOC-0000635",
+      "DOC-0000012",
+      "DOC-0000701",
+      "DOC-0001024",
+      "DOC-0000980",
+      "..."
+    ],
+    "documents_remaining_in_window": 0
+  },
+  "spike": {
+    "month": "2014-04",
+    "documents": 108,
+    "documents_moved_in": 53,
+    "baseline_median": 28,
+    "multiple_of_median": 3.9,
+    "expected": "2014-04 carries roughly 3.5x the median month. The documents are drawn from the eight months around it, so the collection does not grow and no single neighbour loses much.",
+    "how_to_verify": "Collection Coverage, documents by month: one bar is far past the rest and the neighbouring bars are a little short.",
+    "document_ids": [
+      "DOC-0001256",
+      "DOC-0000712",
+      "DOC-0000258",
+      "DOC-0001093",
+      "DOC-0000590",
+      "DOC-0001261",
+      "DOC-0001401",
+      "DOC-0001194",
+      "DOC-0001041",
+      "DOC-0001046",
+      "..."
+    ]
+  },
+  "straddling_categories": {
+    "categories": [
+      "Speaker Bureau Payments",
+      "Prior Auth Fraud"
+    ],
+    "documents": 25,
+    "expected": "These documents carry both Speaker Bureau Payments and Prior Auth Fraud, and the content supports both: a speaker-bureau honorarium to a practice whose prior authorisation numbers moved afterwards. There is no single right category, so a classifier that commits to one is not wrong, and one that reports both is not hedging.",
+    "how_to_verify": "Document Categories: this population should appear under both categories, or be flagged as ambiguous. Either is defensible; silently dropping it is not.",
+    "document_ids": [
+      "DOC-0000997",
+      "DOC-0000847",
+      "DOC-0001200",
+      "DOC-0001011",
+      "DOC-0000837",
+      "DOC-0000936",
+      "DOC-0001235",
+      "DOC-0000929",
+      "DOC-0001098",
+      "DOC-0000919",
+      "..."
+    ],
+    "body": "Attaching the honoraria schedule alongside the prior authorization outcomes for the same practice, because the two keep getting discussed in the same meeting and nobody can agree which file they belong in.\n\nThe speaker payments are straightforward: four programs, four honoraria, all within the approved band. The prior authorization numbers for the same office are the part that needs a second look, since the approval rate moved after the speaker programs started and the reimbursement team handled those calls directly.\n\nFiling this under speaker programs for now. It sits as comfortably under reimbursement, which is the problem."
+  }
+}

@@ -834,6 +834,71 @@ def run(tier_name, tier_dir, verbose):
                      not bad_path, f"{len(bad_path)} do not: {bad_path[:3]}", verbose):
             failures += 1
 
+    # ── Rule 22 — the planted gap, spike and ambiguous population ─────────
+    shape_path = os.path.join(tier_dir, "collection-shape.json")
+    if not os.path.exists(shape_path):
+        print(f"\nRule 22 — collection shape\n  {WARN}  no collection-shape.json "
+              f"(built with --no-shape: the date axis has nothing to detect)")
+    else:
+        print("\nRule 22 — collection shape")
+        shape = json.load(open(shape_path, encoding="utf-8"))
+        per_month = Counter(d.get("Primary Date","")[:7] for d in docs
+                            if d.get("Primary Date","")[:7])
+        median = sorted(per_month.values())[len(per_month) // 2] if per_month else 0
+
+        gap = shape.get("gap")
+        if gap:
+            inside = [d["Control Number"] for d in docs
+                      if d.get("Custodian") == gap["custodian"]
+                      and d.get("Primary Date","")[:7] in gap["months"]]
+            if not check(f"{gap['custodian']} has no documents across the gap months",
+                         not inside, f"{len(inside)} remain: {inside[:3]}", verbose):
+                failures += 1
+
+            # A hole in one custodian, not a collection-wide dip: the months must
+            # still hold everybody else's documents.
+            others = sum(1 for d in docs
+                         if d.get("Custodian") not in ("", gap["custodian"])
+                         and d.get("Primary Date","")[:7] in gap["months"])
+            if not check("the gap is one custodian's, not the whole collection's",
+                         others > median, f"{others} documents from other custodians",
+                         verbose): failures += 1
+
+        spike = shape.get("spike")
+        if spike:
+            got = per_month.get(spike["month"], 0)
+            if not check("the spike month really carries the volume claimed",
+                         got == spike["documents"],
+                         f"manifest {spike['documents']}, corpus {got}", verbose):
+                failures += 1
+
+            # Unmistakable rather than a judgement call: past everything else.
+            others = sorted(v for m, v in per_month.items() if m != spike["month"])
+            clear = got > others[-1] * 1.5 if others else False
+            if not check("the spike is past every other month by a clear margin",
+                         clear, f"{got} against a next-highest of "
+                         f"{others[-1] if others else 0} and a median of {median}",
+                         verbose): failures += 1
+
+        strad = shape.get("straddling_categories")
+        if strad:
+            cats = strad["categories"]
+            both = [d for d in docs
+                    if all(c in d.get("Issue Tags","") for c in cats)]
+            if not check("the straddling population carries both categories",
+                         len(both) >= strad["documents"],
+                         f"{len(both)} documents with both tags", verbose): failures += 1
+
+            # It is only ambiguous if each category also exists on its own.
+            alone = {c: sum(1 for d in docs
+                            if c in d.get("Issue Tags","")
+                            and not all(x in d.get("Issue Tags","") for x in cats))
+                     for c in cats}
+            if not check("both categories also occur on their own, so the overlap means something",
+                         all(v > 0 for v in alone.values()),
+                         ", ".join(f"{c}: {v}" for c, v in alone.items()), verbose):
+                failures += 1
+
     # ── Summary ───────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if failures == 0:
