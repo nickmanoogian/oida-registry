@@ -6,6 +6,51 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — a planted gap, a planted spike, and an ambiguous population (Rule 22)
+
+The last two gaps in the widget coverage table, and they share a shape: both are about
+giving a widget something **hard** rather than something more.
+
+**The date axis had nothing to detect.** Measured before this rule: 48 months running 15 to
+48 documents, a 3.2x spread with no anomaly in it. A feature claiming to surface collection
+gaps could not be tested against that either way, because there was no gap to find and no
+spike to explain.
+
+**Document Categories had no ambiguous case.** Every document sat squarely in one topic, so
+categorisation was only ever asked easy questions.
+
+| | Small tier |
+|---|---|
+| A gap | the top custodian has **zero** documents across three months, while every other custodian's volume over those months is unchanged |
+| A spike | one month at **3.9x** the median: 108 documents against a median of 28 and a next-highest of 48 |
+| An ambiguous population | **25** documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
+
+The gap is **one custodian's, not the collection's**, which is how a real hole appears: one
+mailbox preserved late while everybody else's data is fine. Asserted both ways, that the
+custodian has nothing and that the months still hold everyone else.
+
+The ambiguous population is a speaker-bureau honorarium to a practice whose prior
+authorisation numbers moved afterwards. No single right category, so a classifier that
+commits to one is not wrong and one reporting both is not hedging. Both categories also
+occur on their own elsewhere, asserted, because an overlap only means something if the
+categories exist separately.
+
+**Nothing is deleted or invented.** The gap and the spike are made by moving dates, so the
+tier keeps its size and its Rule 1 file type shares, every move stays inside the matter
+window and inside the document's own narrative phase, and every date on a document moves
+together. Rule 19's window assertions still pass on the built package afterwards, which is
+checked rather than assumed.
+
+Two things caught while building it:
+
+- **Pulling the spike from two neighbouring months halved them**, which is its own anomaly
+  and not one anybody asked for. The donor window is eight months wide now, so the dip is a
+  few documents each: neighbours sit at 15 to 24 against a median of 28.
+- **The manifest disagreed with the corpus on an edge tier.** `missing_date` and
+  `sentinel_date` move documents off the date axis after this rule runs, and two leaving the
+  spike month was enough. The shape is recounted after the edge cases, the same fix the
+  entity census needed for the same reason.
+
 ### Changed — v1.16.0 packages
 
 Every tier republished with the data source dimension, and both load packages rebuilt

@@ -22,7 +22,7 @@ WORKSPACE_FILES = ("documents.csv", "custodians.json", "email-families.json",
 # second language, the planted findings and the entity population sit in the data
 # with nothing to score them against.
 GROUND_TRUTH_FILES = ("pi-ground-truth.csv", "language-mix.json", "findings.json",
-                      "entities.json", "data-sources.json")
+                      "entities.json", "data-sources.json", "collection-shape.json")
 
 PRODUCED_FILES = WORKSPACE_FILES + GROUND_TRUTH_FILES
 

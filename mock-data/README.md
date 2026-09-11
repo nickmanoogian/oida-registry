@@ -48,9 +48,9 @@ are building, so this is the table to read first. Measured on the **small** tier
 | Widget | What the tier gives it | Gaps |
 |---|---|---|
 | **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), **44 non-custodian entities** past the production cap of 25, **28 of them on a single document**, and **2 people sending from two addresses** for name normalisation (Rule 20). Plus Rule 18's principal, its decoy, and a **planted negative**: a pair corresponding at volume about one subject that touches no matter issue and appears nowhere else, so a correct "nothing here" can be told from a broken analysis | — |
-| **Collection Coverage** | 48 months of dates with a real shape (15 to 48 documents per month, not a flat line), **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, hold status variation, and every native stamped from the manifest (Rule 19) | No deliberate collection gap or spike. |
+| **Collection Coverage** | 48 months of dates, **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, and a **planted gap and spike** (Rule 22): the top custodian has zero documents across three months while everyone else is unchanged, and one month carries 3.9x the median. Every native stamped from the manifest (Rule 19) | — |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6) | — |
-| **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, and one document dense with PI and irrelevant to the matter | No population deliberately straddling two obvious categories. |
+| **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, one document dense with PI and irrelevant to the matter, and **25 documents that belong to two categories at once** (Rule 22) | — |
 | **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against | — |
 | **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large and extra large add Spanish. |
 
@@ -84,6 +84,7 @@ produces load files that fail at import.
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, its file types, and the metadata profile measured from the data (Rule 21). |
+| `collection-shape.json` | The planted date gap and spike, and the population that belongs to two categories, each with what to expect and how to verify it (Rule 22). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
 

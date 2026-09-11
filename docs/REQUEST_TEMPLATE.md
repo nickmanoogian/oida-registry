@@ -29,14 +29,14 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | A `Data Source` dimension, with different metadata profiles per source | on by default, Rule 21, `data-sources.json`. 8 sources in the small tier, 10 above it |
 | Per-source folders with custodian folders inside them | Rule 11 as of Rule 21: `natives/{source}/{custodian}/{year}/{month}` |
 | A communicator pair with deliberately zero topical overlap | on by default, Rule 18's `no_overlap_pair`, 18 documents on one irrelevant subject |
+| A deliberate collection gap or spike in the date distribution | on by default, Rule 22, `collection-shape.json`. One custodian with zero documents across three months, and one month at 3.9x the median |
+| A population straddling two obvious document categories | on by default, Rule 22. 25 documents carrying two issue tags with content that supports both |
 | A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. `make mock-xlarge` pulls it |
 
 ## What does not exist yet
 
 | What you would ask for | Status |
 |---|---|
-| A deliberate collection gap or spike in the date distribution | Not modelled. Dates have a real shape but no planted anomaly. |
-| A population straddling two obvious document categories | Not modelled. |
 | Custodian Entity load files for Import/Export | Not produced. `custodian-sources.csv` is a setup sheet, not an Entity object load file. |
 | MIP-protected natives | Cannot be fabricated without a real tenant to apply the label. Rule 12 says so out loud rather than pretending coverage exists. |
 

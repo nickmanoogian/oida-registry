@@ -35,7 +35,7 @@
         "Unsupported"
       ],
       "measured_share_of_its_documents": {
-        "Office properties": 0.737
+        "Office properties": 0.744
       }
     },
     "Network Share": {
@@ -60,7 +60,7 @@
       ],
       "measured_share_of_its_documents": {
         "container": 0.036,
-        "Office properties": 0.644
+        "Office properties": 0.658
       }
     },
     "Mobile Extraction (UFDR)": {
