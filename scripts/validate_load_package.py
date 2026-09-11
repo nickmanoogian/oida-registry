@@ -240,7 +240,7 @@ def main():
 
     header, rows = read_dat(dat)
     i_nat  = header.index("NativeFilePath")
-    i_ctrl = header.index("BegDoc#")
+    i_ctrl = header.index("Control Number")
     i_cust = header.index("Custodian")
 
     # 1. every declared native resolves on disk
