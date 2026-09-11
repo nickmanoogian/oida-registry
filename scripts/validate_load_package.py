@@ -27,13 +27,14 @@ import zlib
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from dat_format import DAT_FIELD_SEP as DAT_SEP
+from dat_format import DAT_QUOTE
+
 import error_natives
 
 PASS = "\033[32mPASS\033[0m"
 FAIL = "\033[31mFAIL\033[0m"
 
-DAT_SEP   = chr(254)
-DAT_QUOTE = chr(255)
 
 failures: list[str] = []
 

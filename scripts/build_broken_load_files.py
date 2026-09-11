@@ -25,8 +25,8 @@ import os
 import shutil
 import sys
 
-DAT_SEP   = chr(254)   # þ
-DAT_QUOTE = chr(255)   # ÿ
+from dat_format import DAT_FIELD_SEP as DAT_SEP
+from dat_format import DAT_QUOTE
 
 MUTATED_ROWS = 2       # keep each fault isolated and easy to find
 
