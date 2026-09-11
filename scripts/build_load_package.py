@@ -880,7 +880,7 @@ def splice_pi(body, text, max_prefix=1200):
 
 
 def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
-                    error_rows=None, plant=None):
+                    error_rows=None, plant=None, keep_native=True):
     ctrl = doc["Control Number"]
     ft   = doc.get("File Type Category","")
     ext  = doc.get("File Extension","txt")
@@ -956,6 +956,13 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         write_text_sidecar(ctrl, blob, os.path.splitext(native_path)[1].lstrip("."),
                            out_dir, errored=bool((doc.get("Processing Error Type") or "").strip()))
 
+        # --no-natives: the file was still built, because the extracted text is
+        # taken from it and that is the only way the spreadsheet PI scenario
+        # reaches the text at all. It is written, read and then removed.
+        if not keep_native:
+            os.remove(native_path)
+            return dat_native_path(native_path, out_dir)
+
         # Rule 12: a document the metadata flags as an error gets a native that
         # actually fails that way. Fabricated in place, over the healthy file.
         record = error_natives.fabricate(doc, native_path, blob) if with_errors else None
@@ -981,6 +988,9 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         with open(fallback, "w", encoding="utf-8") as f:
             f.write(text)
         write_text_sidecar(ctrl, text.encode("utf-8", "replace"), "txt", out_dir)
+        if not keep_native:
+            os.remove(fallback)
+            return dat_native_path(fallback, out_dir)
         stamp_file_dates(fallback, *dates)
         return dat_native_path(fallback, out_dir)
 
@@ -1095,7 +1105,11 @@ DAT_COLUMNS = [
     # it instead of leaving the mapping screen demanding one. It used to be "BegDoc#",
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
-    "Control Number","EndDoc#","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
+    # "EndDoc#" used to sit here holding a byte-identical copy of Control Number
+    # on every row. It mapped to nothing, nothing read it, and it cost 3.9 MB in
+    # the extra large load file. Concordance brackets a page range with
+    # BegDoc/EndDoc; every record here is one document, so it bracketed nothing.
+    "Control Number","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
     "Custodian Org","File Name","File Type","File Size","Primary Date/Time","Email From","Email From (SMTP Address)",
     "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
     "Email Has Attachments","Number of Attachments","Email Threading ID","Inclusive Email",
@@ -1110,6 +1124,12 @@ DAT_COLUMNS = [
     # and the extracted text path so the two LLM widgets have text to read.
     "Primary language","NativeFilePath","ExtractedTextFilePath",
 ]
+
+# The load file without the native path column, for a package built with
+# --no-natives. 17.1 MB of the extra large load file was paths to files such a
+# package does not contain, and the import instructions told you to leave the
+# column unmapped anyway.
+DAT_COLUMNS_NO_NATIVES = [c for c in DAT_COLUMNS if c != "NativeFilePath"]
 
 
 def dat_row(values):
@@ -1135,7 +1155,6 @@ MULTI_VALUE_SEP = ";"
 # None transform = direct doc.get(key, ""); callable transform receives the full doc.
 _COLUMN_MAP = {
     "Control Number":            ("Control Number",          None),
-    "EndDoc#":                   ("Control Number",          None),
     "Custodian":                 ("Custodian",               None),
     "Custodian Email":           ("Custodian Email",         None),
     "Custodian Org":             ("Custodian Org",           None),
@@ -1197,10 +1216,10 @@ _COLUMN_MAP = {
 }
 
 
-def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
+def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None, columns=None):
     fam    = families_by_doc.get(doc.get("Control Number",""), {})
     values = []
-    for col in DAT_COLUMNS:
+    for col in (columns or DAT_COLUMNS):
         if col == "Control Number Beg Attach":    v = fam.get("beg_attach","")
         elif col == "Control Number End Attach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
@@ -1369,7 +1388,7 @@ STEP B3 — Field mapping
     Rsmf Application     → Single Choice
     Rsmf Participants    → Multiple Choice
     Rsmf Message Count   → Whole Number
-    EndDoc#, BegAttach, EndAttach, BegBates, EndBates, Production Set
+    Production Set
                          → Fixed-Length Text(50)
 
   IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
@@ -1582,8 +1601,11 @@ def expected_errors_readme_block(error_rows):
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
-          with_errors=False, error_rate=None):
+          with_errors=False, error_rate=None, no_natives=False):
     random.seed(seed)
+    # Without the natives, the column that points at them is 17 MB of paths to
+    # files this package does not contain.
+    columns = DAT_COLUMNS_NO_NATIVES if no_natives else DAT_COLUMNS
 
     docs_path    = os.path.join(tier_dir, "documents.csv")
     families_path = os.path.join(tier_dir, "email-families.json")
@@ -1653,10 +1675,12 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     for i, doc in enumerate(all_docs):
         native_path = generate_native(doc, cache, out_dir, flat=flat,
                                       with_errors=with_errors, error_rows=error_rows,
-                                      plant=plants.get(doc["Control Number"]))
+                                      plant=plants.get(doc["Control Number"]),
+                                      keep_native=not no_natives)
         native_bytes = (os.path.getsize(os.path.join(out_dir, native_path.replace("\\", os.sep)))
-                        if native_path else None)
-        values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes)
+                        if native_path and not no_natives else None)
+        values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes,
+                                columns=columns)
         dat_rows.append(values)
 
         # Rule 21: one row per source and custodian, because that is the granularity
@@ -1679,7 +1703,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         if native_path:
             natives_written += 1
             st["natives"] += 1
-            st["bytes"]   += native_bytes
+            st["bytes"]   += native_bytes or 0
         else:
             skipped += 1
 
@@ -1691,7 +1715,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     # Write .dat
     dat_path = os.path.join(out_dir, "load-file.dat")
     with open(dat_path, "w", encoding="utf-8", newline="") as f:
-        f.write(dat_row(DAT_COLUMNS))
+        f.write(dat_row(columns))
         for row in dat_rows:
             f.write(dat_row(row))
     dat_mb = os.path.getsize(dat_path) / 1e6
@@ -1729,12 +1753,20 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         with open(edge_src) as f:
             edge_count = sum(v.get("count", 0) for v in json.load(f)["scenarios"].values())
 
+    # --no-natives leaves an empty natives tree behind; a folder of nothing in a
+    # package invites someone to point a processing set at it.
+    if no_natives:
+        nat_root = os.path.join(out_dir, "natives")
+        for root, _dirs, files in os.walk(nat_root, topdown=False):
+            if not files and not os.listdir(root):
+                os.rmdir(root)
+
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
                             .replace("{delimiters}", DELIMITER_NOTE)
-                            .replace("{field_count}", str(len(DAT_COLUMNS)))
+                            .replace("{field_count}", str(len(columns)))
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
                 + expected_errors_readme_block(error_rows)
                 + ground_truth_readme_block(out_dir, ground_truth)
@@ -1742,7 +1774,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
 
     print(f"\n  Done in {time.time()-t0:.0f}s")
     print(f"  Natives:    {natives_written:,} files ({skipped:,} documents have no native)")
-    print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(DAT_COLUMNS)} fields)")
+    print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(columns)} fields)")
     if with_errors:
         guaranteed = sum(1 for r in error_rows if r["Guaranteed"] == "yes")
         if edge_count:
@@ -1783,6 +1815,10 @@ def main():
     p.add_argument("--error-rate", type=float, default=None,
                    help="Promote extra documents to errors until this fraction is reached "
                         "(e.g. 0.25). Requires --with-errors")
+    p.add_argument("--no-natives", action="store_true",
+                   help="Metadata and extracted text only: skip writing the native files "
+                        "and drop the NativeFilePath column, which would otherwise be "
+                        "17 MB of paths to files the package does not contain.")
     p.add_argument("--flat",     action="store_true",
                    help="Write every native into one natives/ directory instead of "
                         "natives/{custodian}/{year}/{month}/")
@@ -1794,7 +1830,7 @@ def main():
         p.error("--error-rate requires --with-errors")
 
     build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed, args.flat,
-          args.with_errors, args.error_rate)
+          args.with_errors, args.error_rate, no_natives=args.no_natives)
 
 if __name__ == "__main__":
     main()

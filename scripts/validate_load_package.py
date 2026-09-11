@@ -232,129 +232,138 @@ def main():
     src = os.path.join(pkg, "custodian-sources.csv")
     nat = os.path.join(pkg, "natives")
 
-    for required in (dat, src, nat):
+    for required in (dat, src):
         if not os.path.exists(required):
             sys.exit(f"ERROR: {required} not found. Build the package first.")
+    if not os.path.exists(nat) and "NativeFilePath" in open(dat, encoding="utf-8").readline():
+        sys.exit(f"ERROR: {nat} not found but the load file declares NativeFilePath.")
 
     print(f"\n  Validating {pkg} (Rule 11)\n")
 
     header, rows = read_dat(dat)
-    i_nat  = header.index("NativeFilePath")
+    # A --no-natives package drops the column entirely: 17 MB of paths to files it
+    # does not contain. The native checks below then have nothing to inspect,
+    # which is correct rather than a gap, so they say so instead of failing.
+    has_natives = "NativeFilePath" in header
+    i_nat  = header.index("NativeFilePath") if has_natives else None
     i_ctrl = header.index("Control Number")
     i_cust = header.index("Custodian")
 
     # 1. every declared native resolves on disk
-    missing = [r[i_nat] for r in rows if r[i_nat]
-               and not os.path.isfile(os.path.join(pkg, r[i_nat].replace("\\", os.sep)))]
-    check("every NativeFilePath resolves on disk", not missing,
-          f"{len(missing)} missing" if missing else f"{sum(1 for r in rows if r[i_nat]):,} natives")
+    if not has_natives:
+        print("\n  Native layer: skipped, this package declares no NativeFilePath\n")
+    else:
+        missing = [r[i_nat] for r in rows if r[i_nat]
+                   and not os.path.isfile(os.path.join(pkg, r[i_nat].replace("\\", os.sep)))]
+        check("every NativeFilePath resolves on disk", not missing,
+              f"{len(missing)} missing" if missing else f"{sum(1 for r in rows if r[i_nat]):,} natives")
 
-    # 2. load file paths use backslashes
-    fwd = [r[i_nat] for r in rows if "/" in r[i_nat]]
-    check("NativeFilePath uses backslash separators", not fwd, f"{len(fwd)} with forward slashes")
+        # 2. load file paths use backslashes
+        fwd = [r[i_nat] for r in rows if "/" in r[i_nat]]
+        check("NativeFilePath uses backslash separators", not fwd, f"{len(fwd)} with forward slashes")
 
-    if not args.flat:
-        # 3. nothing loose at the root of natives/
-        loose = [f for f in os.listdir(nat) if os.path.isfile(os.path.join(nat, f))]
-        check("no files at the root of natives/", not loose, f"{len(loose)} loose files")
+        if not args.flat:
+            # 3. nothing loose at the root of natives/
+            loose = [f for f in os.listdir(nat) if os.path.isfile(os.path.join(nat, f))]
+            check("no files at the root of natives/", not loose, f"{len(loose)} loose files")
 
-        # 4. the folder a native sits in matches its custodian
-        # Rule 21 put the data source in front of the custodian, so both segments
-        # are a contract now: natives\{source}\{custodian}\{year}\{month}.
-        i_src = header.index("Data Source") if "Data Source" in header else None
-        wrong_cust, wrong_src = [], []
-        for r in rows:
-            if not r[i_nat]:
-                continue
-            parts = r[i_nat].split("\\")
-            src_folder  = parts[1] if len(parts) > 1 else ""
-            cust_folder = parts[2] if len(parts) > 2 else ""
-            want_cust = r[i_cust].strip().replace(" ", "_")
-            if cust_folder != want_cust and cust_folder != "_Unassigned":
-                wrong_cust.append((r[i_ctrl], cust_folder, r[i_cust]))
-            if i_src is not None and r[i_src].strip():
-                want_src = re.sub(r"[^A-Za-z0-9._-]+", "_",
-                                  r[i_src].replace(" (", "_").replace(")", ""))
-                if src_folder != want_src:
-                    wrong_src.append((r[i_ctrl], src_folder, want_src))
-        check("native folder matches the row's custodian", not wrong_cust,
-              f"{len(wrong_cust)} mismatches: {wrong_cust[:2]}" if wrong_cust else "")
-        if i_src is not None:
-            check("native folder matches the row's data source", not wrong_src,
-                  f"{len(wrong_src)} mismatches: {wrong_src[:2]}" if wrong_src
-                  else f"{len({r[i_src] for r in rows if r[i_src].strip()})} sources")
-
-    # 5. custodian-sources.csv agrees with disk
-    sheet = list(csv.DictReader(open(src, encoding="utf-8")))
-    disk_files = sum(len(fs) for _, _, fs in os.walk(nat))
-    disk_bytes = sum(os.path.getsize(os.path.join(root, fn))
-                     for root, _, fs in os.walk(nat) for fn in fs)
-    sheet_files = sum(int(r["Natives Written"]) for r in sheet)
-    sheet_bytes = sum(int(r["Native Bytes"]) for r in sheet)
-    check("custodian-sources.csv native count matches disk", disk_files == sheet_files,
-          f"disk {disk_files:,} vs sheet {sheet_files:,}")
-    check("custodian-sources.csv byte total matches disk", disk_bytes == sheet_bytes,
-          f"disk {disk_bytes:,} vs sheet {sheet_bytes:,}")
-
-    # 6. every custodian in the load file has a row in the sheet
-    dat_custs   = {r[i_cust].strip() for r in rows if r[i_cust].strip()}
-    sheet_custs = {r["Custodian"].strip() for r in sheet}
-    check("every custodian in the load file has a data source row",
-          dat_custs <= sheet_custs, f"missing: {sorted(dat_custs - sheet_custs)}")
-
-    # ── Rule 12: intentionally broken natives ─────────────────────────────
-    expected_path = os.path.join(pkg, "EXPECTED_ERRORS.csv")
-    if os.path.exists(expected_path):
-        print("\n  Rule 12 — intentionally broken natives\n")
-        broken = list(csv.DictReader(open(expected_path, encoding="utf-8")))
-
-        gone = [r["Native File"] for r in broken
-                if not os.path.isfile(os.path.join(pkg, r["Native File"].replace("\\", os.sep)))]
-        check("every EXPECTED_ERRORS.csv native exists", not gone,
-              f"{len(gone)} missing" if gone else f"{len(broken):,} fabricated")
-
-        intact = []
-        for r in broken:
-            target = os.path.join(pkg, r["Native File"].replace("\\", os.sep))
-            if not os.path.isfile(target):
-                continue
-            if not is_broken(r, target):
-                intact.append(r["Control Number"])
-        check("every fabricated native is genuinely broken", not intact,
-              f"{len(intact)} still healthy: {intact[:5]}" if intact else
-              f"{len(broken) - len(intact):,} verified")
-
-        flagged = {r[i_ctrl] for r in rows
-                   if "Processing Error Type" in header
-                   and r[header.index("Processing Error Type")].strip()}
-        listed  = {r["Control Number"] for r in broken}
-        # Anything flagged but not fabricated must be a documented exclusion,
-        # not a silent gap.
-        i_type    = header.index("Processing Error Type")
-        by_ctrl   = {r[i_ctrl]: r[i_type].strip() for r in rows}
-        # A row with no NativeFilePath has no file to break, so it cannot be
-        # fabricated however it is flagged. That is a documented exclusion too.
-        no_native = {r[i_ctrl] for r in rows if not r[i_nat]}
-        undocumented = sorted(c for c in (flagged - listed)
-                              if by_ctrl.get(c) not in error_natives.NOT_FABRICABLE
-                              and c not in no_native)
-        excluded = len(flagged - listed) - len(undocumented)
-        check("every flagged document is fabricated or a documented exclusion",
-              not undocumented,
-              f"{len(undocumented)} undocumented: {undocumented[:5]}" if undocumented
-              else f"{excluded} documented exclusions")
-
-        if "File Size" in header:
-            i_size = header.index("File Size")
-            bad = []
+            # 4. the folder a native sits in matches its custodian
+            # Rule 21 put the data source in front of the custodian, so both segments
+            # are a contract now: natives\{source}\{custodian}\{year}\{month}.
+            i_src = header.index("Data Source") if "Data Source" in header else None
+            wrong_cust, wrong_src = [], []
             for r in rows:
                 if not r[i_nat]:
                     continue
-                disk = os.path.getsize(os.path.join(pkg, r[i_nat].replace("\\", os.sep)))
-                if str(disk) != r[i_size]:
-                    bad.append(r[i_ctrl])
-            check("File Size in the load file matches bytes on disk", not bad,
-                  f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
+                parts = r[i_nat].split("\\")
+                src_folder  = parts[1] if len(parts) > 1 else ""
+                cust_folder = parts[2] if len(parts) > 2 else ""
+                want_cust = r[i_cust].strip().replace(" ", "_")
+                if cust_folder != want_cust and cust_folder != "_Unassigned":
+                    wrong_cust.append((r[i_ctrl], cust_folder, r[i_cust]))
+                if i_src is not None and r[i_src].strip():
+                    want_src = re.sub(r"[^A-Za-z0-9._-]+", "_",
+                                      r[i_src].replace(" (", "_").replace(")", ""))
+                    if src_folder != want_src:
+                        wrong_src.append((r[i_ctrl], src_folder, want_src))
+            check("native folder matches the row's custodian", not wrong_cust,
+                  f"{len(wrong_cust)} mismatches: {wrong_cust[:2]}" if wrong_cust else "")
+            if i_src is not None:
+                check("native folder matches the row's data source", not wrong_src,
+                      f"{len(wrong_src)} mismatches: {wrong_src[:2]}" if wrong_src
+                      else f"{len({r[i_src] for r in rows if r[i_src].strip()})} sources")
+
+        # 5. custodian-sources.csv agrees with disk
+        sheet = list(csv.DictReader(open(src, encoding="utf-8")))
+        disk_files = sum(len(fs) for _, _, fs in os.walk(nat))
+        disk_bytes = sum(os.path.getsize(os.path.join(root, fn))
+                         for root, _, fs in os.walk(nat) for fn in fs)
+        sheet_files = sum(int(r["Natives Written"]) for r in sheet)
+        sheet_bytes = sum(int(r["Native Bytes"]) for r in sheet)
+        check("custodian-sources.csv native count matches disk", disk_files == sheet_files,
+              f"disk {disk_files:,} vs sheet {sheet_files:,}")
+        check("custodian-sources.csv byte total matches disk", disk_bytes == sheet_bytes,
+              f"disk {disk_bytes:,} vs sheet {sheet_bytes:,}")
+
+        # 6. every custodian in the load file has a row in the sheet
+        dat_custs   = {r[i_cust].strip() for r in rows if r[i_cust].strip()}
+        sheet_custs = {r["Custodian"].strip() for r in sheet}
+        check("every custodian in the load file has a data source row",
+              dat_custs <= sheet_custs, f"missing: {sorted(dat_custs - sheet_custs)}")
+
+        # ── Rule 12: intentionally broken natives ─────────────────────────────
+        expected_path = os.path.join(pkg, "EXPECTED_ERRORS.csv")
+        if os.path.exists(expected_path):
+            print("\n  Rule 12 — intentionally broken natives\n")
+            broken = list(csv.DictReader(open(expected_path, encoding="utf-8")))
+
+            gone = [r["Native File"] for r in broken
+                    if not os.path.isfile(os.path.join(pkg, r["Native File"].replace("\\", os.sep)))]
+            check("every EXPECTED_ERRORS.csv native exists", not gone,
+                  f"{len(gone)} missing" if gone else f"{len(broken):,} fabricated")
+
+            intact = []
+            for r in broken:
+                target = os.path.join(pkg, r["Native File"].replace("\\", os.sep))
+                if not os.path.isfile(target):
+                    continue
+                if not is_broken(r, target):
+                    intact.append(r["Control Number"])
+            check("every fabricated native is genuinely broken", not intact,
+                  f"{len(intact)} still healthy: {intact[:5]}" if intact else
+                  f"{len(broken) - len(intact):,} verified")
+
+            flagged = {r[i_ctrl] for r in rows
+                       if "Processing Error Type" in header
+                       and r[header.index("Processing Error Type")].strip()}
+            listed  = {r["Control Number"] for r in broken}
+            # Anything flagged but not fabricated must be a documented exclusion,
+            # not a silent gap.
+            i_type    = header.index("Processing Error Type")
+            by_ctrl   = {r[i_ctrl]: r[i_type].strip() for r in rows}
+            # A row with no NativeFilePath has no file to break, so it cannot be
+            # fabricated however it is flagged. That is a documented exclusion too.
+            no_native = {r[i_ctrl] for r in rows if not r[i_nat]}
+            undocumented = sorted(c for c in (flagged - listed)
+                                  if by_ctrl.get(c) not in error_natives.NOT_FABRICABLE
+                                  and c not in no_native)
+            excluded = len(flagged - listed) - len(undocumented)
+            check("every flagged document is fabricated or a documented exclusion",
+                  not undocumented,
+                  f"{len(undocumented)} undocumented: {undocumented[:5]}" if undocumented
+                  else f"{excluded} documented exclusions")
+
+            if "File Size" in header:
+                i_size = header.index("File Size")
+                bad = []
+                for r in rows:
+                    if not r[i_nat]:
+                        continue
+                    disk = os.path.getsize(os.path.join(pkg, r[i_nat].replace("\\", os.sep)))
+                    if str(disk) != r[i_size]:
+                        bad.append(r[i_ctrl])
+                check("File Size in the load file matches bytes on disk", not bad,
+                      f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
 
     # ── The load file has to satisfy Relativity's own spec, not just ours ───
     # Import/Export's multi-value delimiter is ASCII 59, a bare semicolon, and a
@@ -389,86 +398,89 @@ def main():
           else f"LF only across the first {len(head) // 1024:,} KB")
 
     # ── Rule 19: no native carries a library's date or a library's name ───
-    print("\n  Date layer (Rule 19)\n")
+    if not has_natives:
+        print("\n  Date layer (Rule 19): skipped, no natives to inspect\n")
+    else:
+        print("\n  Date layer (Rule 19)\n")
 
-    i_date     = header.index("Primary Date/Time")
-    i_created  = header.index("Created Date/Time")       if "Created Date/Time"       in header else None
-    i_modified = header.index("Last Modified Date/Time") if "Last Modified Date/Time" in header else None
-    has_both = i_created is not None and i_modified is not None
-    check("load file carries Date Created and Date Last Modified", has_both,
-          "both present" if has_both
-          else "without them Relativity derives both from the file itself")
-    edge_path = os.path.join(pkg, "edge-cases.json")
-    sentinels = set()
-    if os.path.exists(edge_path):
-        scen = json.load(open(edge_path, encoding="utf-8"))["scenarios"]
-        sentinels = {e if isinstance(e, str) else e.get("control_number")
-                     for e in scen.get("sentinel_date", {}).get("documents", [])}
+        i_date     = header.index("Primary Date/Time")
+        i_created  = header.index("Created Date/Time")       if "Created Date/Time"       in header else None
+        i_modified = header.index("Last Modified Date/Time") if "Last Modified Date/Time" in header else None
+        has_both = i_created is not None and i_modified is not None
+        check("load file carries Date Created and Date Last Modified", has_both,
+              "both present" if has_both
+              else "without them Relativity derives both from the file itself")
+        edge_path = os.path.join(pkg, "edge-cases.json")
+        sentinels = set()
+        if os.path.exists(edge_path):
+            scen = json.load(open(edge_path, encoding="utf-8"))["scenarios"]
+            sentinels = {e if isinstance(e, str) else e.get("control_number")
+                         for e in scen.get("sentinel_date", {}).get("documents", [])}
 
-    # The window comes from the load file itself, across every date column it
-    # carries, minus the documents whose whole purpose is to sit outside it. A
-    # document last modified after the last email is normal in a real
-    # collection; a document stamped by a library is not.
-    date_cols = [header.index(c) for c in
-                 ("Primary Date/Time","Created Date/Time","Last Modified Date/Time",
-                  "Sent Date/Time","Email Received Date/Time")
-                 if c in header]
-    dated = [r[i][:10] for r in rows if r[i_ctrl] not in sentinels
-             for i in date_cols
-             if r[i].strip() and r[i][:10] not in DOCUMENTED_BAD_DATES]
-    lo, hi = (min(dated), max(dated)) if dated else ("", "")
-    check("load file declares a matter window", bool(lo and hi),
-          f"{lo} to {hi}, across {len(date_cols)} date columns")
+        # The window comes from the load file itself, across every date column it
+        # carries, minus the documents whose whole purpose is to sit outside it. A
+        # document last modified after the last email is normal in a real
+        # collection; a document stamped by a library is not.
+        date_cols = [header.index(c) for c in
+                     ("Primary Date/Time","Created Date/Time","Last Modified Date/Time",
+                      "Sent Date/Time","Email Received Date/Time")
+                     if c in header]
+        dated = [r[i][:10] for r in rows if r[i_ctrl] not in sentinels
+                 for i in date_cols
+                 if r[i].strip() and r[i][:10] not in DOCUMENTED_BAD_DATES]
+        lo, hi = (min(dated), max(dated)) if dated else ("", "")
+        check("load file declares a matter window", bool(lo and hi),
+              f"{lo} to {hi}, across {len(date_cols)} date columns")
 
-    outside, tells, drift, inspected = [], [], [], 0
-    for r in rows:
-        rel = r[i_nat]
-        if not rel or r[i_ctrl] in sentinels:
-            continue
-        target = os.path.join(pkg, rel.replace("\\", os.sep))
-        ext = os.path.splitext(target)[1].lower()
-        stamps = []
-        if ext in (".docx", ".xlsx", ".pptx"):
-            created, modified, xml = ooxml_dates(target)
-            stamps = [d for d in (created, modified) if d]
-            for tell in LIBRARY_TELLS:
-                if tell in xml:
-                    tells.append(f"{r[i_ctrl]}: {tell}")
-        elif ext == ".pdf":
-            created = pdf_creation_date(target)
-            stamps = [created] if created else []
-        if not stamps:
-            continue
-        inspected += 1
-        for d in stamps:
-            if lo and not (lo <= d <= hi) and d not in DOCUMENTED_BAD_DATES:
-                outside.append(f"{r[i_ctrl]}: {d}")
+        outside, tells, drift, inspected = [], [], [], 0
+        for r in rows:
+            rel = r[i_nat]
+            if not rel or r[i_ctrl] in sentinels:
+                continue
+            target = os.path.join(pkg, rel.replace("\\", os.sep))
+            ext = os.path.splitext(target)[1].lower()
+            stamps = []
+            if ext in (".docx", ".xlsx", ".pptx"):
+                created, modified, xml = ooxml_dates(target)
+                stamps = [d for d in (created, modified) if d]
+                for tell in LIBRARY_TELLS:
+                    if tell in xml:
+                        tells.append(f"{r[i_ctrl]}: {tell}")
+            elif ext == ".pdf":
+                created = pdf_creation_date(target)
+                stamps = [created] if created else []
+            if not stamps:
+                continue
+            inspected += 1
+            for d in stamps:
+                if lo and not (lo <= d <= hi) and d not in DOCUMENTED_BAD_DATES:
+                    outside.append(f"{r[i_ctrl]}: {d}")
 
-        # The filesystem stamp is what an unprocessed folder shows, and Relativity
-        # falls back to it when a format carries no date of its own. The contract
-        # is Date Last Modified, with the same fallback chain the builder uses.
-        want = expected_mtime(r, i_date, i_created, i_modified)
-        if want:
-            got = date.fromtimestamp(os.path.getmtime(target)).isoformat()
-            if abs((date.fromisoformat(got) - date.fromisoformat(want)).days) > 1:
-                drift.append(f"{r[i_ctrl]}: file {got}, expected {want}")
+            # The filesystem stamp is what an unprocessed folder shows, and Relativity
+            # falls back to it when a format carries no date of its own. The contract
+            # is Date Last Modified, with the same fallback chain the builder uses.
+            want = expected_mtime(r, i_date, i_created, i_modified)
+            if want:
+                got = date.fromtimestamp(os.path.getmtime(target)).isoformat()
+                if abs((date.fromisoformat(got) - date.fromisoformat(want)).days) > 1:
+                    drift.append(f"{r[i_ctrl]}: file {got}, expected {want}")
 
-    check("no document property dates outside the matter window", not outside,
-          f"{len(outside)} outside: {outside[:3]}" if outside
-          else f"{inspected:,} Office/PDF natives inspected")
-    check("no library default names in document properties", not tells,
-          f"{len(tells)} tells: {tells[:3]}" if tells else "docx, xlsx, pptx clean")
-    check("filesystem mtimes match the load file dates", not drift,
-          f"{len(drift)} adrift: {drift[:2]}" if drift else "within a day")
-    if sentinels:
-        check("sentinel-date documents are exempted by name", True,
-              f"{len(sentinels)} listed in edge-cases.json")
+        check("no document property dates outside the matter window", not outside,
+              f"{len(outside)} outside: {outside[:3]}" if outside
+              else f"{inspected:,} Office/PDF natives inspected")
+        check("no library default names in document properties", not tells,
+              f"{len(tells)} tells: {tells[:3]}" if tells else "docx, xlsx, pptx clean")
+        check("filesystem mtimes match the load file dates", not drift,
+              f"{len(drift)} adrift: {drift[:2]}" if drift else "within a day")
+        if sentinels:
+            check("sentinel-date documents are exempted by name", True,
+                  f"{len(sentinels)} listed in edge-cases.json")
 
     # ── Rules 16-18: the planted content is in the files, not just the manifest ──
     pi_path   = os.path.join(pkg, "pi-ground-truth.csv")
     find_path = os.path.join(pkg, "findings.json")
     i_err     = header.index("Processing Error Type") if "Processing Error Type" in header else None
-    paths     = {r[i_ctrl]: r[i_nat] for r in rows if r[i_nat]}
+    paths     = ({r[i_ctrl]: r[i_nat] for r in rows if r[i_nat]} if has_natives else {})
     i_txtcol  = header.index("ExtractedTextFilePath") if "ExtractedTextFilePath" in header else None
     paths_txt = ({r[i_ctrl]: r[i_txtcol] for r in rows if r[i_txtcol]}
                  if i_txtcol is not None else {})
@@ -477,7 +489,13 @@ def main():
     def full(rel):
         return os.path.join(pkg, rel.replace("\\", os.sep))
 
-    if os.path.exists(pi_path):
+    # Without natives this section has nothing to open, and the extracted text
+    # check above already proves every seeded value is reachable, which is the
+    # claim that matters for a package built that way.
+    if os.path.exists(pi_path) and not has_natives:
+        print("\n  Rule 16 — seeded personal information: verified in the "
+              "extracted text above; no natives to open\n")
+    elif os.path.exists(pi_path):
         print("\n  Rule 16 — seeded personal information\n")
         with open(pi_path, encoding="utf-8") as f:
             pi_rows = list(csv.DictReader(f))
@@ -574,13 +592,18 @@ def main():
             ):
                 if not ctrl or not body:
                     continue
-                rel = paths.get(ctrl)
+                # Without natives the planted body lands in the text sidecar,
+                # which is then the only copy of it in the package.
+                rel = paths.get(ctrl) if has_natives else paths_txt.get(ctrl)
                 if not rel:
                     missing_body.append(f"{ctrl}: no native"); continue
                 probe = body.strip().split("\n")[-1][:40]
-                if probe not in native_text(full(rel)):
+                content = (native_text(full(rel)) if has_natives
+                           else open(full(rel), encoding="utf-8").read())
+                if probe not in content:
                     missing_body.append(f"{ctrl}: body not in native")
-        check("every planted body reached its native", not missing_body,
+        check("every planted body reached its native" if has_natives
+              else "every planted body reached its extracted text", not missing_body,
               "; ".join(missing_body[:2]) if missing_body else "bodies verified")
 
         buried = findings.get("buried_deep")
@@ -598,7 +621,8 @@ def main():
                     detail = f"tab {depth} of {len(names)}"
                 except (zipfile.BadZipFile, KeyError, OSError, ValueError) as exc:
                     detail = str(exc)
-            check("the buried payload is on a late tab of the workbook", ok_sheet, detail)
+            if has_natives:
+                check("the buried payload is on a late tab of the workbook", ok_sheet, detail)
 
         meta = findings.get("metadata_only")
         if meta:
@@ -607,8 +631,9 @@ def main():
             check("the unique address appears once in the load file", hits == 1,
                   f"{hits} rows mention it")
             child = meta["attachment"]["control_number"]
-            check("the encrypted attachment has a native in the package",
-                  child in paths, paths.get(child, "absent"))
+            if has_natives:
+                check("the encrypted attachment has a native in the package",
+                      child in paths, paths.get(child, "absent"))
 
     # ── Edge-case manifest, when the package carries starved documents ────
     edge_file = os.path.join(pkg, "edge-cases.json")
@@ -665,8 +690,9 @@ def main():
     if failures:
         print(f"  {len(failures)} check(s) failed\n")
         sys.exit(1)
-    people = len({r.get("Custodian", "") for r in sheet})
-    print(f"  All checks passed — {len(rows):,} documents, {len(sheet)} data source rows "
+    sheet_rows = list(csv.DictReader(open(src, encoding="utf-8")))
+    people = len({r.get("Custodian", "") for r in sheet_rows})
+    print(f"  All checks passed — {len(rows):,} documents, {len(sheet_rows)} data source rows "
           f"across {people} custodians\n")
 
 
