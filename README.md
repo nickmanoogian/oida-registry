@@ -333,6 +333,25 @@ package adds `EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`,
 > and no planted findings. Until the assets are republished, build the package instead: it
 > is one command and about five seconds (Option B).
 
+### Option C — A package built from real archive documents
+
+`load-packages/small-real/` is the odd one out: 60 **real** produced PDFs from the Insys
+collection with their real OCR text, real Bates numbers, real custodians (19 of them), and a
+`Source URL` back to industrydocuments.ucsf.edu. No synthetic fields and no review decisions.
+
+It is tracked in git rather than published, because it is real archive content rather than
+generated output, so no seed or `make` target recreates it.
+
+```bash
+# rebuild or resize it from the archive index (needs duckdb)
+python scripts/build_real_load_package.py --count 60
+```
+
+Reach for it when the question is whether something works against genuine produced
+documents. Reach for the synthetic packages when you need review fields, the MDL 2804
+narrative, or a specific failure mode. Full detail in
+[`docs/MOCK_DATA.md`](docs/MOCK_DATA.md) §3.2.
+
 ### Option B — Build from scratch
 
 ```bash
