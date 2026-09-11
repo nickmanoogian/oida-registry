@@ -6,6 +6,35 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.18.0 packages
+
+Both load packages rebuilt with the standard Concordance delimiters. **Anyone holding
+an earlier load package needs to pull it again**: the earlier ones do not import.
+
+| | v1.17.0 and earlier | v1.18.0 |
+|---|---|---|
+| Column separator | ASCII 254 | **ASCII 20** |
+| Text qualifier | ASCII 255 | **ASCII 254** |
+| Newline in field | ASCII 174 | ASCII 174, unchanged |
+
+ASCII 254 is the text qualifier in every other tool, so an importer looking for ASCII
+20 between fields found none and read each row as a single value. Relativity's
+Import/Export showed that as a field mapping screen offering **one** field instead of
+59, and `Mapped Fields: 0/1`.
+
+**The tier files did not change, and the pointers deliberately stay at v1.17.0.** All
+ten files in each of medium, large and extra large are byte-identical to v1.17.0,
+verified by regenerating the medium tier and comparing all ten SHA-256 hashes against
+the published assets. Republishing 100 MB of identical files to move a tag would be
+churn, so the 30 pointers still resolve to v1.17.0, which is a permanent URL holding
+the correct bytes. All 30 re-verified against what GitHub serves. `make mock-medium`,
+`make mock-large` and `make mock-xlarge` need no action.
+
+Verified: `releases/latest/download/...` resolves to v1.18.0, and the zip downloaded
+from that URL unpacks to a load file parsing as 59 fields across 1,439 documents with
+zero stray ASCII 255.
+
+
 ### Changed — v1.17.0 packages
 
 Every tier republished with the planted collection shape, and both load packages rebuilt
