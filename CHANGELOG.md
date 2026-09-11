@@ -338,8 +338,9 @@ Nothing referenced it: `.gitignore` already covered `/load-packages/small/` and
 release assets, and the README tells you to `dvc get` the zips. The path is ignored now, so
 the same slip cannot re-add it.
 
-`load-packages/small-real/` stays tracked. Those 122 files are real OIDA PDFs rather than
-generated output, so they are not reproducible from a `make` target.
+`load-packages/small-real/` stays tracked. Those 122 files are 60 real OIDA PDFs, their 60
+real OCR text sidecars, the load file and the import instructions: real archive content
+rather than generated output, so they are not reproducible from a `make` target.
 
 ### Fixed — the published medium and large tiers were ten releases out of date
 
