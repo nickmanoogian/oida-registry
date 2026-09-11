@@ -1394,6 +1394,28 @@ STEP B3 — Field mapping
   IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
   overwrite mode to Append. An Overlay against an empty workspace fails.
 
+  THE SETTING THAT SILENTLY BREAKS THE TEXT LAYER
+  -----------------------------------------------
+  Mapping ExtractedTextFilePath to Extracted Text is NOT enough. In the field
+  mapping screen's "Additional Field Settings" column you must also set that
+  field to "Text File". That is what tells Relativity the column holds a PATH
+  rather than the text itself.
+
+  Skip it and the import succeeds. Every document's extracted text becomes the
+  literal string "text\DOC-0000192.txt", and anything reading extracted text,
+  which is Document Categories and PI Detect both, reads a filename. Nothing
+  errors, nothing warns, and the numbers look plausible.
+
+  The same applies to NativeFilePath: set "Native File" on it, if you are
+  importing natives at all.
+
+  OVERLAY REMOVES WHAT THE LOAD FILE LEAVES BLANK
+  -----------------------------------------------
+  In Overlay or Append/Overlay mode, a blank cell overwrites the existing value
+  rather than being ignored. So a second pass that maps more fields than it
+  means to will erase the first pass. If you import the extracted text as its
+  own overlay job, map ONLY Control Number and ExtractedTextFilePath.
+
   RELATIVITY'S OWN RECOMMENDATIONS FOR A JOB THIS SIZE
   ----------------------------------------------------
   From help.relativity.com, General Recommendations for Structured Import and
@@ -1418,6 +1440,31 @@ STEP B3 — Field mapping
     choice values per import job. This package is inside both: {field_count}
     columns, and the largest choice field is Batch Name at 97 distinct values on
     the extra large tier. If you scale the tier further, watch that one.
+
+  * AUTO MAP IS SPACE SENSITIVE. It matches names case-insensitively but not
+    space-insensitively, which is why these columns are named exactly as the
+    workspace names its fields. 33 of them match a stock workspace outright.
+
+  * DO NOT UNZIP-AND-EXPRESS-TRANSFER. Relativity says not to zip data when
+    Express Transfer is active. This package ships as a zip, so either unzip it
+    first or leave Express Transfer off. Our paths are relative, so Express
+    Transfer is not required either way.
+
+  * CREATE FIELD, IF YOU NEED ONE, offers Currency, Date, Decimal, Fixed-Length
+    Text, Long Text, Multiple Choice, Single Choice, User, Whole Number and
+    Yes/No. Nothing here needs a type outside that list.
+
+  * SIZE. Without Express Transfer a single structured import data set is capped
+    at 20 GB. Every tier here is far under that: the extra large load file plus
+    its extracted text is about 0.5 GB unzipped. Relativity also says to avoid
+    Express Transfer for ZIP data under 20 GB, which is exactly this package, so
+    leave it off.
+
+  * RESTRICTED FILE TYPES. An instance setting can restrict file types, and
+    Import/Export silently SKIPS restricted files. If a native count comes up
+    short and nothing errored, check RestrictedFileTypes before suspecting the
+    package. This matters most for the errors package, which ships deliberately
+    unusual types.
 
   * ENCODING. The load file and the text sidecars are UTF-8, which the spec
     accepts. Relativity notes UTF-16 imports faster for extracted text; we write
