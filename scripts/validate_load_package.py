@@ -356,6 +356,38 @@ def main():
             check("File Size in the load file matches bytes on disk", not bad,
                   f"{len(bad)} rows disagree" if bad else f"{len(rows):,} rows")
 
+    # ── The load file has to satisfy Relativity's own spec, not just ours ───
+    # Import/Export's multi-value delimiter is ASCII 59, a bare semicolon, and a
+    # multiple-choice mapping "creates a unique value for each choice option". So a
+    # value written "A; B" imports as "A" and " B", and the leading space makes a
+    # second choice that looks identical in a list. Caught only by reading
+    # Relativity's load file spec: nothing in this repo could tell, because the
+    # writer and the reader here were both ours.
+    MULTI = ("Issue Tags", "Rsmf Participants")
+    spaced, split_ok = [], 0
+    for col in MULTI:
+        if col not in header:
+            continue
+        i = header.index(col)
+        for r in rows:
+            v = r[i] if i < len(r) else ""
+            if not v or ";" not in v:
+                continue
+            split_ok += 1
+            if "; " in v or any(p != p.strip() for p in v.split(";")):
+                spaced.append(f"{r[i_ctrl]} {col}: {v[:50]}")
+    check("multi-value fields use a bare semicolon, per Relativity's spec",
+          not spaced,
+          f"{len(spaced)} values carry a space beside the delimiter: {spaced[:2]}"
+          if spaced else f"{split_ok:,} multi-value cells across {len(MULTI)} columns")
+
+    # Mixing line endings "can cause import errors or unexpected behavior".
+    with open(dat, "rb") as fh:
+        head = fh.read(20 * 1024 * 1024)
+    check("line endings are consistent", b"\r" not in head,
+          "CR found, the file mixes line endings" if b"\r" in head
+          else f"LF only across the first {len(head) // 1024:,} KB")
+
     # ── Rule 19: no native carries a library's date or a library's name ───
     print("\n  Date layer (Rule 19)\n")
 
