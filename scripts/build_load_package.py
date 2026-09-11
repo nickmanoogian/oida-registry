@@ -793,6 +793,8 @@ def load_plants(tier_dir):
                 if finding.get("distinguisher_body"):
                     slot(finding["distinguisher"]["control_number"])["body"] = \
                         finding["distinguisher_body"]
+                for ctrl, body in (finding.get("bodies") or {}).items():
+                    slot(ctrl)["body"] = body
                 if finding["id"] == "buried_deep":
                     slot(finding["control_number"])["buried"] = {
                         "sheet": finding["payload_sheet"],

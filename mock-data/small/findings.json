@@ -111,6 +111,61 @@
           "Threshold raised after release, no approval on file"
         ]
       ]
+    },
+    {
+      "id": "no_overlap_pair",
+      "control_number": "DOC-0000032",
+      "document_ids": [
+        "DOC-0000032",
+        "DOC-0000440",
+        "DOC-0000196",
+        "DOC-0000763",
+        "DOC-0000647",
+        "DOC-0000165",
+        "DOC-0000227",
+        "DOC-0000410",
+        "DOC-0000219",
+        "DOC-0000472",
+        "DOC-0000621",
+        "DOC-0000578",
+        "DOC-0000337",
+        "DOC-0000285",
+        "DOC-0000684",
+        "DOC-0000211",
+        "DOC-0000152",
+        "DOC-0000789"
+      ],
+      "pair": [
+        "Thomas Bradley",
+        "Gregory Nash"
+      ],
+      "custodian": "Thomas Bradley and Gregory Nash",
+      "documents": 18,
+      "topic": "an employee blood drive",
+      "findable_by": "the pair itself: they correspond at volume, so the edge is real",
+      "invisible_to": "any topical link to the matter, because there is none",
+      "expected_answer": "Thomas Bradley and Gregory Nash exchange 18 documents, every one of them about an employee blood drive. They share no issue tag, and the vocabulary of that correspondence appears in no other document. Asked what connects them, the answer is one mundane subject. Asked whether they discuss the matter, the answer is no, and that is correct rather than a gap.",
+      "how_to_verify": "Key Relationships: the pair has a real edge with real volume. Search the extracted text of those documents for any matter keyword: no hits. Search the corpus for 'blood drive': only these.",
+      "bodies": {
+        "DOC-0000032": "Sign-up sheet is on the second floor by the kitchen. Twenty-two slots so far, and the mobile unit needs thirty before they will send a second nurse.",
+        "DOC-0000440": "I can take the morning shift at the sign-in table if you cover the afternoon. Bring the clipboard from the supply closet, the one on the wall is broken.",
+        "DOC-0000196": "Refreshments are sorted: juice, biscuits and the urn from the third floor. The nurses asked for a chair with arms for anyone who feels faint.",
+        "DOC-0000763": "Final headcount is thirty-one. That clears the threshold, so we get both nurses and the whole thing should be done by two.",
+        "DOC-0000647": "Thank-you note drafted for the volunteers. I will print it on the good paper and leave it by the sign-in table for people to add their names.",
+        "DOC-0000165": "Sign-up sheet is on the second floor by the kitchen. Twenty-two slots so far, and the mobile unit needs thirty before they will send a second nurse.",
+        "DOC-0000227": "I can take the morning shift at the sign-in table if you cover the afternoon. Bring the clipboard from the supply closet, the one on the wall is broken.",
+        "DOC-0000410": "Refreshments are sorted: juice, biscuits and the urn from the third floor. The nurses asked for a chair with arms for anyone who feels faint.",
+        "DOC-0000219": "Final headcount is thirty-one. That clears the threshold, so we get both nurses and the whole thing should be done by two.",
+        "DOC-0000472": "Thank-you note drafted for the volunteers. I will print it on the good paper and leave it by the sign-in table for people to add their names.",
+        "DOC-0000621": "Sign-up sheet is on the second floor by the kitchen. Twenty-two slots so far, and the mobile unit needs thirty before they will send a second nurse.",
+        "DOC-0000578": "I can take the morning shift at the sign-in table if you cover the afternoon. Bring the clipboard from the supply closet, the one on the wall is broken.",
+        "DOC-0000337": "Refreshments are sorted: juice, biscuits and the urn from the third floor. The nurses asked for a chair with arms for anyone who feels faint.",
+        "DOC-0000285": "Final headcount is thirty-one. That clears the threshold, so we get both nurses and the whole thing should be done by two.",
+        "DOC-0000684": "Thank-you note drafted for the volunteers. I will print it on the good paper and leave it by the sign-in table for people to add their names.",
+        "DOC-0000211": "Sign-up sheet is on the second floor by the kitchen. Twenty-two slots so far, and the mobile unit needs thirty before they will send a second nurse.",
+        "DOC-0000152": "I can take the morning shift at the sign-in table if you cover the afternoon. Bring the clipboard from the supply closet, the one on the wall is broken.",
+        "DOC-0000789": "Refreshments are sorted: juice, biscuits and the urn from the third floor. The nurses asked for a chair with arms for anyone who feels faint."
+      }
     }
   ]
 }

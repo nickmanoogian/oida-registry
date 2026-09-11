@@ -2,129 +2,161 @@
   "note": "The non-custodian half of Key Relationships. A skewed external roster with a long singleton tail, plus people sending from two addresses so name normalisation has something to resolve.",
   "externals": [
     {
+      "name": "DEA Diversion Control",
+      "email": "diversion@dea.gov",
+      "org": "DEA",
+      "kind": "Regulator",
+      "documents": 56,
+      "document_ids": [
+        "DOC-0000215",
+        "DOC-0000423",
+        "DOC-0000743",
+        "DOC-0000162",
+        "DOC-0000444",
+        "..."
+      ],
+      "assigned_by_this_rule": 9
+    },
+    {
       "name": "FDA CDER",
       "email": "cder@fda.hhs.gov",
       "org": "FDA",
       "kind": "Regulator",
-      "documents": 60,
+      "documents": 53,
       "document_ids": [
-        "DOC-0000663",
-        "DOC-0000083",
-        "DOC-0000636",
-        "DOC-0000246",
-        "DOC-0000271",
+        "DOC-0000521",
+        "DOC-0000526",
+        "DOC-0000449",
+        "DOC-0000402",
+        "DOC-0000428",
         "..."
       ],
-      "assigned_by_this_rule": 9
+      "assigned_by_this_rule": 7
     },
     {
       "name": "Ohio AG Office",
       "email": "inquiry@ag.state.us",
       "org": "State AG",
       "kind": "Regulator",
-      "documents": 58,
-      "document_ids": [
-        "DOC-0000769",
-        "DOC-0000511",
-        "DOC-0000145",
-        "DOC-0000109",
-        "DOC-0000415",
-        "..."
-      ],
-      "assigned_by_this_rule": 8
-    },
-    {
-      "name": "Dana Kirchner",
-      "email": "dana.kirchner@cardinalhealth.com",
-      "org": "Cardinal Health",
-      "kind": "Distributor compliance",
       "documents": 52,
       "document_ids": [
-        "DOC-0000451",
-        "DOC-0000732",
-        "DOC-0000375",
-        "DOC-0000301",
-        "DOC-0000593",
+        "DOC-0000493",
+        "DOC-0000563",
+        "DOC-0000574",
+        "DOC-0000383",
+        "DOC-0000117",
         "..."
       ],
-      "assigned_by_this_rule": 52
-    },
-    {
-      "name": "DEA Diversion Control",
-      "email": "diversion@dea.gov",
-      "org": "DEA",
-      "kind": "Regulator",
-      "documents": 49,
-      "document_ids": [
-        "DOC-0000496",
-        "DOC-0000418",
-        "DOC-0000787",
-        "DOC-0000570",
-        "DOC-0000484",
-        "..."
-      ],
-      "assigned_by_this_rule": 6
-    },
-    {
-      "name": "Owen Basara",
-      "email": "owen.basara@cardinalhealth.com",
-      "org": "Cardinal Health",
-      "kind": "Distributor compliance",
-      "documents": 36,
-      "document_ids": [
-        "DOC-0000501",
-        "DOC-0000335",
-        "DOC-0000523",
-        "DOC-0000477",
-        "DOC-0000325",
-        "..."
-      ],
-      "assigned_by_this_rule": 36
+      "assigned_by_this_rule": 7
     },
     {
       "name": "Renee Colquitt",
       "email": "renee.colquitt@mckesson.com",
       "org": "McKesson",
       "kind": "Distributor compliance",
-      "documents": 36,
+      "documents": 50,
       "document_ids": [
-        "DOC-0000135",
-        "DOC-0000675",
-        "DOC-0000641",
-        "DOC-0000654",
-        "DOC-0000267",
+        "DOC-0000731",
+        "DOC-0000584",
+        "DOC-0000002",
+        "DOC-0000344",
+        "DOC-0000475",
         "..."
       ],
-      "assigned_by_this_rule": 36
+      "assigned_by_this_rule": 50
+    },
+    {
+      "name": "Owen Basara",
+      "email": "owen.basara@cardinalhealth.com",
+      "org": "Cardinal Health",
+      "kind": "Distributor compliance",
+      "documents": 44,
+      "document_ids": [
+        "DOC-0000004",
+        "DOC-0000619",
+        "DOC-0000328",
+        "DOC-0000393",
+        "DOC-0000559",
+        "..."
+      ],
+      "assigned_by_this_rule": 44
+    },
+    {
+      "name": "Dana Kirchner",
+      "email": "dana.kirchner@cardinalhealth.com",
+      "org": "Cardinal Health",
+      "kind": "Distributor compliance",
+      "documents": 30,
+      "document_ids": [
+        "DOC-0000696",
+        "DOC-0000269",
+        "DOC-0000799",
+        "DOC-0000137",
+        "DOC-0000184",
+        "..."
+      ],
+      "assigned_by_this_rule": 30
     },
     {
       "name": "Priya Deshmukh",
       "email": "priya.deshmukh@amerisourcebergen.com",
       "org": "AmerisourceBergen",
       "kind": "Distributor compliance",
-      "documents": 8,
+      "documents": 7,
       "document_ids": [
-        "DOC-0000722",
-        "DOC-0000644",
-        "DOC-0000700",
-        "DOC-0000598",
-        "DOC-0000667",
+        "DOC-0000056",
+        "DOC-0000011",
+        "DOC-0000045",
+        "DOC-0000167",
+        "DOC-0000154",
         "..."
       ],
-      "assigned_by_this_rule": 8
+      "assigned_by_this_rule": 7
     },
     {
-      "name": "DEA St Louis Field Div",
-      "email": "stlouis.diversion@dea.gov",
+      "name": "Grant Oyelaran",
+      "email": "grant.oyelaran@amerisourcebergen.com",
+      "org": "AmerisourceBergen",
+      "kind": "Diversion control",
+      "documents": 7,
+      "document_ids": [
+        "DOC-0000355",
+        "DOC-0000733",
+        "DOC-0000210",
+        "DOC-0000679",
+        "DOC-0000060",
+        "..."
+      ],
+      "assigned_by_this_rule": 7
+    },
+    {
+      "name": "DEA Detroit Field Div",
+      "email": "detroit.diversion@dea.gov",
       "org": "DEA",
+      "kind": "Regulator",
+      "documents": 7,
+      "document_ids": [
+        "DOC-0000800",
+        "DOC-0000123",
+        "DOC-0000710",
+        "DOC-0000001",
+        "DOC-0000364",
+        "..."
+      ],
+      "assigned_by_this_rule": 7
+    },
+    {
+      "name": "Oklahoma AG Office",
+      "email": "civil.enforcement@ag.state.us",
+      "org": "State AG",
       "kind": "Regulator",
       "documents": 6,
       "document_ids": [
-        "DOC-0000169",
-        "DOC-0000714",
-        "DOC-0000179",
-        "DOC-0000751",
-        "DOC-0000339",
+        "DOC-0000556",
+        "DOC-0000548",
+        "DOC-0000784",
+        "DOC-0000494",
+        "DOC-0000376",
         "..."
       ],
       "assigned_by_this_rule": 6
@@ -136,51 +168,24 @@
       "kind": "Order management",
       "documents": 5,
       "document_ids": [
-        "DOC-0000149",
-        "DOC-0000313",
-        "DOC-0000248",
-        "DOC-0000075",
-        "DOC-0000563"
+        "DOC-0000633",
+        "DOC-0000216",
+        "DOC-0000713",
+        "DOC-0000037",
+        "DOC-0000634"
       ],
       "assigned_by_this_rule": 5
     },
     {
-      "name": "Oklahoma AG Office",
-      "email": "civil.enforcement@ag.state.us",
-      "org": "State AG",
-      "kind": "Regulator",
-      "documents": 4,
-      "document_ids": [
-        "DOC-0000014",
-        "DOC-0000174",
-        "DOC-0000351",
-        "DOC-0000785"
-      ],
-      "assigned_by_this_rule": 4
-    },
-    {
-      "name": "Grant Oyelaran",
-      "email": "grant.oyelaran@amerisourcebergen.com",
-      "org": "AmerisourceBergen",
-      "kind": "Diversion control",
-      "documents": 3,
-      "document_ids": [
-        "DOC-0000503",
-        "DOC-0000030",
-        "DOC-0000159"
-      ],
-      "assigned_by_this_rule": 3
-    },
-    {
-      "name": "DEA Detroit Field Div",
-      "email": "detroit.diversion@dea.gov",
+      "name": "DEA St Louis Field Div",
+      "email": "stlouis.diversion@dea.gov",
       "org": "DEA",
       "kind": "Regulator",
       "documents": 3,
       "document_ids": [
-        "DOC-0000557",
-        "DOC-0000702",
-        "DOC-0000276"
+        "DOC-0000249",
+        "DOC-0000745",
+        "DOC-0000075"
       ],
       "assigned_by_this_rule": 3
     },
@@ -191,7 +196,7 @@
       "kind": "Regulator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000015"
+        "DOC-0000272"
       ],
       "assigned_by_this_rule": 1
     },
@@ -202,7 +207,7 @@
       "kind": "Regulator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000718"
+        "DOC-0000082"
       ],
       "assigned_by_this_rule": 1
     },
@@ -213,7 +218,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000660"
+        "DOC-0000627"
       ],
       "assigned_by_this_rule": 1
     },
@@ -224,7 +229,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000191"
+        "DOC-0000411"
       ],
       "assigned_by_this_rule": 1
     },
@@ -235,7 +240,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000746"
+        "DOC-0000253"
       ],
       "assigned_by_this_rule": 1
     },
@@ -246,7 +251,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000635"
+        "DOC-0000147"
       ],
       "assigned_by_this_rule": 1
     },
@@ -257,7 +262,7 @@
       "kind": "Expert witness",
       "documents": 1,
       "document_ids": [
-        "DOC-0000190"
+        "DOC-0000664"
       ],
       "assigned_by_this_rule": 1
     },
@@ -268,7 +273,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000209"
+        "DOC-0000013"
       ],
       "assigned_by_this_rule": 1
     },
@@ -279,7 +284,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000401"
+        "DOC-0000157"
       ],
       "assigned_by_this_rule": 1
     },
@@ -290,7 +295,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000441"
+        "DOC-0000759"
       ],
       "assigned_by_this_rule": 1
     },
@@ -301,7 +306,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000728"
+        "DOC-0000299"
       ],
       "assigned_by_this_rule": 1
     },
@@ -312,7 +317,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000596"
+        "DOC-0000335"
       ],
       "assigned_by_this_rule": 1
     },
@@ -323,7 +328,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000247"
+        "DOC-0000005"
       ],
       "assigned_by_this_rule": 1
     },
@@ -334,7 +339,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000767"
+        "DOC-0000461"
       ],
       "assigned_by_this_rule": 1
     },
@@ -345,7 +350,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000555"
+        "DOC-0000061"
       ],
       "assigned_by_this_rule": 1
     },
@@ -356,7 +361,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000456"
+        "DOC-0000175"
       ],
       "assigned_by_this_rule": 1
     },
@@ -367,7 +372,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000273"
+        "DOC-0000375"
       ],
       "assigned_by_this_rule": 1
     },
@@ -378,7 +383,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000175"
+        "DOC-0000368"
       ],
       "assigned_by_this_rule": 1
     },
@@ -389,7 +394,7 @@
       "kind": "Market research vendor",
       "documents": 1,
       "document_ids": [
-        "DOC-0000579"
+        "DOC-0000354"
       ],
       "assigned_by_this_rule": 1
     },
@@ -400,7 +405,7 @@
       "kind": "Laboratory",
       "documents": 1,
       "document_ids": [
-        "DOC-0000207"
+        "DOC-0000715"
       ],
       "assigned_by_this_rule": 1
     },
@@ -411,7 +416,7 @@
       "kind": "Logistics",
       "documents": 1,
       "document_ids": [
-        "DOC-0000172"
+        "DOC-0000581"
       ],
       "assigned_by_this_rule": 1
     },
@@ -422,7 +427,7 @@
       "kind": "Advertising agency",
       "documents": 1,
       "document_ids": [
-        "DOC-0000617"
+        "DOC-0000639"
       ],
       "assigned_by_this_rule": 1
     },
@@ -433,7 +438,7 @@
       "kind": "External audit",
       "documents": 1,
       "document_ids": [
-        "DOC-0000425"
+        "DOC-0000377"
       ],
       "assigned_by_this_rule": 1
     },
@@ -444,7 +449,7 @@
       "kind": "Supplier",
       "documents": 1,
       "document_ids": [
-        "DOC-0000171"
+        "DOC-0000416"
       ],
       "assigned_by_this_rule": 1
     },
@@ -455,7 +460,7 @@
       "kind": "Consultant",
       "documents": 1,
       "document_ids": [
-        "DOC-0000001"
+        "DOC-0000090"
       ],
       "assigned_by_this_rule": 1
     },
@@ -466,7 +471,7 @@
       "kind": "Benefits administrator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000305"
+        "DOC-0000751"
       ],
       "assigned_by_this_rule": 1
     },
@@ -477,7 +482,7 @@
       "kind": "Insurance broker",
       "documents": 1,
       "document_ids": [
-        "DOC-0000492"
+        "DOC-0000624"
       ],
       "assigned_by_this_rule": 1
     },
@@ -488,27 +493,27 @@
       "kind": "Staffing vendor",
       "documents": 1,
       "document_ids": [
-        "DOC-0000513"
+        "DOC-0000576"
       ],
       "assigned_by_this_rule": 1
     }
   ],
   "aliases": [
     {
-      "person": "Thomas Bradley",
-      "primary": "thomas.bradley@mallinckrodt.com",
-      "alias": "thomas.bradley@covidien.com",
+      "person": "Michael Brennan",
+      "primary": "michael.brennan@mallinckrodt.com",
+      "alias": "michael.brennan@covidien.com",
       "why": "legacy domain from before the spin-off",
-      "documents_from_primary": 138,
-      "documents_from_alias": 28
+      "documents_from_primary": 183,
+      "documents_from_alias": 45
     },
     {
-      "person": "Robert Ashton",
-      "primary": "robert.ashton@mallinckrodt.com",
-      "alias": "rashton@mallinckrodt.com",
+      "person": "James Whitfield",
+      "primary": "james.whitfield@mallinckrodt.com",
+      "alias": "jwhitfield@mallinckrodt.com",
       "why": "an older account format still in use",
-      "documents_from_primary": 101,
-      "documents_from_alias": 17
+      "documents_from_primary": 92,
+      "documents_from_alias": 12
     }
   ],
   "singletons": [

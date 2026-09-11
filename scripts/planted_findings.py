@@ -21,6 +21,12 @@ So each tier plants a matched pair and a decoy:
      you only reach by walking the entity rather than by reading the first document.
   4. **buried_deep** — the relevant sentence sits on the eleventh tab of a twelve
      tab workbook, so shallow extraction misses it and reports the document clean.
+  5. **no_overlap_pair** — two custodians who genuinely correspond, at volume, about
+     one mundane subject that touches no matter issue and appears nowhere else in the
+     corpus. Asked what connects them, a feature should find that subject and nothing
+     else. Asked whether they discuss the matter, the right answer is no. Without a
+     planted negative there is no way to tell a correct "nothing here" from a broken
+     analysis, which is the whole reason this one exists.
 
 Emitted at generation time as findings.json, with the expected answer and how to
 verify it, so a tester can tell a product bug from a data artifact.
@@ -81,6 +87,38 @@ BURIED_PAYLOAD = [
      "Released without documented justification — flag cleared manually"],
     ["43", "SO-115003", "Chillicothe OH",
      "Threshold raised after release, no approval on file"],
+]
+
+# ── The pair that correspond about nothing the matter cares about ────────
+# One subject, deliberately mundane, with vocabulary that appears in no other
+# document: no product, no order, no regulator, no counsel. A blood drive is about
+# as far from suspicious order monitoring as office email gets.
+NO_OVERLAP_TOPIC = "an employee blood drive"
+
+NO_OVERLAP_SUBJECTS = [
+    "Blood drive — sign-up sheet for the 14th",
+    "RE: Blood drive — sign-up sheet for the 14th",
+    "Blood drive — donor slots still open",
+    "RE: Blood drive — donor slots still open",
+    "Blood drive — refreshments and the sign-in table",
+    "RE: Blood drive — refreshments and the sign-in table",
+    "Blood drive — final headcount for the 14th",
+    "RE: Blood drive — final headcount for the 14th",
+    "Blood drive — thank-you note for the volunteers",
+    "RE: Blood drive — thank-you note for the volunteers",
+]
+
+NO_OVERLAP_BODIES = [
+    "Sign-up sheet is on the second floor by the kitchen. Twenty-two slots so far, and "
+    "the mobile unit needs thirty before they will send a second nurse.",
+    "I can take the morning shift at the sign-in table if you cover the afternoon. Bring "
+    "the clipboard from the supply closet, the one on the wall is broken.",
+    "Refreshments are sorted: juice, biscuits and the urn from the third floor. The "
+    "nurses asked for a chair with arms for anyone who feels faint.",
+    "Final headcount is thirty-one. That clears the threshold, so we get both nurses and "
+    "the whole thing should be done by two.",
+    "Thank-you note drafted for the volunteers. I will print it on the good paper and "
+    "leave it by the sign-in table for people to add their names.",
 ]
 
 
@@ -307,6 +345,74 @@ def apply(all_docs, families, custodians, tier_name, seed=42):
                               "justification'. A hit means the whole workbook was read."),
             "payload_rows": BURIED_PAYLOAD,
         })
+
+    # ── 5. A pair that correspond, about nothing the matter cares about ──
+    # Drawn from the middle of the volume distribution: a pair nobody would dismiss
+    # as noise, which is what makes the negative result worth asserting.
+    mid = ranked[2:] if len(ranked) > 3 else ranked
+    claimed = {f["control_number"] for f in findings}
+    for f in findings:
+        for key in ("attachment", "distinguisher"):
+            if isinstance(f.get(key), dict):
+                claimed.add(f[key]["control_number"])
+    if len(mid) >= 2:
+        a, b = mid[0], mid[1]
+        cust = {c["name"]: c for c in custodians}
+        pool = [d for d in all_docs
+                if d.get("Record Type") == "Email"
+                and d.get("Custodian") in (a, b)
+                and d["Control Number"] not in claimed
+                and not d["Control Number"].startswith("HOT-")
+                and not d.get("Email Thread ID")
+                and not d.get("PI Seeded")
+                and d.get("Language", "English") == "English"
+                and not d.get("Bates Begin")
+                and d.get("Privilege", "") != "Privileged"
+                and d.get("Responsiveness", "") in ("", "Non-Responsive")]
+        rng.shuffle(pool)
+        ids, bodies = [], {}
+        for n, d in enumerate(pool[:18]):
+            sender = cust.get(d["Custodian"])
+            recipient = cust.get(b if d["Custodian"] == a else a)
+            if not sender or not recipient:
+                continue
+            subject = NO_OVERLAP_SUBJECTS[n % len(NO_OVERLAP_SUBJECTS)]
+            body    = NO_OVERLAP_BODIES[n % len(NO_OVERLAP_BODIES)]
+            d["Email From"]      = sender["name"]
+            d["Email From SMTP"] = sender["email"]
+            d["Email To"]        = recipient["name"]
+            d["Email To SMTP"]   = recipient["email"]
+            d["Email CC"]        = ""
+            d["Email CC SMTP"]   = ""
+            d["Email Subject"]      = subject
+            d["Conversation Topic"] = subject
+            d["Issue Tags"]         = ""
+            d["Extracted Text Preview"] = body[:200]
+            ids.append(d["Control Number"])
+            bodies[d["Control Number"]] = body
+        if ids:
+            findings.append({
+                "id": "no_overlap_pair",
+                "control_number": ids[0],
+                "document_ids": ids,
+                "pair": [a, b],
+                "custodian": f"{a} and {b}",
+                "documents": len(ids),
+                "topic": NO_OVERLAP_TOPIC,
+                "findable_by": "the pair itself: they correspond at volume, so the edge is real",
+                "invisible_to": "any topical link to the matter, because there is none",
+                "expected_answer": (
+                    f"{a} and {b} exchange {len(ids)} documents, every one of them about "
+                    f"{NO_OVERLAP_TOPIC}. They share no issue tag, and the vocabulary of that "
+                    f"correspondence appears in no other document. Asked what connects them, "
+                    f"the answer is one mundane subject. Asked whether they discuss the matter, "
+                    f"the answer is no, and that is correct rather than a gap."),
+                "how_to_verify": (
+                    "Key Relationships: the pair has a real edge with real volume. Search the "
+                    "extracted text of those documents for any matter keyword: no hits. Search "
+                    "the corpus for 'blood drive': only these."),
+                "bodies": bodies,
+            })
 
     return findings
 
