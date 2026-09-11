@@ -1408,7 +1408,7 @@ STEP B3 — Field mapping
   ensure that file paths in the related load file match the zip file's
   structure."
 
-  That last sentence is the trap. This load file says text\{ctrl}.txt, so the
+  That last sentence is the trap. This load file says text\\{ctrl}.txt, so the
   zip you upload must have text/ AT ITS ROOT. Zip the enclosing folder instead
   and every path is wrong by one level, with no useful error.
 
@@ -1428,7 +1428,7 @@ STEP B3 — Field mapping
   rather than the text itself.
 
   Skip it and the import succeeds. Every document's extracted text becomes the
-  literal string "text\DOC-0000192.txt", and anything reading extracted text,
+  literal string "text\\DOC-0000192.txt", and anything reading extracted text,
   which is Document Categories and PI Detect both, reads a filename. Nothing
   errors, nothing warns, and the numbers look plausible.
 
