@@ -108,11 +108,11 @@ small tier has 306 attachments across 131 emails. **Edge cases** (Rule 13, off b
 non-English, broken families, orphan attachments, duplicate MD5, and more — so a feature that
 aggregates over a collection is tested against incomplete input, not just complete rows.
 
-Each tier contains eight files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all eight:
+Each tier contains nine files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all nine:
 
 | File | Description |
 |------|-------------|
-| `documents.csv` | One row per document; 111 columns — every Relativity field plus the narrative fields and `PI Seeded` |
+| `documents.csv` | One row per document; 112 columns — every Relativity field plus the narrative fields and `PI Seeded` |
 | `custodians.json` | Custodian profiles: name, email, org, role, dept, narrative, hold status, doc counts |
 | `email-families.json` | Threading structure — organic parent/child families plus the scripted story threads |
 | `batches.json` | Batch assignments — reviewer, status, doc list, dates |
@@ -120,6 +120,7 @@ Each tier contains eight files, and `make mock-medium` / `mock-large` / `mock-xl
 | `language-mix.json` | The second-language slice and why it is irrelevant to the matter (Rule 17) |
 | `findings.json` | Known-answer findings and the decoy (Rule 18) |
 | `entities.json` | The external entity population, alias addresses and singleton tail (Rule 20) |
+| `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, and the metadata profile measured from the data (Rule 21) |
 
 `docs/REQUEST_TEMPLATE.md` is the intake form for a corpus request, with a map from each
 common ask to the flag that serves it and an honest list of what is not modelled yet.

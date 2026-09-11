@@ -111,10 +111,17 @@ def apply(all_docs, families, custodians, seed=42, protected=None):
     for d in docs:
         d["Custodian"] = d["Custodian Email"] = ""
         d["Custodian Department"] = d["Custodian Org"] = ""
-        # Keep the year/month tail so the folder tree stays well formed; only the
-        # custodian segment becomes _Unassigned (build_load_package Rule 11).
-        tail = d.get("Processing Folder Path", "").split("\\")[-2:]
-        d["Processing Folder Path"] = "\\".join(["\\\\Collection", "_Unassigned"] + tail)
+        # Keep the source and the year/month tail so the folder tree stays well
+        # formed; only the custodian segment becomes _Unassigned. This used to drop
+        # the leading segment, which was the custodian until Rule 21 put the data
+        # source in front of it, and then the path no longer named its own source.
+        parts = [p for p in d.get("Processing Folder Path", "").split("\\") if p]
+        if parts and parts[0].lower() == "collection":
+            parts = parts[1:]
+        source = parts[0] if len(parts) >= 3 else None      # source/custodian/y/m
+        tail   = parts[-2:] if len(parts) >= 2 else []
+        segs   = ["\\\\Collection"] + ([source] if source else []) + ["_Unassigned"] + tail
+        d["Processing Folder Path"] = "\\".join(segs)
     report["no_custodian"] = [d["Control Number"] for d in docs]
 
     # ── no date at all, and dates no human ever typed ─────────────────────

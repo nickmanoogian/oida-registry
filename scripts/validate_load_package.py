@@ -250,16 +250,30 @@ def main():
         check("no files at the root of natives/", not loose, f"{len(loose)} loose files")
 
         # 4. the folder a native sits in matches its custodian
-        wrong = []
+        # Rule 21 put the data source in front of the custodian, so both segments
+        # are a contract now: natives\{source}\{custodian}\{year}\{month}.
+        i_src = header.index("Data Source") if "Data Source" in header else None
+        wrong_cust, wrong_src = [], []
         for r in rows:
             if not r[i_nat]:
                 continue
             parts = r[i_nat].split("\\")
-            folder = parts[1] if len(parts) > 1 else ""
-            if folder != r[i_cust].strip().replace(" ", "_") and folder != "_Unassigned":
-                wrong.append((r[i_ctrl], folder, r[i_cust]))
-        check("native folder matches the row's custodian", not wrong,
-              f"{len(wrong)} mismatches" if wrong else "")
+            src_folder  = parts[1] if len(parts) > 1 else ""
+            cust_folder = parts[2] if len(parts) > 2 else ""
+            want_cust = r[i_cust].strip().replace(" ", "_")
+            if cust_folder != want_cust and cust_folder != "_Unassigned":
+                wrong_cust.append((r[i_ctrl], cust_folder, r[i_cust]))
+            if i_src is not None and r[i_src].strip():
+                want_src = re.sub(r"[^A-Za-z0-9._-]+", "_",
+                                  r[i_src].replace(" (", "_").replace(")", ""))
+                if src_folder != want_src:
+                    wrong_src.append((r[i_ctrl], src_folder, want_src))
+        check("native folder matches the row's custodian", not wrong_cust,
+              f"{len(wrong_cust)} mismatches: {wrong_cust[:2]}" if wrong_cust else "")
+        if i_src is not None:
+            check("native folder matches the row's data source", not wrong_src,
+                  f"{len(wrong_src)} mismatches: {wrong_src[:2]}" if wrong_src
+                  else f"{len({r[i_src] for r in rows if r[i_src].strip()})} sources")
 
     # 5. custodian-sources.csv agrees with disk
     sheet = list(csv.DictReader(open(src, encoding="utf-8")))
@@ -555,7 +569,9 @@ def main():
     if failures:
         print(f"  {len(failures)} check(s) failed\n")
         sys.exit(1)
-    print(f"  All checks passed — {len(rows):,} documents, {len(sheet)} custodians\n")
+    people = len({r.get("Custodian", "") for r in sheet})
+    print(f"  All checks passed — {len(rows):,} documents, {len(sheet)} data source rows "
+          f"across {people} custodians\n")
 
 
 if __name__ == "__main__":

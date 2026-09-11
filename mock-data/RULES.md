@@ -358,10 +358,16 @@ the directory tree must match that column exactly:
 
 ```
 natives/
-  Michael_Brennan/2014/01/DOC-0000318.docx
-  Thomas_Bradley/2013/11/DOC-0000229.eml
+  Exchange_Online/Michael_Brennan/2014/01/DOC-0000318.eml
+  OneDrive/Thomas_Bradley/2013/11/DOC-0000229.docx
+  Mobile_Extraction_UFDR/Sarah_Chen/2015/12/DOC-0000901.heic
   ...
 ```
+
+The data source is the first segment as of Rule 21. Relativity assigns a custodian **per
+data source**, so the granularity that matters is the pair rather than the person: once
+somebody's documents arrive through four channels, one folder per person is as wrong as one
+folder for everybody.
 
 The reason is Relativity Processing: a processing set assigns custodians **per data source**.
 One flat folder means one data source, and therefore one custodian for the entire collection,
@@ -373,10 +379,12 @@ Requirements:
 - Every native lives under the path its `Processing Folder Path` describes. No files at the
   root of `natives/`.
 - `NativeFilePath` in the load file is the package-relative path in backslash form, e.g.
-  `natives\Michael_Brennan\2014\01\DOC-0000318.docx`.
-- Every package ships `custodian-sources.csv`: one row per custodian with name, email, org,
-  department, data source folder, document count, natives written and total bytes. This is the
-  sheet whoever builds the processing set works down.
+  `natives\Exchange_Online\Michael_Brennan\2014\01\DOC-0000318.eml`.
+- Every package ships `custodian-sources.csv`: **one row per data source and custodian**, with
+  the source, name, email, org, department, folder, document count, natives written and total
+  bytes. This is the sheet whoever builds the processing set works down, and it is keyed on the
+  pair because that is what Relativity assigns a custodian at. The small tier yields 66 rows:
+  8 sources across 10 custodians.
 - Documents with no custodian go under `_Unassigned/`, and only when a build deliberately asks
   for them. The default build assigns every document to a custodian.
 
@@ -869,6 +877,61 @@ python scripts/validate_mock_data.py --tier small
 
 ---
 
+## Rule 21 — The Data Source Dimension
+
+Collection Coverage exists to compare data sources, and the tiers had no such axis. The only
+grouping available was custodian, so "sources with genuinely different metadata profiles"
+stood as the longest-running gap in the widget coverage table.
+
+**The rule does not fabricate a difference.** The metadata profiles already varied, and they
+varied by file type: email documents carry email metadata and no EXIF, mobile images carry
+EXIF and no email metadata, Google Workspace documents carry Drive fields and an extension
+that deliberately disagrees with their type. A real collection produces those differences
+*because* the documents came through different channels. This rule names the channel, so the
+difference becomes something you can group by rather than something you can only infer.
+
+| Source | What it collects | Measured profile, small tier |
+|---|---|---|
+| Exchange Online | Mailbox: mail and calendar | 821 documents, email metadata on 98% |
+| OneDrive | Personal drive: loose Office documents and PDFs | 293 documents, Office properties on 74% |
+| Network Share | File server: loose documents, archives, unsupported formats | 222 documents, Office properties on 64%, 4% containers |
+| Mobile Extraction (UFDR) | Cellebrite handset: chat, photos, call logs | 38 documents, camera model 92%, EXIF GPS 10%, OCR 92% |
+| Scanned Production | Paper, scanned and OCR'd | 27 documents, OCR on 100% |
+| Microsoft Teams | Channel and chat export | 20 documents, RSMF on 100% |
+| Slack Export | Workspace export | 10 documents, RSMF on 100% |
+| Exchange (PST export) | Archived mail as containers | 8 documents, 100% containers |
+
+Medium and above add **Google Workspace** and **Bloomberg Vault**, because those file types
+only exist from the medium tier up.
+
+**OneDrive and Network Share share a profile on purpose.** Two sources whose metadata looks
+identical is a real case, and a widget still has to group them separately. A rule where every
+source is trivially distinguishable would not test that.
+
+### Requirements
+
+- **On by default.** `--no-sources` turns it off and leaves custodian as the only axis.
+- **`Data Source` on `documents.csv`**, and in the load file, so Relativity has the field
+  rather than having to derive it from a path.
+- **The source is the first segment of `Processing Folder Path`**, and therefore of the tree
+  on disk (Rule 11). Asserted per document.
+- **`custodian-sources.csv` is keyed on the pair**, one row per source and custodian.
+- **Every tier ships `data-sources.json`**: per source, what it collects, its folder, its
+  document count, its custodian count, its file types, and **the profile measured from the
+  data** rather than described. The validator checks every count against the corpus, and
+  fails if fewer than four distinct profiles appear, because an axis where everything
+  measures the same is decoration.
+- **Runs before the other passes**, since `Processing Folder Path` depends on it.
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier small
+python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
@@ -888,7 +951,7 @@ Rules 16, 17 and 18 are on by default. To turn one off, or to change what it see
 ```bash
 python scripts/generate_mock_metadata.py --tier small --ssn-range 666
 python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
-python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities --no-sources
 ```
 
 With all three off the output is byte-identical to v1.12.0, so a tier used as clean
