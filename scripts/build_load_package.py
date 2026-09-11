@@ -880,7 +880,7 @@ def splice_pi(body, text, max_prefix=1200):
 
 
 def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
-                    error_rows=None, plant=None):
+                    error_rows=None, plant=None, keep_native=True):
     ctrl = doc["Control Number"]
     ft   = doc.get("File Type Category","")
     ext  = doc.get("File Extension","txt")
@@ -956,6 +956,13 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         write_text_sidecar(ctrl, blob, os.path.splitext(native_path)[1].lstrip("."),
                            out_dir, errored=bool((doc.get("Processing Error Type") or "").strip()))
 
+        # --no-natives: the file was still built, because the extracted text is
+        # taken from it and that is the only way the spreadsheet PI scenario
+        # reaches the text at all. It is written, read and then removed.
+        if not keep_native:
+            os.remove(native_path)
+            return dat_native_path(native_path, out_dir)
+
         # Rule 12: a document the metadata flags as an error gets a native that
         # actually fails that way. Fabricated in place, over the healthy file.
         record = error_natives.fabricate(doc, native_path, blob) if with_errors else None
@@ -981,6 +988,9 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         with open(fallback, "w", encoding="utf-8") as f:
             f.write(text)
         write_text_sidecar(ctrl, text.encode("utf-8", "replace"), "txt", out_dir)
+        if not keep_native:
+            os.remove(fallback)
+            return dat_native_path(fallback, out_dir)
         stamp_file_dates(fallback, *dates)
         return dat_native_path(fallback, out_dir)
 
@@ -1095,21 +1105,31 @@ DAT_COLUMNS = [
     # it instead of leaving the mapping screen demanding one. It used to be "BegDoc#",
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
-    "Control Number","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
-    "Custodian Org","File Name","File Type","File Size","Primary Date","Email From","Email From (SMTP Address)",
+    # "EndDoc#" used to sit here holding a byte-identical copy of Control Number
+    # on every row. It mapped to nothing, nothing read it, and it cost 3.9 MB in
+    # the extra large load file. Concordance brackets a page range with
+    # BegDoc/EndDoc; every record here is one document, so it bracketed nothing.
+    "Control Number","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
+    "Custodian Org","File Name","File Type","File Size","Primary Date/Time","Email From","Email From (SMTP Address)",
     "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
-    "Email Has Attachments","Number of Attachments","Email Threading ID","Email Threading Inclusive",
+    "Email Has Attachments","Number of Attachments","Email Threading ID","Inclusive Email",
     "Conversation Topic","Author","Title","Company","Page Count",
     "Created Date/Time","Last Modified Date/Time","Data Source",
     "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
-    "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
+    "Bates Beg","Bates End","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
     "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
     # Language so a language breakdown has something to read from metadata alone,
     # and the extracted text path so the two LLM widgets have text to read.
-    "Language","NativeFilePath","ExtractedTextFilePath",
+    "Primary language","NativeFilePath","ExtractedTextFilePath",
 ]
+
+# The load file without the native path column, for a package built with
+# --no-natives. 17.1 MB of the extra large load file was paths to files such a
+# package does not contain, and the import instructions told you to leave the
+# column unmapped anyway.
+DAT_COLUMNS_NO_NATIVES = [c for c in DAT_COLUMNS if c != "NativeFilePath"]
 
 
 def dat_row(values):
@@ -1135,14 +1155,13 @@ MULTI_VALUE_SEP = ";"
 # None transform = direct doc.get(key, ""); callable transform receives the full doc.
 _COLUMN_MAP = {
     "Control Number":            ("Control Number",          None),
-    "EndDoc#":                   ("Control Number",          None),
     "Custodian":                 ("Custodian",               None),
     "Custodian Email":           ("Custodian Email",         None),
     "Custodian Org":             ("Custodian Org",           None),
     "File Name":                 ("File Name",               None),
     "File Type":                 ("File Extension",          None),
     "File Size":                 ("File Size (bytes)",       None),
-    "Primary Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
+    "Primary Date/Time":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
     "Email From":                      ("Email From",              None),
     "Email From (SMTP Address)":               ("Email From SMTP",         None),
     "Email To":                        ("Email To",                None),
@@ -1158,7 +1177,7 @@ _COLUMN_MAP = {
     "Email Has Attachments":           ("Has Attachments",         None),
     "Number of Attachments":          ("Attachment Count",        None),
     "Email Threading ID":        ("Email Thread ID",         None),
-    "Email Threading Inclusive": ("Email Threading Inclusive",None),
+    "Inclusive Email": ("Email Threading Inclusive",None),
     "Conversation Topic":        ("Conversation Topic",      None),
     "Author":                    ("Author",                  None),
     "Title":                     ("Title",                   None),
@@ -1173,8 +1192,8 @@ _COLUMN_MAP = {
     "Privilege Reason":          ("Privilege Reason",        None),
     "Hot Doc":                   ("Hot Doc",                 None),
     "Issues":                ("Issue Tags",              None),
-    "BegBates":                  ("Bates Begin",             None),
-    "EndBates":                  ("Bates End",               None),
+    "Bates Beg":                  ("Bates Begin",             None),
+    "Bates End":                  ("Bates End",               None),
     "Production Set":            ("Production Set",          None),
     "Redacted":                  ("Redacted",                None),
     "TAR Score":                 ("TAR Score",               None),
@@ -1193,16 +1212,16 @@ _COLUMN_MAP = {
     "Record Type":               ("Record Type",             None),
     "Processing Status":         ("Processing Status",       None),
     "Processing Error Type":     ("Processing Error Type",   None),
-    "Language":                  ("Language",                None),
+    "Primary language":                  ("Language",                None),
 }
 
 
-def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
+def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None, columns=None):
     fam    = families_by_doc.get(doc.get("Control Number",""), {})
     values = []
-    for col in DAT_COLUMNS:
-        if col == "BegAttach":    v = fam.get("beg_attach","")
-        elif col == "EndAttach":  v = fam.get("end_attach","")
+    for col in (columns or DAT_COLUMNS):
+        if col == "Control Number Beg Attach":    v = fam.get("beg_attach","")
+        elif col == "Control Number End Attach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
         elif col == "ExtractedTextFilePath":
             v = text_rel_path(doc["Control Number"]) if native_rel_path else ""
@@ -1369,11 +1388,132 @@ STEP B3 — Field mapping
     Rsmf Application     → Single Choice
     Rsmf Participants    → Multiple Choice
     Rsmf Message Count   → Whole Number
-    EndDoc#, BegAttach, EndAttach, BegBates, EndBates, Production Set
+    Production Set
                          → Fixed-Length Text(50)
 
   IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
   overwrite mode to Append. An Overlay against an empty workspace fails.
+
+  HOW IMPORT/EXPORT WANTS THIS PACKAGE HANDED TO IT
+  -------------------------------------------------
+  The load file and the files it points at are uploaded SEPARATELY, and the
+  files must be in their own zip:
+
+    1. load-file.dat            -> the "Load File" picker, on its own
+    2. a zip of text/ and       -> tick "Include Native & Text", then the
+       natives/                    "Native & Text" picker
+
+  The guide: "To import any text or native file when not using Express
+  Transfer, you need to zip the files and upload the zip file... You must
+  ensure that file paths in the related load file match the zip file's
+  structure."
+
+  That last sentence is the trap. This load file says text\{ctrl}.txt, so the
+  zip you upload must have text/ AT ITS ROOT. Zip the enclosing folder instead
+  and every path is wrong by one level, with no useful error.
+
+  From inside this package directory:
+
+      zip -r native-and-text.zip text natives     # or just text, if no natives
+
+  Express Transfer is the alternative and takes the files unzipped, but
+  Relativity says not to zip data when Express Transfer is active and to avoid
+  it for ZIP data under 20 GB, which is this package.
+
+  THE SETTING THAT SILENTLY BREAKS THE TEXT LAYER
+  -----------------------------------------------
+  Mapping ExtractedTextFilePath to Extracted Text is NOT enough. In the field
+  mapping screen's "Additional Field Settings" column you must also set that
+  field to "Text File". That is what tells Relativity the column holds a PATH
+  rather than the text itself.
+
+  Skip it and the import succeeds. Every document's extracted text becomes the
+  literal string "text\DOC-0000192.txt", and anything reading extracted text,
+  which is Document Categories and PI Detect both, reads a filename. Nothing
+  errors, nothing warns, and the numbers look plausible.
+
+  Setting "Text File" also asks for a File Encoding for those files. These
+  sidecars are UTF-8. Pick UTF-8; a wrong encoding here mangles the text without
+  failing the import.
+
+  The same applies to NativeFilePath: set "Native File" on it, if you are
+  importing natives at all.
+
+  If you run the text as its own overlay job, the Overlay Identifier has to be a
+  Fixed-Length Text field whose category is Generic or Identifier. Control
+  Number qualifies; most of the other columns do not.
+
+  THREE SMALLER RULES FROM THE GUIDE
+  ----------------------------------
+  * "Only fields matched or those with additional settings selected are loaded
+    into the workspace. Other fields... are ignored." So leaving 27 columns
+    unmapped costs nothing: they are simply not read.
+  * "You must always match the identifier field for the load file." Field 1 is
+    Control Number and auto-maps by name, so this is one less thing to get
+    wrong than it used to be.
+  * You need View and Add or Edit permissions on every field you map. A mapping
+    that fails for permissions fails the job, not the field.
+
+  OVERLAY REMOVES WHAT THE LOAD FILE LEAVES BLANK
+  -----------------------------------------------
+  In Overlay or Append/Overlay mode, a blank cell overwrites the existing value
+  rather than being ignored. So a second pass that maps more fields than it
+  means to will erase the first pass. If you import the extracted text as its
+  own overlay job, map ONLY Control Number and ExtractedTextFilePath.
+
+  RELATIVITY'S OWN RECOMMENDATIONS FOR A JOB THIS SIZE
+  ----------------------------------------------------
+  From help.relativity.com, General Recommendations for Structured Import and
+  Export Jobs, and the Import/Export load file specifications:
+
+  * RUN "PRE-CHECK LOAD FILE" FIRST. It validates date formats, field type
+    alignment, text length against field maximums, column count consistency,
+    folder and choice quantities, and the native and extracted text paths
+    (sampling 1,000 rows). On a load file this size that minute is cheap.
+
+  * IMPORT EXTRACTED TEXT AS A SEPARATE JOB when the workspace is SQL backed.
+    Relativity recommends importing extracted text separately from other data.
+    Job 1: Append, the metadata, ExtractedTextFilePath unmapped. Job 2: Overlay
+    keyed on Control Number, mapping only Control Number and
+    ExtractedTextFilePath to Extracted Text. A failure in the text pass then
+    costs you nothing already loaded.
+
+  * IF EXTRACTED TEXT IS DATA GRID ENABLED, use it. Relativity reports Data Grid
+    text imports 60 to 80% faster than SQL, with no size limit.
+
+  * FIELD AND CHOICE LIMITS. Relativity advises at most 100 fields and 100 new
+    choice values per import job. This package is inside both: {field_count}
+    columns, and the largest choice field is Batch Name at 97 distinct values on
+    the extra large tier. If you scale the tier further, watch that one.
+
+  * AUTO MAP IS SPACE SENSITIVE. It matches names case-insensitively but not
+    space-insensitively, which is why these columns are named exactly as the
+    workspace names its fields. 33 of them match a stock workspace outright.
+
+  * DO NOT UNZIP-AND-EXPRESS-TRANSFER. Relativity says not to zip data when
+    Express Transfer is active. This package ships as a zip, so either unzip it
+    first or leave Express Transfer off. Our paths are relative, so Express
+    Transfer is not required either way.
+
+  * CREATE FIELD, IF YOU NEED ONE, offers Currency, Date, Decimal, Fixed-Length
+    Text, Long Text, Multiple Choice, Single Choice, User, Whole Number and
+    Yes/No. Nothing here needs a type outside that list.
+
+  * SIZE. Without Express Transfer a single structured import data set is capped
+    at 20 GB. Every tier here is far under that: the extra large load file plus
+    its extracted text is about 0.5 GB unzipped. Relativity also says to avoid
+    Express Transfer for ZIP data under 20 GB, which is exactly this package, so
+    leave it off.
+
+  * RESTRICTED FILE TYPES. An instance setting can restrict file types, and
+    Import/Export silently SKIPS restricted files. If a native count comes up
+    short and nothing errored, check RestrictedFileTypes before suspecting the
+    package. This matters most for the errors package, which ships deliberately
+    unusual types.
+
+  * ENCODING. The load file and the text sidecars are UTF-8, which the spec
+    accepts. Relativity notes UTF-16 imports faster for extracted text; we write
+    UTF-8 because it is half the size on disk and the spec's default.
 
 STEP B4 — Set the native file path base
   When prompted for the native file path, set the base path to the location of
@@ -1553,8 +1693,11 @@ def expected_errors_readme_block(error_rows):
 # ── Main ──────────────────────────────────────────────────────────────────
 
 def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
-          with_errors=False, error_rate=None):
+          with_errors=False, error_rate=None, no_natives=False):
     random.seed(seed)
+    # Without the natives, the column that points at them is 17 MB of paths to
+    # files this package does not contain.
+    columns = DAT_COLUMNS_NO_NATIVES if no_natives else DAT_COLUMNS
 
     docs_path    = os.path.join(tier_dir, "documents.csv")
     families_path = os.path.join(tier_dir, "email-families.json")
@@ -1624,10 +1767,12 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     for i, doc in enumerate(all_docs):
         native_path = generate_native(doc, cache, out_dir, flat=flat,
                                       with_errors=with_errors, error_rows=error_rows,
-                                      plant=plants.get(doc["Control Number"]))
+                                      plant=plants.get(doc["Control Number"]),
+                                      keep_native=not no_natives)
         native_bytes = (os.path.getsize(os.path.join(out_dir, native_path.replace("\\", os.sep)))
-                        if native_path else None)
-        values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes)
+                        if native_path and not no_natives else None)
+        values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes,
+                                columns=columns)
         dat_rows.append(values)
 
         # Rule 21: one row per source and custodian, because that is the granularity
@@ -1650,7 +1795,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         if native_path:
             natives_written += 1
             st["natives"] += 1
-            st["bytes"]   += native_bytes
+            st["bytes"]   += native_bytes or 0
         else:
             skipped += 1
 
@@ -1662,7 +1807,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     # Write .dat
     dat_path = os.path.join(out_dir, "load-file.dat")
     with open(dat_path, "w", encoding="utf-8", newline="") as f:
-        f.write(dat_row(DAT_COLUMNS))
+        f.write(dat_row(columns))
         for row in dat_rows:
             f.write(dat_row(row))
     dat_mb = os.path.getsize(dat_path) / 1e6
@@ -1700,11 +1845,20 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         with open(edge_src) as f:
             edge_count = sum(v.get("count", 0) for v in json.load(f)["scenarios"].values())
 
+    # --no-natives leaves an empty natives tree behind; a folder of nothing in a
+    # package invites someone to point a processing set at it.
+    if no_natives:
+        nat_root = os.path.join(out_dir, "natives")
+        for root, _dirs, files in os.walk(nat_root, topdown=False):
+            if not files and not os.listdir(root):
+                os.rmdir(root)
+
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
                             .replace("{delimiters}", DELIMITER_NOTE)
+                            .replace("{field_count}", str(len(columns)))
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
                 + expected_errors_readme_block(error_rows)
                 + ground_truth_readme_block(out_dir, ground_truth)
@@ -1712,7 +1866,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
 
     print(f"\n  Done in {time.time()-t0:.0f}s")
     print(f"  Natives:    {natives_written:,} files ({skipped:,} documents have no native)")
-    print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(DAT_COLUMNS)} fields)")
+    print(f"  load-file.dat: {dat_mb:.1f} MB ({len(dat_rows):,} rows, {len(columns)} fields)")
     if with_errors:
         guaranteed = sum(1 for r in error_rows if r["Guaranteed"] == "yes")
         if edge_count:
@@ -1753,6 +1907,10 @@ def main():
     p.add_argument("--error-rate", type=float, default=None,
                    help="Promote extra documents to errors until this fraction is reached "
                         "(e.g. 0.25). Requires --with-errors")
+    p.add_argument("--no-natives", action="store_true",
+                   help="Metadata and extracted text only: skip writing the native files "
+                        "and drop the NativeFilePath column, which would otherwise be "
+                        "17 MB of paths to files the package does not contain.")
     p.add_argument("--flat",     action="store_true",
                    help="Write every native into one natives/ directory instead of "
                         "natives/{custodian}/{year}/{month}/")
@@ -1764,7 +1922,7 @@ def main():
         p.error("--error-rate requires --with-errors")
 
     build(args.tier, tier_dir, out_dir, not args.no_oida, args.limit, args.seed, args.flat,
-          args.with_errors, args.error_rate)
+          args.with_errors, args.error_rate, no_natives=args.no_natives)
 
 if __name__ == "__main__":
     main()
