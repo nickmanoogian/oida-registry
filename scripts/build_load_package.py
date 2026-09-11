@@ -43,6 +43,8 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from tier_files import GROUND_TRUTH_FILES
+
 import error_natives
 
 try:
@@ -797,10 +799,6 @@ def load_plants(tier_dir):
                         "rows":  finding["payload_rows"],
                     }
     return plants
-
-
-GROUND_TRUTH_FILES = ("pi-ground-truth.csv", "language-mix.json", "findings.json",
-                      "entities.json")
 
 
 def copy_ground_truth(tier_dir, out_dir, present=None):

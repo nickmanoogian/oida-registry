@@ -31,6 +31,18 @@ existed to fix, reintroduced two days later by the rule that was supposed to clo
 
 **v1.15.0 republishes all three tiers at eight files each**, and the pointers move with it.
 
+### Added — `scripts/tier_files.py`, the file list declared once
+
+The list of files a tier consists of lived in three places and agreed in none of them,
+which is how a fourth file got added to the generator and updated exactly one. It is one
+stdlib-only module now, consumed by `write_dvc_pointers`, the load package builder and the
+tier config check.
+
+That also fixed the first cut of the guard below, which imported `build_load_package` just
+to read its file tuple and so needed python-docx, openpyxl, python-pptx and fpdf2. CI does
+not install those until a later step, so the guard failed in CI while passing locally.
+Verified the fix by running the guard with those four libraries blocked at import.
+
 ### Added — a guard for exactly this
 
 `scripts/check_tier_config.py` now asserts two things it could not see before:

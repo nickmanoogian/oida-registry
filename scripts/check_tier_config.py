@@ -19,11 +19,11 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import build_load_package as pkg
 import entity_population
 import generate_mock_metadata as gen
 import language_mix
 import pi_layer
+import tier_files
 import validate_mock_data as val
 import write_dvc_pointers as ptr
 
@@ -72,8 +72,7 @@ def main():
     #    hand a tier to anybody: no pointer, no make target, no release asset, and
     #    the load package did not copy it. A file that only exists in the committed
     #    small tier is a file nobody else gets, and nothing failed.
-    produced = {"documents.csv", "custodians.json", "email-families.json",
-                "batches.json"} | set(pkg.GROUND_TRUTH_FILES)
+    produced = set(tier_files.PRODUCED_FILES)
     for tier, names in ptr.TIER_FILES.items():
         # the pointer list gzips the big two above the medium tier
         declared = {n.removesuffix(".gz") for n in names}
