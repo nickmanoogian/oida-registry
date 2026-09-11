@@ -23,21 +23,10 @@ import argparse
 import os
 import sys
 
+from tier_files import TIER_FILES
+
 REPO = "https://github.com/nickmanoogian/oida-registry"
 
-# Local file name per tier. The big two are gzipped above the medium tier,
-# which is why the paths differ rather than the naming being inconsistent.
-TIER_FILES = {
-    "medium": ["documents.csv", "custodians.json", "email-families.json",
-               "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
-    "large":  ["documents.csv.gz", "custodians.json", "email-families.json.gz",
-               "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
-    "xlarge": ["documents.csv.gz", "custodians.json", "email-families.json.gz",
-               "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
-}
 
 TEMPLATE = """deps:
 - path: {url}

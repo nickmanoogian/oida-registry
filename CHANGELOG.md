@@ -6,6 +6,54 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Fixed — `entities.json` reached nobody, and the published tiers predated Rule 20
+
+Rule 20 produces `entities.json` and it was committed in the small tier, but it was wired
+into **none** of the four places that hand a tier to somebody else: no `.dvc` pointer, not
+pulled by any `make mock-*` target, no release asset, and not copied into a built load
+package. A file that exists only in the committed small tier is a file nobody else gets,
+and nothing failed.
+
+The visible symptom was one sentence in `docs/MOCK_DATA.md` reading "contains eight files
+… pull all seven". The half that looked like a typo was the true half.
+
+Worse, the tier data published on v1.14.0 predated Rule 20 entirely. Downloading the asset
+to check rather than reasoning from dates:
+
+```
+published v1.14.0 medium tier: 9,980 docs, 15 distinct addresses
+```
+
+Fifteen, where the current generator produces 60 external entities for medium and 120 for
+large and extra large. `make mock-medium` was handing back a tier with no entity
+population, no singleton tail and no alias, which is the same drift the v1.14.0 release
+existed to fix, reintroduced two days later by the rule that was supposed to close it.
+
+**v1.15.0 republishes all three tiers at eight files each**, and the pointers move with it.
+
+### Added — `scripts/tier_files.py`, the file list declared once
+
+The list of files a tier consists of lived in three places and agreed in none of them,
+which is how a fourth file got added to the generator and updated exactly one. It is one
+stdlib-only module now, consumed by `write_dvc_pointers`, the load package builder and the
+tier config check.
+
+That also fixed the first cut of the guard below, which imported `build_load_package` just
+to read its file tuple and so needed python-docx, openpyxl, python-pptx and fpdf2. CI does
+not install those until a later step, so the guard failed in CI while passing locally.
+Verified the fix by running the guard with those four libraries blocked at import.
+
+### Added — a guard for exactly this
+
+`scripts/check_tier_config.py` now asserts two things it could not see before:
+
+- every file the generator produces for a tier has a pointer declared in
+  `write_dvc_pointers.TIER_FILES`
+- every declared pointer is actually pulled by its `make mock-*` target
+
+Removing `entities.json` from the pointer list fails the gate with the file named, per
+tier, which is how the fix was verified rather than assumed.
+
 ### Added — `make setup`, and a gate that says what it needs
 
 `make check` could not run on a fresh clone. Ruff and mypy were not declared anywhere, so lint

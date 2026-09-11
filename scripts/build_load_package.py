@@ -43,6 +43,8 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from tier_files import GROUND_TRUTH_FILES
+
 import error_natives
 
 try:
@@ -799,9 +801,6 @@ def load_plants(tier_dir):
     return plants
 
 
-GROUND_TRUTH_FILES = ("pi-ground-truth.csv", "language-mix.json", "findings.json")
-
-
 def copy_ground_truth(tier_dir, out_dir, present=None):
     """Ship the ground truth beside the natives, the way EXPECTED_ERRORS.csv is.
 
@@ -848,6 +847,12 @@ def copy_ground_truth(tier_dir, out_dir, present=None):
             ]
             with open(dest, "w") as f:
                 json.dump(payload, f, indent=2)
+        elif name == "entities.json":
+            # The entity counts are a census of the whole tier, and a slice cannot
+            # be recounted from `present` alone: the sampled document_ids are
+            # truncated. A filtered copy would understate every entity, so a
+            # limited package ships without it rather than with a wrong one.
+            continue
         else:
             shutil.copyfile(src, dest)
         copied.append(name)
