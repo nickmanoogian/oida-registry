@@ -36,7 +36,7 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
 | **`documents.csv`** | 1.4 MB | 9 MB | 130 MB | 260 MB |
-| **Where it lives** | in git | v1.15.0 release, via DVC | v1.15.0 release, via DVC | v1.15.0 release, via DVC |
+| **Where it lives** | in git | v1.16.0 release, via DVC | v1.16.0 release, via DVC | v1.16.0 release, via DVC |
 
 ---
 
