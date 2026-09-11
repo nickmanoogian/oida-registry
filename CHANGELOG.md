@@ -6,6 +6,26 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — `make setup`, and a gate that says what it needs
+
+`make check` could not run on a fresh clone. Ruff and mypy were not declared anywhere, so lint
+died on `/bin/sh: .venv/bin/ruff: No such file or directory`, and the error scenario matrix needs
+`fpdf2`, so it failed 35 of 306 combinations on `ModuleNotFoundError` once you got past lint.
+Neither message says what to do, and neither is a real failure of the branch.
+
+`make setup` creates `.venv` and installs the new `requirements-dev.txt`, which is
+`requirements.txt` plus ruff and mypy. About two minutes, most of it `dvc[s3]`, once per clone.
+
+`scripts/check_deps.py` now runs first in the gate and names anything missing in milliseconds,
+pointing at `make setup`. It checks only what the gate needs: ruff, mypy and `fpdf`. `duckdb` and
+the other native file generators belong to `export-insys` and `load-*`, so a clone that cannot
+build a load package can still pass `check`.
+
+Also fixed the mismatch underneath it. The gate resolved ruff and mypy against `.venv` but ran
+every script through a bare `python3`, so it could lint with one interpreter and generate with
+another, and `make setup` would have installed into a `.venv` the gate then ignored. All of it now
+goes through one `$(PY)`, which prefers `.venv` when it exists.
+
 ### Added — an entity population for Key Relationships (Rule 20)
 
 Rule 14 fixed the custodian side: ten custodians give 45 internal pairs, past the top-25

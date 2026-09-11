@@ -3,7 +3,7 @@ OUT       := ./data
 MOCK_OUT  := ./mock-data
 ECI_OUT   := /tmp/oida-large
 
-.PHONY: help check lint typecheck imports tiers list get-small get-all manifest verify \
+.PHONY: help setup deps check lint typecheck imports tiers list get-small get-all manifest verify \
         mock-small mock-medium mock-large mock-xlarge mock-validate \
         mock-regen-small mock-regen-medium mock-regen-large mock-regen-xlarge mock-small-edge \
         load-small load-small-synthetic load-small-errors load-broken load-medium load-large load-xlarge load-validate \
@@ -12,8 +12,12 @@ ECI_OUT   := /tmp/oida-large
 
 help:
 	@echo ""
+	@echo "  ── Setup ─────────────────────────────────────────────────────"
+	@echo "  make setup           Create .venv and install requirements-dev.txt"
+	@echo ""
 	@echo "  ── Quality gate ──────────────────────────────────────────────"
 	@echo "  make check           Everything a branch must pass before a PR"
+	@echo "  make deps            Check the gate's own dependencies are installed"
 	@echo "  make lint            Ruff only"
 	@echo "  make typecheck       Mypy only"
 	@echo "  make imports         Import cycle check only"
@@ -63,8 +67,23 @@ help:
 # `npm run check:circular-deps` (lint + typecheck + cycles + tests in one). Ordered
 # cheapest first so a typo fails in seconds rather than after a two minute build.
 
-RUFF := $(shell command -v ruff 2>/dev/null || echo .venv/bin/ruff)
-MYPY := $(shell command -v mypy 2>/dev/null || echo .venv/bin/mypy)
+# The gate used to resolve ruff and mypy against .venv but run everything else
+# through a bare `python3`, so it could lint with one interpreter and generate with
+# another. `make setup` populates .venv, so .venv wins when it exists and the whole
+# gate agrees on which Python it is testing.
+VENV := .venv
+PY   := $(if $(wildcard $(VENV)/bin/python3),$(VENV)/bin/python3,python3)
+RUFF := $(if $(wildcard $(VENV)/bin/ruff),$(VENV)/bin/ruff,$(shell command -v ruff 2>/dev/null || echo ruff))
+MYPY := $(if $(wildcard $(VENV)/bin/mypy),$(VENV)/bin/mypy,$(shell command -v mypy 2>/dev/null || echo mypy))
+
+setup:
+	@python3 -m venv $(VENV)
+	@$(VENV)/bin/python3 -m pip install --quiet --upgrade pip
+	@$(VENV)/bin/python3 -m pip install --quiet -r requirements-dev.txt
+	@echo "  $(VENV) ready — run 'make check'"
+
+deps:
+	@$(PY) scripts/check_deps.py
 
 lint:
 	@$(RUFF) check . || (echo "  lint failed — run '$(RUFF) check . --fix'" && exit 1)
@@ -73,21 +92,21 @@ typecheck:
 	@$(MYPY) scripts/ --ignore-missing-imports
 
 imports:
-	@python3 scripts/check_imports.py
+	@$(PY) scripts/check_imports.py
 
 tiers:
-	@python3 scripts/check_tier_config.py
+	@$(PY) scripts/check_tier_config.py
 
-check: lint typecheck imports tiers
+check: deps lint typecheck imports tiers
 	@echo "\n── Rules ──"
-	@python3 scripts/validate_mock_data.py --tier small
+	@$(PY) scripts/validate_mock_data.py --tier small
 	@echo "\n── Edge case tier ──"
-	@python3 scripts/generate_mock_metadata.py --tier small --edge-cases --out /tmp/oida-gate-edge >/dev/null
-	@python3 scripts/validate_mock_data.py --tier small --dir /tmp/oida-gate-edge
+	@$(PY) scripts/generate_mock_metadata.py --tier small --edge-cases --out /tmp/oida-gate-edge >/dev/null
+	@$(PY) scripts/validate_mock_data.py --tier small --dir /tmp/oida-gate-edge
 	@echo "\n── Error scenarios ──"
-	@python3 scripts/test_error_scenarios.py
+	@$(PY) scripts/test_error_scenarios.py
 	@echo "\n── Determinism ──"
-	@python3 scripts/generate_mock_metadata.py --tier small >/dev/null
+	@$(PY) scripts/generate_mock_metadata.py --tier small >/dev/null
 	@git diff --quiet mock-data/small/ || (echo "  FAIL regenerating the small tier changed it — commit the regenerated files" && exit 1)
 	@echo "  small tier regenerates byte-identical"
 	@echo "\n  All gate checks passed. Safe to raise a PR.\n"
