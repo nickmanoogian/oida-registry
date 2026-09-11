@@ -1375,6 +1375,35 @@ STEP B3 — Field mapping
   IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
   overwrite mode to Append. An Overlay against an empty workspace fails.
 
+  RELATIVITY'S OWN RECOMMENDATIONS FOR A JOB THIS SIZE
+  ----------------------------------------------------
+  From help.relativity.com, General Recommendations for Structured Import and
+  Export Jobs, and the Import/Export load file specifications:
+
+  * RUN "PRE-CHECK LOAD FILE" FIRST. It validates date formats, field type
+    alignment, text length against field maximums, column count consistency,
+    folder and choice quantities, and the native and extracted text paths
+    (sampling 1,000 rows). On a load file this size that minute is cheap.
+
+  * IMPORT EXTRACTED TEXT AS A SEPARATE JOB when the workspace is SQL backed.
+    Relativity recommends importing extracted text separately from other data.
+    Job 1: Append, the metadata, ExtractedTextFilePath unmapped. Job 2: Overlay
+    keyed on Control Number, mapping only Control Number and
+    ExtractedTextFilePath to Extracted Text. A failure in the text pass then
+    costs you nothing already loaded.
+
+  * IF EXTRACTED TEXT IS DATA GRID ENABLED, use it. Relativity reports Data Grid
+    text imports 60 to 80% faster than SQL, with no size limit.
+
+  * FIELD AND CHOICE LIMITS. Relativity advises at most 100 fields and 100 new
+    choice values per import job. This package is inside both: {field_count}
+    columns, and the largest choice field is Batch Name at 97 distinct values on
+    the extra large tier. If you scale the tier further, watch that one.
+
+  * ENCODING. The load file and the text sidecars are UTF-8, which the spec
+    accepts. Relativity notes UTF-16 imports faster for extracted text; we write
+    UTF-8 because it is half the size on disk and the spec's default.
+
 STEP B4 — Set the native file path base
   When prompted for the native file path, set the base path to the location of
   this package on the file server. NativeFilePath holds package-relative paths
@@ -1705,6 +1734,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
                             .replace("{delimiters}", DELIMITER_NOTE)
+                            .replace("{field_count}", str(len(DAT_COLUMNS)))
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
                 + expected_errors_readme_block(error_rows)
                 + ground_truth_readme_block(out_dir, ground_truth)
