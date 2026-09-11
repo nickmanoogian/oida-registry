@@ -1012,12 +1012,12 @@ DAT_COLUMNS = [
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
     "Control Number","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
-    "Custodian Org","File Name","File Type","File Size","Date","From","From (SMTP)",
-    "To","To (SMTP)","CC","Subject","Date Sent","Date Received","Message ID",
-    "Has Attachments","Attachment Count","Email Thread ID","Email Threading Inclusive",
+    "Custodian Org","File Name","File Type","File Size","Primary Date","Email From","Email From (SMTP Address)",
+    "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
+    "Email Has Attachments","Number of Attachments","Email Threading ID","Email Threading Inclusive",
     "Conversation Topic","Author","Title","Company","Page Count",
-    "Date Created","Date Last Modified","Data Source",
-    "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issue Tags",
+    "Created Date/Time","Last Modified Date/Time","Data Source",
+    "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
@@ -1040,7 +1040,7 @@ def dat_row(values):
 # choice option": splitting on ASCII 59 yields " Prior Auth Fraud" with a leading
 # space as a choice distinct from "Prior Auth Fraud". So the space is stripped on
 # the way into the .dat only, leaving documents.csv readable.
-MULTI_VALUE_COLUMNS = ("Issue Tags", "Rsmf Participants")
+MULTI_VALUE_COLUMNS = ("Issues", "Rsmf Participants")
 MULTI_VALUE_SEP = ";"
 
 
@@ -1055,34 +1055,37 @@ _COLUMN_MAP = {
     "File Name":                 ("File Name",               None),
     "File Type":                 ("File Extension",          None),
     "File Size":                 ("File Size (bytes)",       None),
-    "Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
-    "From":                      ("Email From",              None),
-    "From (SMTP)":               ("Email From SMTP",         None),
-    "To":                        ("Email To",                None),
-    "To (SMTP)":                 ("Email To SMTP",           None),
-    "CC":                        ("Email CC",                None),
-    "Subject":                   ("Email Subject",           lambda d: d.get("Email Subject","") or d.get("Title","")),
-    "Date Sent":                 ("Date Sent",               lambda d: d.get("Date Sent","")[:10] if d.get("Date Sent") else ""),
-    "Date Received":             ("Date Received",           lambda d: d.get("Date Received","")[:10] if d.get("Date Received") else ""),
+    "Primary Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
+    "Email From":                      ("Email From",              None),
+    "Email From (SMTP Address)":               ("Email From SMTP",         None),
+    "Email To":                        ("Email To",                None),
+    "Email To (SMTP Address)":                 ("Email To SMTP",           None),
+    "Email CC":                        ("Email CC",                None),
+    # Email-only now that the column is named after Relativity's own "Email
+    # Subject" field. The document title it used to fall back to is already its
+    # own "Title" column, so the fallback only mislabelled EDocs.
+    "Email Subject":                   ("Email Subject",           None),
+    "Sent Date/Time":                 ("Date Sent",               lambda d: d.get("Date Sent","")[:10] if d.get("Date Sent") else ""),
+    "Email Received Date/Time":             ("Date Received",           lambda d: d.get("Date Received","")[:10] if d.get("Date Received") else ""),
     "Message ID":                ("Message ID",              None),
-    "Has Attachments":           ("Has Attachments",         None),
-    "Attachment Count":          ("Attachment Count",        None),
-    "Email Thread ID":           ("Email Thread ID",         None),
+    "Email Has Attachments":           ("Has Attachments",         None),
+    "Number of Attachments":          ("Attachment Count",        None),
+    "Email Threading ID":        ("Email Thread ID",         None),
     "Email Threading Inclusive": ("Email Threading Inclusive",None),
     "Conversation Topic":        ("Conversation Topic",      None),
     "Author":                    ("Author",                  None),
     "Title":                     ("Title",                   None),
     "Company":                   ("Company",                 None),
     "Page Count":                ("Page Count",              None),
-    "Date Created":              ("Date Created",            lambda d: d.get("Date Created","")[:10]),
-    "Date Last Modified":        ("Date Last Modified",      lambda d: d.get("Date Last Modified","")[:10]),
+    "Created Date/Time":              ("Date Created",            lambda d: d.get("Date Created","")[:10]),
+    "Last Modified Date/Time":        ("Date Last Modified",      lambda d: d.get("Date Last Modified","")[:10]),
     "Data Source":               ("Data Source",             None),
     "Workflow Stage":            ("Workflow Stage",          None),
     "Responsive":                ("Responsiveness",          None),
     "Privileged":                ("Privilege",               None),
     "Privilege Reason":          ("Privilege Reason",        None),
     "Hot Doc":                   ("Hot Doc",                 None),
-    "Issue Tags":                ("Issue Tags",              None),
+    "Issues":                ("Issue Tags",              None),
     "BegBates":                  ("Bates Begin",             None),
     "EndBates":                  ("Bates End",               None),
     "Production Set":            ("Production Set",          None),
@@ -1238,18 +1241,49 @@ STEP B3 — Field mapping
   screen shows a single column instead of 59:
     {delimiters}
 
-  Map these .dat columns to Relativity fields:
-    Control Number       → Control Number  (the identifier; auto-maps by name)
-    Custodian            → Custodian
-    Custodian Org        → Custodian Org (custom text field)
-    Responsive           → Responsiveness (single choice)
-    Privileged           → Privilege (single choice)
-    Hot Doc              → Hot Doc (yes/no)
-    Issue Tags           → Issue Tags (multi-choice or long text)
-    Narrative Phase      → Narrative Phase (number)
-    Narrative Phase Name → Narrative Phase Name (text)
-    TAR Score            → TAR Score (decimal)
-    NativeFilePath       → (mapped to native file upload)
+  MOST COLUMNS AUTO-MAP, because they are named after Relativity's own document
+  fields: Control Number, Custodian, File Name, File Type, File Size, Email From,
+  Email From (SMTP Address), Email To, Email To (SMTP Address), Email CC,
+  Email Subject, Sent Date/Time, Email Received Date/Time, Created Date/Time,
+  Last Modified Date/Time, Email Has Attachments, Number of Attachments,
+  Message ID, Author, Title, Company, Issues, Record Type, Responsive.
+
+  DO NOT USE "Map with AI" ON THIS FILE. Checked against a real workspace, it
+  mapped "Primary Date" to "Meeting End Date" and "Rsmf Message Count" to
+  "Email Recipient Count", and pointed several text columns at Multiple Object
+  fields that expect object references. Wrong mappings import silently and then
+  a date breakdown is quietly built on meeting end dates. Auto-map by name, then
+  map the rest by hand.
+
+  Create these as custom fields, they are ours rather than Relativity's:
+    Custodian Email      → Fixed-Length Text(50)
+    Custodian Org        → Single Choice
+    Data Source          → Single Choice          (Rule 21)
+    Workflow Stage       → Single Choice
+    Privileged           → Single Choice
+    Privilege Reason     → Single Choice
+    Hot Doc              → Yes/No
+    Narrative Phase      → Whole Number
+    Narrative Phase Name → Single Choice
+    TAR Score            → Decimal
+    AL Predicted Relevant→ Yes/No
+    Batch Name/Status    → Fixed-Length Text(50) / Single Choice
+    Reviewer             → Single Choice
+    Dedup Method         → Single Choice
+    OCR Flag             → Yes/No
+    Redacted             → Yes/No
+    Primary Date         → Date
+    Page Count           → Whole Number
+    Processing Status    → Single Choice
+    Processing Error Type→ Single Choice
+    Rsmf Application     → Single Choice
+    Rsmf Participants    → Multiple Choice
+    Rsmf Message Count   → Whole Number
+    EndDoc#, BegAttach, EndAttach, BegBates, EndBates, Production Set
+                         → Fixed-Length Text(50)
+
+  IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
+  overwrite mode to Append. An Overlay against an empty workspace fails.
 
 STEP B4 — Set the native file path base
   When prompted for the native file path, set the base path to the location of

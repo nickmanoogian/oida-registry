@@ -363,7 +363,7 @@ def main():
     # second choice that looks identical in a list. Caught only by reading
     # Relativity's load file spec: nothing in this repo could tell, because the
     # writer and the reader here were both ours.
-    MULTI = ("Issue Tags", "Rsmf Participants")
+    MULTI = ("Issues", "Rsmf Participants")
     spaced, split_ok = [], 0
     for col in MULTI:
         if col not in header:
@@ -391,9 +391,9 @@ def main():
     # ── Rule 19: no native carries a library's date or a library's name ───
     print("\n  Date layer (Rule 19)\n")
 
-    i_date     = header.index("Date")
-    i_created  = header.index("Date Created")      if "Date Created"       in header else None
-    i_modified = header.index("Date Last Modified") if "Date Last Modified" in header else None
+    i_date     = header.index("Primary Date")
+    i_created  = header.index("Created Date/Time")       if "Created Date/Time"       in header else None
+    i_modified = header.index("Last Modified Date/Time") if "Last Modified Date/Time" in header else None
     has_both = i_created is not None and i_modified is not None
     check("load file carries Date Created and Date Last Modified", has_both,
           "both present" if has_both
@@ -410,7 +410,8 @@ def main():
     # document last modified after the last email is normal in a real
     # collection; a document stamped by a library is not.
     date_cols = [header.index(c) for c in
-                 ("Date","Date Created","Date Last Modified","Date Sent","Date Received")
+                 ("Primary Date","Created Date/Time","Last Modified Date/Time",
+                  "Sent Date/Time","Email Received Date/Time")
                  if c in header]
     dated = [r[i][:10] for r in rows if r[i_ctrl] not in sentinels
              for i in date_cols
