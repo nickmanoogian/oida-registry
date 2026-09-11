@@ -580,8 +580,9 @@ Requirements:
   attachments took 595 of 617 and left 22 standalone EDocs, which is not a collection anyone has
   ever seen.
 
-In the small tier this yields 304 attachments across 129 emails (16% of email), alongside 313
-documents that stay loose, with the tier size unchanged at 1,439.
+In the small tier this yields 306 attachments across 131 emails (16% of email), alongside 311
+documents that stay loose, with the tier size unchanged at 1,439. Two of those attachments are
+Rule 18's, re-parented to carry the encrypted payload on the planted finding and its decoy.
 
 ---
 

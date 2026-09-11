@@ -101,6 +101,13 @@ matter, deterministic per random seed (default `42`).
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR | scale past a quarter of a million documents |
 
+Every document also carries a **`Record Type`** (`Email` / `EDoc` / `Container` / `Attachment`,
+Rule 14) and **attachments are re-parented real documents, not invented rows** (Rule 15): the
+small tier has 306 attachments across 131 emails. **Edge cases** (Rule 13, off by default,
+`--edge-cases`) starve twelve scenarios — no custodian, no date, sentinel dates, no text,
+non-English, broken families, orphan attachments, duplicate MD5, and more — so a feature that
+aggregates over a collection is tested against incomplete input, not just complete rows.
+
 Each tier contains eight files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all eight:
 
 | File | Description |
@@ -198,9 +205,10 @@ in-browser.
 
 ## 4. Key custodians
 
-The mock custodian roster grows with the tier. The **small** tier is four
-Mallinckrodt custodians; **medium** adds Insys and McKinsey; **large** fills out
-40 custodians across all four orgs. The people who carry the narrative:
+The mock custodian roster grows with the tier. The **small** tier has 10 custodians
+(8 Mallinckrodt, 1 Insys, 1 McKinsey) with document counts weighted by `doc_target`
+rather than flat — 323 documents down to 38; **large** fills out 40 custodians
+across all four orgs, including outside counsel. The people who carry the narrative:
 
 | Name | Org | Role | Role in the story |
 |------|-----|------|-------------------|
@@ -218,11 +226,14 @@ Mallinckrodt custodians; **medium** adds Insys and McKinsey; **large** fills out
 | Richard Galveston | Outside Counsel | Senior Litigation Partner | DEA response, AG subpoena, MDL settlement (large tier) |
 
 **Hold status varies by design** (a key realism rule): most custodians have
-Acknowledged, at least one is Outstanding (e.g. Lisa Torres in small; Tevelow in
-medium/large), and the large tier includes an Escalated hold and several never
-acknowledged. In the small tier the four custodians are Michael Brennan (VP Sales
-& Marketing, key), Sarah Chen (Regional Sales Director), Thomas Bradley (CCO), and
-Lisa Torres (Executive Assistant, hold Outstanding).
+Acknowledged, at least one is Outstanding (Lisa Torres and Bradley Tevelow, both
+in the small tier), and the large tier includes an Escalated hold and several
+never acknowledged. The full small-tier roster is Michael Brennan (VP Sales &
+Marketing, key, 323 docs), Sarah Chen (Regional Sales Director, 243), Thomas
+Bradley (CCO, 223), Gregory Nash (Director, SOM Compliance, 133), Robert Ashton
+(VP Sales, 128), Patricia Morrison (VP Marketing, 117), James Whitfield (CEO,
+94), Lisa Torres (Executive Assistant, 76, hold Outstanding), Dr. Alec Harrington
+(Insys VP Sales, 64), and Bradley Tevelow (McKinsey, 38, hold Outstanding).
 
 ---
 
@@ -281,17 +292,30 @@ made deterministic in v1.6.0), and CI (`validate.yml`) regenerates the small tie
 on every PR and fails if the output differs from the committed files.
 
 **Native-file load package** (actual `.eml`/`.docx`/`.xlsx`/`.pptx`/`.pdf`/`.rsmf`
-files plus a Relativity Concordance `.dat` load file, ready for workspace import):
+files plus a Relativity Concordance `.dat` load file, ready for workspace import).
+Three variants ship, each testing a different failure surface:
+
+| Package | Contents | Build |
+|---|---|---|
+| `small.zip` | Clean — everything imports and processes | `make load-small` |
+| `small-errors.zip` | Fabricated processing failures **and** the twelve Rule 13 edge-case starves, plus `edge-cases.json` mapping every one | `make load-small-errors` |
+| `load-broken` (local only, not published) | Seven variants that fail at **import**, not processing: missing native, duplicate control number, bad date, unqualified delimiter, bad encoding, short row, blank required field | `make load-broken` |
 
 ```bash
 pip install python-docx openpyxl python-pptx fpdf2
 make load-small                # real OIDA OCR content
 make load-small-synthetic      # synthetic content only, no network
+make load-release              # builds + validates + zips the release assets
 # pre-built package: dvc get https://github.com/nickmanoogian/oida-registry load-packages/small.zip
 ```
 
 The scripted HOT- documents get hand-crafted MDL 2804 content; all other documents
-use real OIDA OCR text pulled from S3 (or synthetic with `--no-oida`).
+use real OIDA OCR text pulled from S3 (or synthetic with `--no-oida`). Every native
+is stamped with the row's own `Date Created` / `Date Last Modified` (Rule 19), not
+a library default, and encrypted artefacts use password `oida` (renamed from
+`oioda` at the v1.9.1 → v1.10.0 boundary; each package documents its own password
+in `IMPORT_README.txt`). `make check` (lint → typecheck → import cycles →
+validators → scenario matrix → determinism) is the gate to run before a PR.
 
 **ECI real-data export:** see §3.3 (`make export-insys`).
 
@@ -311,7 +335,7 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `README.md` | Top-level usage for engineers and non-engineers |
 | `docs/MOCK_DATA.md` | **This file** — canonical mock/real data reference |
 | `mock-data/README.md` | Mock-tier usage and key fields |
-| `mock-data/RULES.md` | The 10 rules that define a realistic Relativity dataset |
+| `mock-data/RULES.md` | The 19 rules that define a realistic Relativity dataset |
 | `mock-data/DEMO_GUIDE.md` | Narrative walkthrough for demos |
 | `mock-data/{small,medium,large}/` | The three synthetic tiers (small in git; others via DVC) |
 | `data-products/` | Real OIDA structured datasets (`.dvc` pointers) + `SCHEMA.md` |
@@ -319,10 +343,14 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `load-packages/` | Pre-built Relativity load package (`small.zip`) |
 | `scripts/` | Generator, validator, exporter, downloader, manifest and URL tools |
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
-| `CHANGELOG.md` | Version history (current: v1.6.0) |
+| `CHANGELOG.md` | Version history (current: v1.14.0) |
 
-Current release: **v1.6.0** (2026-06-26). See [`../CHANGELOG.md`](../CHANGELOG.md)
-for the full history.
+Current release: **v1.14.0** (2026-09-09). Since v1.6.0, every tier gained
+attachments and `Record Type` (Rule 15/14), PI/language/planted-findings ground
+truth (Rules 16–18), a stamped native date layer (Rule 19), edge cases that starve
+a feature on purpose (Rule 13), an extra large (275,273-doc) tier, and
+import-failure load-file variants (`make load-broken`) — see
+[`../CHANGELOG.md`](../CHANGELOG.md) for the full history.
 
 ---
 
