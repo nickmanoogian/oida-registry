@@ -1394,6 +1394,32 @@ STEP B3 — Field mapping
   IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
   overwrite mode to Append. An Overlay against an empty workspace fails.
 
+  HOW IMPORT/EXPORT WANTS THIS PACKAGE HANDED TO IT
+  -------------------------------------------------
+  The load file and the files it points at are uploaded SEPARATELY, and the
+  files must be in their own zip:
+
+    1. load-file.dat            -> the "Load File" picker, on its own
+    2. a zip of text/ and       -> tick "Include Native & Text", then the
+       natives/                    "Native & Text" picker
+
+  The guide: "To import any text or native file when not using Express
+  Transfer, you need to zip the files and upload the zip file... You must
+  ensure that file paths in the related load file match the zip file's
+  structure."
+
+  That last sentence is the trap. This load file says text\{ctrl}.txt, so the
+  zip you upload must have text/ AT ITS ROOT. Zip the enclosing folder instead
+  and every path is wrong by one level, with no useful error.
+
+  From inside this package directory:
+
+      zip -r native-and-text.zip text natives     # or just text, if no natives
+
+  Express Transfer is the alternative and takes the files unzipped, but
+  Relativity says not to zip data when Express Transfer is active and to avoid
+  it for ZIP data under 20 GB, which is this package.
+
   THE SETTING THAT SILENTLY BREAKS THE TEXT LAYER
   -----------------------------------------------
   Mapping ExtractedTextFilePath to Extracted Text is NOT enough. In the field
@@ -1406,8 +1432,27 @@ STEP B3 — Field mapping
   which is Document Categories and PI Detect both, reads a filename. Nothing
   errors, nothing warns, and the numbers look plausible.
 
+  Setting "Text File" also asks for a File Encoding for those files. These
+  sidecars are UTF-8. Pick UTF-8; a wrong encoding here mangles the text without
+  failing the import.
+
   The same applies to NativeFilePath: set "Native File" on it, if you are
   importing natives at all.
+
+  If you run the text as its own overlay job, the Overlay Identifier has to be a
+  Fixed-Length Text field whose category is Generic or Identifier. Control
+  Number qualifies; most of the other columns do not.
+
+  THREE SMALLER RULES FROM THE GUIDE
+  ----------------------------------
+  * "Only fields matched or those with additional settings selected are loaded
+    into the workspace. Other fields... are ignored." So leaving 27 columns
+    unmapped costs nothing: they are simply not read.
+  * "You must always match the identifier field for the load file." Field 1 is
+    Control Number and auto-maps by name, so this is one less thing to get
+    wrong than it used to be.
+  * You need View and Add or Edit permissions on every field you map. A mapping
+    that fails for permissions fails the job, not the field.
 
   OVERLAY REMOVES WHAT THE LOAD FILE LEAVES BLANK
   -----------------------------------------------
