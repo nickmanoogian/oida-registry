@@ -793,6 +793,47 @@ def run(tier_name, tier_dir, verbose):
                      not bad_alias, f"{len(bad_alias)}: {bad_alias[:2]}", verbose):
             failures += 1
 
+    # ── Rule 21 — the data source dimension ───────────────────────────────
+    src_path = os.path.join(tier_dir, "data-sources.json")
+    if not os.path.exists(src_path):
+        print(f"\nRule 21 — data sources\n  {WARN}  no data-sources.json "
+              f"(built with --no-sources: custodian is the only axis)")
+    else:
+        print("\nRule 21 — data sources")
+        manifest = json.load(open(src_path, encoding="utf-8"))["sources"]
+        seen = Counter(d.get("Data Source", "") for d in docs)
+
+        blank = [d["Control Number"] for d in docs if not d.get("Data Source", "").strip()]
+        if not check("every document has a data source", not blank,
+                     f"{len(blank)} blank: {blank[:3]}", verbose): failures += 1
+
+        if not check("more than one source, or there is no axis to group by",
+                     len(seen) >= 4, f"{len(seen)} sources", verbose): failures += 1
+
+        wrong = [f"{k}: manifest {v['documents']}, corpus {seen.get(k, 0)}"
+                 for k, v in manifest.items() if v["documents"] != seen.get(k, 0)]
+        if not check("every source's document count matches the corpus", not wrong,
+                     f"{len(wrong)} disagree: {wrong[:2]}", verbose): failures += 1
+
+        # The point of the rule is that the profiles differ. If every source measures
+        # the same, the axis is decoration.
+        profiles = {k: frozenset(v["measured_share_of_its_documents"]) for k, v in manifest.items()}
+        distinct = len(set(profiles.values()))
+        if not check("the sources have genuinely different metadata profiles",
+                     distinct >= 4, f"{distinct} distinct profiles across "
+                     f"{len(profiles)} sources", verbose): failures += 1
+
+        # Rule 11's contract, extended: the path has to name the source.
+        import data_sources
+        bad_path = []
+        for d in docs:
+            slug = data_sources.SLUG.get(d.get("Data Source", ""), "")
+            if slug and slug not in (d.get("Processing Folder Path", "") or ""):
+                bad_path.append(d["Control Number"])
+        if not check("Processing Folder Path names the document's data source",
+                     not bad_path, f"{len(bad_path)} do not: {bad_path[:3]}", verbose):
+            failures += 1
+
     # ── Summary ───────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     if failures == 0:

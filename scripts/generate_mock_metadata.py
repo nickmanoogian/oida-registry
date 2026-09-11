@@ -1004,7 +1004,12 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
         "Custodian Org":           org,
         "Narrative Phase":         phase,
         "Narrative Phase Name":    NARRATIVE_PHASES[phase]["name"],
+        # Rule 21: the source is the first segment, because Relativity assigns
+        # custodians per data source and Rule 11 makes this path a contract with
+        # the tree on disk. data_sources.apply fills Data Source first, then this
+        # path is rewritten to match.
         "Processing Folder Path":  f"\\\\Collection\\{custodian['name'].replace(' ','_')}\\{date.year}\\{date.strftime('%m')}",
+        "Data Source":            "",
         "Virtual Path":            f"{org}\\{custodian['name'].replace(' ','_')}\\{ft_name}\\{ctrl}.{ext}",
         "Container ID":            "",
         "Container Name":          "",
@@ -1110,7 +1115,7 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
 def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
              language_on=True, findings_on=True, entities_on=True,
-             ssn_range="9xx", second_language_share=None):
+             sources_on=True, ssn_range="9xx", second_language_share=None):
     random.seed(seed)
     # xlarge borrows large's narrative: same roster, same scripted content, same
     # phase weighting. Only the volumes and the production shape are its own.
@@ -1476,6 +1481,21 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     # story, the file type shares and the review coding are all untouched. These
     # are on by default, unlike the edge cases below: a pass that *feeds* a widget
     # belongs in the tier, and a pass that *starves* one has to be asked for.
+    # Rule 21 runs before the others: Processing Folder Path depends on the source,
+    # and Rule 11 makes that path a contract with the package on disk.
+    source_report = None
+    if sources_on:
+        import data_sources
+        source_report = data_sources.apply(all_docs, seed)
+        for d in all_docs:
+            slug = data_sources.SLUG.get(d["Data Source"], d["Data Source"])
+            cust = (d.get("Custodian") or "_Unassigned").replace(" ", "_")
+            date_part = (d.get("Primary Date") or "")[:7].replace("-", "\\")
+            d["Processing Folder Path"] = f"\\\\Collection\\{slug}\\{cust}\\{date_part}"
+        print(f"  Rule 21: {len(source_report['sources'])} data sources — "
+              + ", ".join(f"{k} {v['documents']:,}"
+                          for k, v in list(source_report["sources"].items())[:4]) + ", ...")
+
     language_report = None
     if language_on:
         import language_mix
@@ -1579,6 +1599,9 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         }))
     if entity_report is not None:
         outputs.append(("entities.json", entity_report))
+    if source_report is not None:
+        import data_sources
+        outputs.append(("data-sources.json", data_sources.manifest(all_docs)))
     if findings is not None:
         import planted_findings
         outputs.append(("findings.json", {
@@ -1630,6 +1653,9 @@ def main():
                         "one bar.")
     p.add_argument("--no-findings", action="store_true",
                    help="Skip the planted findings and decoy (Rule 18).")
+    p.add_argument("--no-sources", action="store_true",
+                   help="Skip the data source dimension (Rule 21). Collection Coverage "
+                        "then has custodian as its only axis.")
     p.add_argument("--no-entities", action="store_true",
                    help="Skip the external entity population (Rule 20). Key "
                         "Relationships then has 15 addresses and no alias to resolve.")
@@ -1644,6 +1670,7 @@ def main():
              language_on=not args.no_language_mix,
              findings_on=not args.no_findings,
              entities_on=not args.no_entities,
+             sources_on=not args.no_sources,
              ssn_range=args.ssn_range,
              second_language_share=args.second_language_share)
 

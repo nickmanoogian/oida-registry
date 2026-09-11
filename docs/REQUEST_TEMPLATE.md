@@ -26,15 +26,15 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | Fixed calendar dates, deterministic output | seed 42 by default; two runs are byte-identical |
 | An entity population past the production cap of 25, with a real singleton tail | on by default, Rule 20, `entities.json`. 44 non-custodian entities in the small tier, 28 on one document |
 | One person using two addresses, to test name normalisation | on by default, Rule 20. 2 aliased people in the small tier, up to 5 in the big ones |
+| A `Data Source` dimension, with different metadata profiles per source | on by default, Rule 21, `data-sources.json`. 8 sources in the small tier, 10 above it |
+| Per-source folders with custodian folders inside them | Rule 11 as of Rule 21: `natives/{source}/{custodian}/{year}/{month}` |
+| A communicator pair with deliberately zero topical overlap | on by default, Rule 18's `no_overlap_pair`, 18 documents on one irrelevant subject |
 | A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. `make mock-xlarge` pulls it |
 
 ## What does not exist yet
 
 | What you would ask for | Status |
 |---|---|
-| A `Data Source` dimension: Exchange vs OneDrive vs a mobile extraction, with different metadata profiles per source | Not modelled. The data source axis is custodian (Rule 11). |
-| Per-source folders with custodian folders inside them | Not modelled. The tree is `natives/{custodian}/{year}/{month}`. |
-| A communicator pair with deliberately zero topical overlap | Not modelled. |
 | A deliberate collection gap or spike in the date distribution | Not modelled. Dates have a real shape but no planted anomaly. |
 | A population straddling two obvious document categories | Not modelled. |
 | Custodian Entity load files for Import/Export | Not produced. `custodian-sources.csv` is a setup sheet, not an Entity object load file. |

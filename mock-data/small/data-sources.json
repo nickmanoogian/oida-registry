@@ -1,0 +1,139 @@
+{
+  "note": "The collection channel each document came through. The metadata profiles already varied by file type; this names the source that produced them, so the difference is something you can group by.",
+  "sources": {
+    "Exchange Online": {
+      "collects": "Mailbox collection: mail and calendar",
+      "profile": "email metadata populated, no EXIF, no Drive fields",
+      "folder": "Exchange_Online",
+      "documents": 821,
+      "custodians": 10,
+      "file_types": [
+        "Calendar - ICS",
+        "Email - EML",
+        "Email - MSG"
+      ],
+      "measured_share_of_its_documents": {
+        "email metadata": 0.982
+      }
+    },
+    "OneDrive": {
+      "collects": "Personal cloud drive: loose Office documents and PDFs",
+      "profile": "Office properties populated, no email metadata",
+      "folder": "OneDrive",
+      "documents": 293,
+      "custodians": 10,
+      "file_types": [
+        "Office - Excel (XLS)",
+        "Office - Excel (XLSX)",
+        "Office - PowerPoint (PPT)",
+        "Office - PowerPoint (PPTX)",
+        "Office - Word (DOC)",
+        "Office - Word (DOCX)",
+        "PDF - MIP Protected",
+        "PDF - Text",
+        "Text / Markup",
+        "Unsupported"
+      ],
+      "measured_share_of_its_documents": {
+        "Office properties": 0.737
+      }
+    },
+    "Network Share": {
+      "collects": "File server: loose documents, archives and unsupported formats",
+      "profile": "Office properties populated, no email metadata, ZIP containers. Shares a profile with OneDrive on purpose: two sources whose metadata looks the same is a real case, and a widget still has to group them separately",
+      "folder": "Network_Share",
+      "documents": 222,
+      "custodians": 10,
+      "file_types": [
+        "Audio / Video",
+        "Container - ZIP",
+        "Office - Excel (XLS)",
+        "Office - Excel (XLSX)",
+        "Office - PowerPoint (PPT)",
+        "Office - PowerPoint (PPTX)",
+        "Office - Visio",
+        "Office - Word (DOC)",
+        "Office - Word (DOCX)",
+        "PDF - Text",
+        "Text / Markup",
+        "Unsupported"
+      ],
+      "measured_share_of_its_documents": {
+        "container": 0.036,
+        "Office properties": 0.644
+      }
+    },
+    "Mobile Extraction (UFDR)": {
+      "collects": "Cellebrite handset extraction: chat, photos, call logs",
+      "profile": "EXIF including GPS, camera make and model, RSMF, structured call logs",
+      "folder": "Mobile_Extraction_UFDR",
+      "documents": 38,
+      "custodians": 8,
+      "file_types": [
+        "Audio / Video",
+        "Image - HEIC",
+        "Image - JPEG"
+      ],
+      "measured_share_of_its_documents": {
+        "EXIF GPS": 0.105,
+        "camera model": 0.921,
+        "OCR required": 0.921
+      }
+    },
+    "Scanned Production": {
+      "collects": "Paper production, scanned and OCR'd",
+      "profile": "OCR required, shorter and messier extracted text, no email metadata",
+      "folder": "Scanned_Production",
+      "documents": 27,
+      "custodians": 10,
+      "file_types": [
+        "Image - PNG",
+        "Image - TIFF",
+        "PDF - Scanned"
+      ],
+      "measured_share_of_its_documents": {
+        "OCR required": 1.0
+      }
+    },
+    "Microsoft Teams": {
+      "collects": "Teams channel and chat export",
+      "profile": "RSMF fields, placeholders for unsupported events, no email metadata",
+      "folder": "Microsoft_Teams",
+      "documents": 20,
+      "custodians": 7,
+      "file_types": [
+        "Chat - Teams (RSMF)"
+      ],
+      "measured_share_of_its_documents": {
+        "RSMF fields": 1.0
+      }
+    },
+    "Slack Export": {
+      "collects": "Slack workspace export",
+      "profile": "RSMF fields keyed on the channel, no email metadata",
+      "folder": "Slack_Export",
+      "documents": 10,
+      "custodians": 6,
+      "file_types": [
+        "Chat - Slack (RSMF)"
+      ],
+      "measured_share_of_its_documents": {
+        "RSMF fields": 1.0
+      }
+    },
+    "Exchange (PST export)": {
+      "collects": "Archived mail handed over as container files",
+      "profile": "container parents with no natives, children carry unreliable dates",
+      "folder": "Exchange_PST_export",
+      "documents": 8,
+      "custodians": 5,
+      "file_types": [
+        "Email Container - MBOX",
+        "Email Container - PST"
+      ],
+      "measured_share_of_its_documents": {
+        "container": 1.0
+      }
+    }
+  }
+}

@@ -31,6 +31,7 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Aliased people** | 2 | 3 | 5 | 5 |
 | **PI instances** | 102 | 443 | 3,326 | 6,048 |
 | **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% | German 1.2%, Polish 0.8%, Spanish 0.4% |
+| **Data sources** | 8 | 10 | 10 | 10 |
 | **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
@@ -47,7 +48,7 @@ are building, so this is the table to read first. Measured on the **small** tier
 | Widget | What the tier gives it | Gaps |
 |---|---|---|
 | **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), **44 non-custodian entities** past the production cap of 25, **28 of them on a single document**, and **2 people sending from two addresses** for name normalisation (Rule 20). Plus Rule 18's principal, its decoy, and a **planted negative**: a pair corresponding at volume about one subject that touches no matter issue and appears nowhere else, so a correct "nothing here" can be told from a broken analysis | — |
-| **Collection Coverage** | 48 months of dates with a real shape (15 to 48 documents per month, not a flat line), 10 per-custodian data source folders, hold status variation, and every native stamped from the manifest (Rule 19) | The data source axis is *custodian*, not source type: there is no `Data Source` field distinguishing Exchange from OneDrive from a mobile extraction, so sources with genuinely different metadata profiles cannot be compared. No deliberate collection gap or spike. |
+| **Collection Coverage** | 48 months of dates with a real shape (15 to 48 documents per month, not a flat line), **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, hold status variation, and every native stamped from the manifest (Rule 19) | No deliberate collection gap or spike. |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6) | — |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, and one document dense with PI and irrelevant to the matter | No population deliberately straddling two obvious categories. |
 | **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against | — |
@@ -82,6 +83,7 @@ produces load files that fail at import.
 | `language-mix.json` | The second-language slice: requested share, achieved share, and why it is irrelevant to the matter (Rule 17). |
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
+| `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, its file types, and the metadata profile measured from the data (Rule 21). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
 

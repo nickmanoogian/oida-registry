@@ -6,6 +6,57 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — the data source dimension (Rule 21)
+
+Collection Coverage exists to compare data sources, and the tiers had no such axis. Custodian
+was the only grouping available, so "sources with genuinely different metadata profiles" was
+the longest-running gap in the widget coverage table.
+
+**The rule does not fabricate a difference.** The profiles already varied, by file type: email
+documents carry email metadata and no EXIF, mobile images carry EXIF and no email metadata,
+Google Workspace documents carry Drive fields and an extension that deliberately disagrees
+with their type. A real collection produces those differences *because* the documents came
+through different channels. This names the channel, so the difference is something you can
+group by rather than infer.
+
+Eight sources in the small tier, ten above it, with the profile **measured from the data**
+rather than described:
+
+| Source | Documents | Measured |
+|---|---|---|
+| Exchange Online | 821 | email metadata 98% |
+| OneDrive | 293 | Office properties 74% |
+| Network Share | 222 | Office properties 64%, containers 4% |
+| Mobile Extraction (UFDR) | 38 | camera model 92%, EXIF GPS 10%, OCR 92% |
+| Scanned Production | 27 | OCR 100% |
+| Microsoft Teams | 20 | RSMF 100% |
+| Slack Export | 10 | RSMF 100% |
+| Exchange (PST export) | 8 | containers 100% |
+
+OneDrive and Network Share share a profile **on purpose**: two sources whose metadata looks
+identical is a real case, and a widget still has to group them separately.
+
+### Changed — the package tree gains a source segment (Rule 11)
+
+`natives/{custodian}/{year}/{month}` becomes
+`natives/{source}/{custodian}/{year}/{month}`, and `custodian-sources.csv` is keyed on the
+**pair** rather than the person: 66 rows for the small tier, 8 sources across 10 custodians.
+
+That is not cosmetic. Relativity assigns a custodian **per data source**, so one row per
+person told you to build one data source each, which is wrong the moment somebody's documents
+arrive through four channels. `validate_load_package.py` now asserts both segments against
+the load file rather than just the custodian.
+
+`Data Source` is also a load file field, so Relativity has it rather than having to derive it
+from a path. The `.dat` goes from 58 fields to 59, and `documents.csv` from 111 columns to 112.
+
+### Fixed — the edge cases dropped the source from an unassigned path
+
+`no_custodian` rebuilt `Processing Folder Path` as `\Collection\_Unassigned\{year}\{month}`,
+dropping the leading segment. That segment was the custodian until Rule 21 put the source in
+front of it, so 49 documents ended up in a path that did not name their own source, and the
+new Rule 21 check caught it. It keeps the source now.
+
 ### Added — a planted negative, the fifth finding (Rule 18)
 
 Rule 18 had four findings, all of them things to find. It also carried a note saying the

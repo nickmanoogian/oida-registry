@@ -977,22 +977,28 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
 # ── Custodian data source sheet ───────────────────────────────────────────
 
 CUSTODIAN_SOURCE_COLUMNS = [
-    "Custodian","Custodian Email","Custodian Org","Custodian Department",
+    "Data Source","Custodian","Custodian Email","Custodian Org","Custodian Department",
     "Data Source Folder","Documents","Natives Written","Native Bytes",
 ]
 
 
 def write_custodian_sources(stats, out_dir, flat):
-    """One row per custodian: the setup sheet for Relativity processing data sources."""
+    """One row per data source and custodian: the processing set setup sheet.
+
+    Keyed on the pair rather than on the custodian, because that is the granularity
+    Relativity assigns a custodian at. One row per person told you to build one data
+    source each, which is wrong the moment a person's documents arrive through four
+    different channels (Rule 21).
+    """
     path = os.path.join(out_dir, "custodian-sources.csv")
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(CUSTODIAN_SOURCE_COLUMNS)
-        for name in sorted(stats):
-            st = stats[name]
-            folder = "natives" if flat else "natives\\" + st["folder"]
-            w.writerow([name, st["email"], st["org"], st["dept"], folder,
-                        st["docs"], st["natives"], st["bytes"]])
+        for key in sorted(stats, key=lambda k: (k[0], k[1])):
+            st = stats[key]
+            folder = "natives" if flat else "natives\\" + st["folder"].replace(os.sep, "\\")
+            w.writerow([st["source"], st["custodian"], st["email"], st["org"],
+                        st["dept"], folder, st["docs"], st["natives"], st["bytes"]])
     return path
 
 
@@ -1008,7 +1014,7 @@ DAT_COLUMNS = [
     "To","To (SMTP)","CC","Subject","Date Sent","Date Received","Message ID",
     "Has Attachments","Attachment Count","Email Thread ID","Email Threading Inclusive",
     "Conversation Topic","Author","Title","Company","Page Count",
-    "Date Created","Date Last Modified",
+    "Date Created","Date Last Modified","Data Source",
     "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issue Tags",
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
@@ -1057,6 +1063,7 @@ _COLUMN_MAP = {
     "Page Count":                ("Page Count",              None),
     "Date Created":              ("Date Created",            lambda d: d.get("Date Created","")[:10]),
     "Date Last Modified":        ("Date Last Modified",      lambda d: d.get("Date Last Modified","")[:10]),
+    "Data Source":               ("Data Source",             None),
     "Workflow Stage":            ("Workflow Stage",          None),
     "Responsive":                ("Responsiveness",          None),
     "Privileged":                ("Privilege",               None),
@@ -1129,15 +1136,27 @@ def custodian_readme_block(stats, flat):
         return ("  natives\\   all {:,} documents in one folder (--flat).\n"
                 "            Custodian is NOT derivable from the folder structure here;\n"
                 "            use PATH B, or rebuild without --flat.".format(total))
-    lines = []
-    for name in sorted(stats):
-        st = stats[name]
-        lines.append("  natives\\{:<20} {:>7,} docs   {:>8.1f} MB   {}".format(
-            st["folder"], st["docs"], st["bytes"]/1e6, name))
+    # Grouped by source, because that is the order somebody building a processing set
+    # works in: one data source per row of custodian-sources.csv.
+    lines, by_source = [], {}
+    for (source, cust), st in stats.items():
+        by_source.setdefault(source, []).append((cust, st))
+    for source in sorted(by_source):
+        rows = sorted(by_source[source])
+        docs = sum(st["docs"] for _, st in rows)
+        lines.append("  {}  ({:,} documents across {} custodians)".format(
+            source, docs, len(rows)))
+        for _cust, st in rows:
+            lines.append("    natives\\{:<44} {:>7,} docs   {:>8.1f} MB".format(
+                st["folder"].replace("/", "\\"), st["docs"], st["bytes"]/1e6))
+        lines.append("")
+    lines.append("Each folder is natives\\{source}\\{custodian}\\{year}\\{month}, mirroring the")
+    lines.append("Processing Folder Path column in documents.csv. The folder structure and that")
+    lines.append("column always agree, so either can be treated as the source of truth.")
     lines.append("")
-    lines.append("Each custodian folder is further split by year and month, mirroring the")
-    lines.append("Processing Folder Path column in documents.csv. The folder structure and")
-    lines.append("that column always agree, so either can be treated as the source of truth.")
+    lines.append("Add ONE PROCESSING DATA SOURCE PER ROW of custodian-sources.csv, not one per")
+    lines.append("custodian: a person's documents arrive through several channels, and Relativity")
+    lines.append("assigns the custodian per data source.")
     return "\n".join(lines)
 
 
@@ -1472,12 +1491,20 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         values = doc_to_dat_row(doc, native_path, families_by_doc, native_bytes)
         dat_rows.append(values)
 
-        cust = (doc.get("Custodian") or "").strip() or "(unassigned)"
-        st   = cust_stats.setdefault(cust, {
+        # Rule 21: one row per source and custodian, because that is the granularity
+        # Relativity assigns a custodian at. A sheet keyed on custodian alone told you
+        # to make one data source per person, which is wrong once a person's documents
+        # arrive through four different channels.
+        cust   = (doc.get("Custodian") or "").strip() or "(unassigned)"
+        source = (doc.get("Data Source") or "").strip() or "(unknown)"
+        parts  = native_subdir(doc).split(os.sep)
+        st   = cust_stats.setdefault((source, cust), {
+            "source": source,
+            "custodian": cust,
             "email":  doc.get("Custodian Email",""),
             "org":    doc.get("Custodian Org",""),
             "dept":   doc.get("Custodian Department",""),
-            "folder": native_subdir(doc).split(os.sep)[0],
+            "folder": os.path.join(*parts[:2]) if len(parts) > 1 else parts[0],
             "docs": 0, "natives": 0, "bytes": 0,
         })
         st["docs"] += 1
@@ -1556,11 +1583,19 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
                          for d in all_docs} & set(error_natives.NOT_FABRICABLE)
         for kind in sorted(skipped_kinds):
             print(f"    not fabricated: {kind} — {error_natives.NOT_FABRICABLE[kind]}")
-    print(f"  Custodians: {len(cust_stats)} -> custodian-sources.csv")
-    for name in sorted(cust_stats):
-        st = cust_stats[name]
-        folder = "natives" if flat else os.path.join("natives", st["folder"])
-        print(f"    {name:<22} {st['docs']:>7,} docs  {st['bytes']/1e6:>7.1f} MB  {folder}")
+    pairs = len(cust_stats)
+    people = len({k[1] for k in cust_stats})
+    srcs   = len({k[0] for k in cust_stats})
+    print(f"  Data sources: {pairs} rows -> custodian-sources.csv "
+          f"({srcs} sources x {people} custodians)")
+    by_source: dict = {}
+    for (source, _cust), st in cust_stats.items():
+        agg = by_source.setdefault(source, {"docs": 0, "bytes": 0, "custs": 0})
+        agg["docs"] += st["docs"]; agg["bytes"] += st["bytes"]; agg["custs"] += 1
+    for source in sorted(by_source, key=lambda k: -by_source[k]["docs"]):
+        agg = by_source[source]
+        print(f"    {source:<26} {agg['docs']:>7,} docs  {agg['bytes']/1e6:>7.1f} MB  "
+              f"{agg['custs']} custodians")
     print(f"  Package:    {out_dir}")
 
 
