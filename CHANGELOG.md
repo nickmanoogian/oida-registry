@@ -6,6 +6,28 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.16.0 packages
+
+Every tier republished with the data source dimension, and both load packages rebuilt
+because the package tree changed with it.
+
+| | v1.15.0 | v1.16.0 |
+|---|---|---|
+| Data sources | none | 9 medium, 10 large and extra large |
+| Files per tier | 8 | **9** |
+| Package tree | `natives/{custodian}/{year}/{month}` | `natives/{source}/{custodian}/{year}/{month}` |
+| `custodian-sources.csv` | one row per custodian | one row per **source and custodian**, 66 for small |
+| `.dat` fields | 58 | 59 |
+| `documents.csv` columns | 111 | 112 |
+
+**Pull again if you took either load package before today.** The v1.15.0 zips have the flat
+custodian tree, no `Data Source` field, and a `custodian-sources.csv` at the wrong
+granularity for a Relativity processing set.
+
+27 pointers moved to v1.16.0 and were verified against the live release, content length
+against the byte count in each pointer. v1.15.0 is annotated as superseded; nothing was
+deleted from it.
+
 ### Added — the data source dimension (Rule 21)
 
 Collection Coverage exists to compare data sources, and the tiers had no such axis. Custodian

@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.15.0/medium-findings.json
-  size: 5616
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.16.0/medium-findings.json
+  size: 10170
 outs:
 - path: findings.json
-  size: 5616
+  size: 10170
   isexec: false
