@@ -27,6 +27,8 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Scripted hot docs** | 8 | 11 | 13 | 13 |
 | **Scripted threads** | 2 | 5 | 5 | 5 |
 | **Planted findings** | 4 | 4 | 4 | 4 |
+| **External entities** | 40 (28 singletons) | 60 (42) | 120 (84) | 120 (84) |
+| **Aliased people** | 2 | 3 | 5 | 5 |
 | **PI instances** | 102 | 443 | 3,326 | 6,048 |
 | **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% | German 1.2%, Polish 0.8%, Spanish 0.4% |
 | **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
@@ -44,7 +46,7 @@ are building, so this is the table to read first. Measured on the **small** tier
 
 | Widget | What the tier gives it | Gaps |
 |---|---|---|
-| **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), one entity carrying exactly one document (the Rule 18 principal), and a decoy entity carrying two | Only **15 distinct addresses** in the tier, so the production cap of 25 non-custodian entities cannot be reached. **No person uses two addresses**, so name normalisation is untested. No pair with deliberately zero topical overlap. |
+| **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), **44 non-custodian entities** past the production cap of 25, **28 of them on a single document**, and **2 people sending from two addresses** for name normalisation (Rule 20). Plus the Rule 18 principal and its decoy | No pair with deliberately zero topical overlap. |
 | **Collection Coverage** | 48 months of dates with a real shape (15 to 48 documents per month, not a flat line), 10 per-custodian data source folders, hold status variation, and every native stamped from the manifest (Rule 19) | The data source axis is *custodian*, not source type: there is no `Data Source` field distinguishing Exchange from OneDrive from a mobile extraction, so sources with genuinely different metadata profiles cannot be compared. No deliberate collection gap or spike. |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6) | — |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, and one document dense with PI and irrelevant to the matter | No population deliberately straddling two obvious categories. |
@@ -79,6 +81,7 @@ produces load files that fail at import.
 | `pi-ground-truth.csv` | One row per seeded PI instance, with the literal value and whether it is expected to be detected (Rule 16). |
 | `language-mix.json` | The second-language slice: requested share, achieved share, and why it is irrelevant to the matter (Rule 17). |
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
+| `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
 
 ---
@@ -236,8 +239,8 @@ python scripts/generate_mock_metadata.py --tier small --ssn-range 666
 # a second-language slice under 1%
 python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
 
-# back to the v1.12.0 shape: no PI, one language, no planted findings
-python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings
+# back to the v1.12.0 shape: no PI, one language, no findings, 15 addresses
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities
 ```
 
 With all three off the output is byte-identical to v1.12.0, so a tier used as clean fixture

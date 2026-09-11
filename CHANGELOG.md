@@ -6,6 +6,48 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — an entity population for Key Relationships (Rule 20)
+
+Rule 14 fixed the custodian side: ten custodians give 45 internal pairs, past the top-25
+cut production applies. The non-custodian side was never fixed, and it is half of what the
+widget shows.
+
+| Small tier | Before | After |
+|---|---|---|
+| Distinct addresses in the collection | 15 | 54 |
+| Non-custodian entities | 12 | **44**, against a production cap of 25 |
+| Entities on exactly one document | 1, and Rule 18 planted it | **28** |
+| People sending from two addresses | 0 | **2** |
+
+Twelve entities against a cap of 25 meant the "entities below the cut are not listed"
+behaviour was untestable with the package most people download. One singleton meant there
+was no organic long tail, which is the part a top-N cap hides. No alias meant name
+normalisation had never been run against this data at all.
+
+The roster is 40 entities for small, 60 for medium, 120 for large and extra large, on a
+skewed distribution: a short heavy head, a moderate middle, and a tail that is mostly
+singletons. Named entries carry the narrative, including the speaker bureau physicians
+Rule 4's story already names; beyond them the tail is generated as dispensing pharmacies,
+because a matter this size really has hundreds that appear once each.
+
+Aliases are the realistic cases: a legacy domain from before a spin-off, an older account
+format, a personal address used for work mail. Each aliased person sends a minority of
+their own mail from the second address.
+
+On by default. `--no-entities` reproduces the previous output **byte for byte**, verified
+against the pre-rule generator.
+
+Two things the validator caught while building it, both of which would have made
+`entities.json` lie:
+
+- **Three regulator inboxes were already recipients** in the generator's own round-robin,
+  so reporting what the pass handed out understated them by an order of magnitude:
+  `cder@fda.hhs.gov` claimed 9 documents and had 60. The report is a census of the corpus
+  now, and every claimed count is checked against it.
+- **The edge cases blank recipients**, and they run after this pass, so counts taken at the
+  end of the pass drifted on an edge tier. The census is taken last, after the edge cases,
+  so the ground truth describes the data as it finally stands.
+
 ### Removed — a stray nested load package, 1,426 files tracked in git
 
 `load-packages/load-packages/small/` was committed by accident in d7e464c, the repository

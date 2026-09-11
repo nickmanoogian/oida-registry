@@ -101,7 +101,7 @@ matter, deterministic per random seed (default `42`).
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR | scale past a quarter of a million documents |
 
-Each tier contains seven files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all seven:
+Each tier contains eight files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all seven:
 
 | File | Description |
 |------|-------------|
@@ -112,6 +112,7 @@ Each tier contains seven files, and `make mock-medium` / `mock-large` / `mock-xl
 | `pi-ground-truth.csv` | One row per seeded PI instance, with the value and whether it is expected to be detected (Rule 16) |
 | `language-mix.json` | The second-language slice and why it is irrelevant to the matter (Rule 17) |
 | `findings.json` | Known-answer findings and the decoy (Rule 18) |
+| `entities.json` | The external entity population, alias addresses and singleton tail (Rule 20) |
 
 `docs/REQUEST_TEMPLATE.md` is the intake form for a corpus request, with a map from each
 common ask to the flag that serves it and an honest list of what is not modelled yet.

@@ -1,0 +1,546 @@
+{
+  "note": "The non-custodian half of Key Relationships. A skewed external roster with a long singleton tail, plus people sending from two addresses so name normalisation has something to resolve.",
+  "externals": [
+    {
+      "name": "FDA CDER",
+      "email": "cder@fda.hhs.gov",
+      "org": "FDA",
+      "kind": "Regulator",
+      "documents": 60,
+      "document_ids": [
+        "DOC-0000663",
+        "DOC-0000083",
+        "DOC-0000636",
+        "DOC-0000246",
+        "DOC-0000271",
+        "..."
+      ],
+      "assigned_by_this_rule": 9
+    },
+    {
+      "name": "Ohio AG Office",
+      "email": "inquiry@ag.state.us",
+      "org": "State AG",
+      "kind": "Regulator",
+      "documents": 58,
+      "document_ids": [
+        "DOC-0000769",
+        "DOC-0000511",
+        "DOC-0000145",
+        "DOC-0000109",
+        "DOC-0000415",
+        "..."
+      ],
+      "assigned_by_this_rule": 8
+    },
+    {
+      "name": "Dana Kirchner",
+      "email": "dana.kirchner@cardinalhealth.com",
+      "org": "Cardinal Health",
+      "kind": "Distributor compliance",
+      "documents": 52,
+      "document_ids": [
+        "DOC-0000451",
+        "DOC-0000732",
+        "DOC-0000375",
+        "DOC-0000301",
+        "DOC-0000593",
+        "..."
+      ],
+      "assigned_by_this_rule": 52
+    },
+    {
+      "name": "DEA Diversion Control",
+      "email": "diversion@dea.gov",
+      "org": "DEA",
+      "kind": "Regulator",
+      "documents": 49,
+      "document_ids": [
+        "DOC-0000496",
+        "DOC-0000418",
+        "DOC-0000787",
+        "DOC-0000570",
+        "DOC-0000484",
+        "..."
+      ],
+      "assigned_by_this_rule": 6
+    },
+    {
+      "name": "Owen Basara",
+      "email": "owen.basara@cardinalhealth.com",
+      "org": "Cardinal Health",
+      "kind": "Distributor compliance",
+      "documents": 36,
+      "document_ids": [
+        "DOC-0000501",
+        "DOC-0000335",
+        "DOC-0000523",
+        "DOC-0000477",
+        "DOC-0000325",
+        "..."
+      ],
+      "assigned_by_this_rule": 36
+    },
+    {
+      "name": "Renee Colquitt",
+      "email": "renee.colquitt@mckesson.com",
+      "org": "McKesson",
+      "kind": "Distributor compliance",
+      "documents": 36,
+      "document_ids": [
+        "DOC-0000135",
+        "DOC-0000675",
+        "DOC-0000641",
+        "DOC-0000654",
+        "DOC-0000267",
+        "..."
+      ],
+      "assigned_by_this_rule": 36
+    },
+    {
+      "name": "Priya Deshmukh",
+      "email": "priya.deshmukh@amerisourcebergen.com",
+      "org": "AmerisourceBergen",
+      "kind": "Distributor compliance",
+      "documents": 8,
+      "document_ids": [
+        "DOC-0000722",
+        "DOC-0000644",
+        "DOC-0000700",
+        "DOC-0000598",
+        "DOC-0000667",
+        "..."
+      ],
+      "assigned_by_this_rule": 8
+    },
+    {
+      "name": "DEA St Louis Field Div",
+      "email": "stlouis.diversion@dea.gov",
+      "org": "DEA",
+      "kind": "Regulator",
+      "documents": 6,
+      "document_ids": [
+        "DOC-0000169",
+        "DOC-0000714",
+        "DOC-0000179",
+        "DOC-0000751",
+        "DOC-0000339",
+        "..."
+      ],
+      "assigned_by_this_rule": 6
+    },
+    {
+      "name": "Victor Amundsen",
+      "email": "victor.amundsen@mckesson.com",
+      "org": "McKesson",
+      "kind": "Order management",
+      "documents": 5,
+      "document_ids": [
+        "DOC-0000149",
+        "DOC-0000313",
+        "DOC-0000248",
+        "DOC-0000075",
+        "DOC-0000563"
+      ],
+      "assigned_by_this_rule": 5
+    },
+    {
+      "name": "Oklahoma AG Office",
+      "email": "civil.enforcement@ag.state.us",
+      "org": "State AG",
+      "kind": "Regulator",
+      "documents": 4,
+      "document_ids": [
+        "DOC-0000014",
+        "DOC-0000174",
+        "DOC-0000351",
+        "DOC-0000785"
+      ],
+      "assigned_by_this_rule": 4
+    },
+    {
+      "name": "Grant Oyelaran",
+      "email": "grant.oyelaran@amerisourcebergen.com",
+      "org": "AmerisourceBergen",
+      "kind": "Diversion control",
+      "documents": 3,
+      "document_ids": [
+        "DOC-0000503",
+        "DOC-0000030",
+        "DOC-0000159"
+      ],
+      "assigned_by_this_rule": 3
+    },
+    {
+      "name": "DEA Detroit Field Div",
+      "email": "detroit.diversion@dea.gov",
+      "org": "DEA",
+      "kind": "Regulator",
+      "documents": 3,
+      "document_ids": [
+        "DOC-0000557",
+        "DOC-0000702",
+        "DOC-0000276"
+      ],
+      "assigned_by_this_rule": 3
+    },
+    {
+      "name": "West Virginia AG Office",
+      "email": "consumer@ag.state.us",
+      "org": "State AG",
+      "kind": "Regulator",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000015"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "State Board of Pharmacy",
+      "email": "licensing@pharmacyboard.state.us",
+      "org": "State Board",
+      "kind": "Regulator",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000718"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Marguerite Ivey",
+      "email": "m.ivey@harlowbrandt.example",
+      "org": "Harlow Brandt LLP",
+      "kind": "Outside counsel",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000660"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Curtis Nakamura",
+      "email": "c.nakamura@harlowbrandt.example",
+      "org": "Harlow Brandt LLP",
+      "kind": "Outside counsel",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000191"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Ilse Fontaine",
+      "email": "i.fontaine@brightwaterlaw.example",
+      "org": "Brightwater Law",
+      "kind": "Outside counsel",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000746"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Terrence Aboagye",
+      "email": "t.aboagye@brightwaterlaw.example",
+      "org": "Brightwater Law",
+      "kind": "Outside counsel",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000635"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Solveig Brandt",
+      "email": "s.brandt@meridianforensics.example",
+      "org": "Meridian Forensics",
+      "kind": "Expert witness",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000190"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Alan Foster",
+      "email": "a.foster@lakeshoreclinic.example",
+      "org": "Lakeshore Clinic",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000209"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Maria Santos",
+      "email": "m.santos@santospaincare.example",
+      "org": "Santos Pain Care",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000401"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Susan Ellis",
+      "email": "s.ellis@ellisneurology.example",
+      "org": "Ellis Neurology",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000441"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Robert Kim",
+      "email": "r.kim@midstatepain.example",
+      "org": "Midstate Pain",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000728"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Patricia Quinn",
+      "email": "p.quinn@quinnfamilymed.example",
+      "org": "Quinn Family Medicine",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000596"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Halvor Jessen",
+      "email": "h.jessen@northreachpain.example",
+      "org": "Northreach Pain",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000247"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Dr. Adaeze Nwosu",
+      "email": "a.nwosu@nwosuspine.example",
+      "org": "Nwosu Spine",
+      "kind": "Speaker bureau KOL",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000767"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Rowena Escobar",
+      "email": "r.escobar@butnerpharmacy.example",
+      "org": "Butner Pharmacy",
+      "kind": "Dispensing pharmacy",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000555"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Lyle Tomczak",
+      "email": "l.tomczak@chillicothedrug.example",
+      "org": "Chillicothe Drug",
+      "kind": "Dispensing pharmacy",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000456"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Anika Sorenson",
+      "email": "a.sorenson@valleyviewrx.example",
+      "org": "Valleyview Rx",
+      "kind": "Dispensing pharmacy",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000273"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Marcus Delacroix-Bell",
+      "email": "m.bell@harborsiderx.example",
+      "org": "Harborside Rx",
+      "kind": "Dispensing pharmacy",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000175"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Yevgenia Kaplan",
+      "email": "y.kaplan@stratafieldresearch.example",
+      "org": "Stratafield Research",
+      "kind": "Market research vendor",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000579"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Bo Lindqvist",
+      "email": "b.lindqvist@axiomclinicallabs.example",
+      "org": "Axiom Clinical Labs",
+      "kind": "Laboratory",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000207"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Chidi Okafor",
+      "email": "c.okafor@pinnaclefreight.example",
+      "org": "Pinnacle Freight",
+      "kind": "Logistics",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000172"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Simone Vasquez",
+      "email": "s.vasquez@corveltmedia.example",
+      "org": "Corvelt Media",
+      "kind": "Advertising agency",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000617"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Hector Ramallo",
+      "email": "h.ramallo@bridgepointaudit.example",
+      "org": "Bridgepoint Audit",
+      "kind": "External audit",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000425"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Ingrid Salvesen",
+      "email": "i.salvesen@calderapackaging.example",
+      "org": "Caldera Packaging",
+      "kind": "Supplier",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000171"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Tobias Wren",
+      "email": "t.wren@wrenactuarial.example",
+      "org": "Wren Actuarial",
+      "kind": "Consultant",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000001"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Fatima Belkacem",
+      "email": "f.belkacem@northgatebenefits.example",
+      "org": "Northgate Benefits",
+      "kind": "Benefits administrator",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000305"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Desmond Achebe",
+      "email": "d.achebe@sentinelriskgroup.example",
+      "org": "Sentinel Risk Group",
+      "kind": "Insurance broker",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000492"
+      ],
+      "assigned_by_this_rule": 1
+    },
+    {
+      "name": "Noor Rahimi",
+      "email": "n.rahimi@veritasstaffing.example",
+      "org": "Veritas Staffing",
+      "kind": "Staffing vendor",
+      "documents": 1,
+      "document_ids": [
+        "DOC-0000513"
+      ],
+      "assigned_by_this_rule": 1
+    }
+  ],
+  "aliases": [
+    {
+      "person": "Thomas Bradley",
+      "primary": "thomas.bradley@mallinckrodt.com",
+      "alias": "thomas.bradley@covidien.com",
+      "why": "legacy domain from before the spin-off",
+      "documents_from_primary": 138,
+      "documents_from_alias": 28
+    },
+    {
+      "person": "Robert Ashton",
+      "primary": "robert.ashton@mallinckrodt.com",
+      "alias": "rashton@mallinckrodt.com",
+      "why": "an older account format still in use",
+      "documents_from_primary": 101,
+      "documents_from_alias": 17
+    }
+  ],
+  "singletons": [
+    "a.foster@lakeshoreclinic.example",
+    "a.nwosu@nwosuspine.example",
+    "a.sorenson@valleyviewrx.example",
+    "b.lindqvist@axiomclinicallabs.example",
+    "c.nakamura@harlowbrandt.example",
+    "c.okafor@pinnaclefreight.example",
+    "consumer@ag.state.us",
+    "d.achebe@sentinelriskgroup.example",
+    "f.belkacem@northgatebenefits.example",
+    "h.jessen@northreachpain.example",
+    "h.ramallo@bridgepointaudit.example",
+    "i.fontaine@brightwaterlaw.example",
+    "i.salvesen@calderapackaging.example",
+    "l.tomczak@chillicothedrug.example",
+    "licensing@pharmacyboard.state.us",
+    "m.bell@harborsiderx.example",
+    "m.ivey@harlowbrandt.example",
+    "m.santos@santospaincare.example",
+    "n.rahimi@veritasstaffing.example",
+    "p.quinn@quinnfamilymed.example",
+    "r.escobar@butnerpharmacy.example",
+    "r.kim@midstatepain.example",
+    "s.brandt@meridianforensics.example",
+    "s.ellis@ellisneurology.example",
+    "s.vasquez@corveltmedia.example",
+    "t.aboagye@brightwaterlaw.example",
+    "t.wren@wrenactuarial.example",
+    "y.kaplan@stratafieldresearch.example"
+  ],
+  "distinct_external_addresses": 40,
+  "production_entity_cap": 25
+}

@@ -791,6 +791,68 @@ python scripts/validate_load_package.py load-packages/small
 
 ---
 
+## Rule 20 — The Entity Population
+
+Rule 14 fixed the *custodian* side of Key Relationships: ten custodians give 45 internal
+pairs, past the top-25 cut production applies. The non-custodian side was never fixed, and
+it is half of what the widget shows.
+
+Measured on the small tier before this rule:
+
+| | Before | After |
+|---|---|---|
+| Distinct addresses in the collection | 15 | 54 |
+| Non-custodian entities | 12 | 44 |
+| Entities on exactly one document | 1, and it was planted by Rule 18 | 28 |
+| People sending from two addresses | 0 | 2 |
+
+Twelve non-custodian entities against a production cap of **25** meant the tier could not
+reach the cut, so the "entities below the cut are not listed" behaviour was untestable with
+the package most people download. One singleton meant there was no organic long tail. And no
+alias meant name normalisation had never been run against this data at all.
+
+### What it seeds
+
+- **An external roster**, sized to clear the cap comfortably rather than squeak past it: 40
+  entities for small, 60 for medium, 120 for large and extra large. Fictional people at the
+  organisations this matter actually involves, which is the convention the custodian roster
+  already follows.
+- **A skewed volume distribution**: a short heavy head, a moderate middle, and a tail that is
+  mostly singletons. That is the shape a real external population has, and the tail is
+  precisely what a top-N cap hides.
+- **Alias addresses**: 2 people for small, up to 5 for the big tiers, each sending a minority
+  of their own mail from a second address. The reasons are the realistic ones, a legacy domain
+  from before a spin-off, an older account format, a personal address used for work.
+
+The named roster carries the narrative: counterparties a reviewer could plausibly chase,
+including the speaker bureau physicians Rule 4's story already names. Beyond it the tail is
+generated as dispensing pharmacies, because a matter this size really does have hundreds of
+dispensing counterparties that appear once each and writing them out by hand would add
+nothing.
+
+### Requirements
+
+- **On by default**, like Rules 16 to 18. `--no-entities` turns it off.
+- **Every tier ships `entities.json`**: each entity with its organisation, its kind, its
+  document count and a sample of its documents, plus the alias list and the singletons.
+- **The counts are a census of the corpus, not a record of what the pass handed out.** Three
+  regulator inboxes were already recipients in the generator's own round-robin, so an
+  assignment count understated them by an order of magnitude. The validator checks every
+  claimed count against the corpus, which is how that was caught.
+- **Runs after Rules 16 to 18 and respects everything they claimed**, so a rewritten
+  recipient cannot land on a document whose ground truth depends on its current one. In
+  particular Rule 18's unique address still appears exactly once, which is asserted.
+- **The rewritten documents join the protected set**, so the edge cases cannot blank a
+  recipient the entity census counts.
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
@@ -810,7 +872,7 @@ Rules 16, 17 and 18 are on by default. To turn one off, or to change what it see
 ```bash
 python scripts/generate_mock_metadata.py --tier small --ssn-range 666
 python scripts/generate_mock_metadata.py --tier small --second-language-share 0.008
-python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings
+python scripts/generate_mock_metadata.py --tier small --no-pi --no-language-mix --no-findings --no-entities
 ```
 
 With all three off the output is byte-identical to v1.12.0, so a tier used as clean

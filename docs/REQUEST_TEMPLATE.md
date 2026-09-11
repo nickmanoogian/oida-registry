@@ -24,6 +24,8 @@ a build from scratch, and the parts that are not are worth knowing before you st
 | Ground truth emitted at generation time | all of the above; nothing is reconstructed afterward |
 | Build-time assertions that fail loudly | `make check`, `validate_mock_data.py`, `validate_load_package.py` |
 | Fixed calendar dates, deterministic output | seed 42 by default; two runs are byte-identical |
+| An entity population past the production cap of 25, with a real singleton tail | on by default, Rule 20, `entities.json`. 44 non-custodian entities in the small tier, 28 on one document |
+| One person using two addresses, to test name normalisation | on by default, Rule 20. 2 aliased people in the small tier, up to 5 in the big ones |
 | A size above a quarter of a million documents | `--tier xlarge`, 275,273 documents. `make mock-xlarge` pulls it |
 
 ## What does not exist yet
@@ -32,8 +34,6 @@ a build from scratch, and the parts that are not are worth knowing before you st
 |---|---|
 | A `Data Source` dimension: Exchange vs OneDrive vs a mobile extraction, with different metadata profiles per source | Not modelled. The data source axis is custodian (Rule 11). |
 | Per-source folders with custodian folders inside them | Not modelled. The tree is `natives/{custodian}/{year}/{month}`. |
-| One person using two addresses, to test name normalisation | Not modelled. Each custodian has one address. |
-| Enough distinct entities to reach the production cap of 25 non-custodian entities | Not modelled. The small tier has 15 distinct addresses. |
 | A communicator pair with deliberately zero topical overlap | Not modelled. |
 | A deliberate collection gap or spike in the date distribution | Not modelled. Dates have a real shape but no planted anomaly. |
 | A population straddling two obvious document categories | Not modelled. |
