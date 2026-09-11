@@ -1095,14 +1095,14 @@ DAT_COLUMNS = [
     # it instead of leaving the mapping screen demanding one. It used to be "BegDoc#",
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
-    "Control Number","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
+    "Control Number","EndDoc#","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
     "Custodian Org","File Name","File Type","File Size","Primary Date","Email From","Email From (SMTP Address)",
     "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
     "Email Has Attachments","Number of Attachments","Email Threading ID","Email Threading Inclusive",
     "Conversation Topic","Author","Title","Company","Page Count",
     "Created Date/Time","Last Modified Date/Time","Data Source",
     "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
-    "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
+    "Bates Beg","Bates End","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
     "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
@@ -1173,8 +1173,8 @@ _COLUMN_MAP = {
     "Privilege Reason":          ("Privilege Reason",        None),
     "Hot Doc":                   ("Hot Doc",                 None),
     "Issues":                ("Issue Tags",              None),
-    "BegBates":                  ("Bates Begin",             None),
-    "EndBates":                  ("Bates End",               None),
+    "Bates Beg":                  ("Bates Begin",             None),
+    "Bates End":                  ("Bates End",               None),
     "Production Set":            ("Production Set",          None),
     "Redacted":                  ("Redacted",                None),
     "TAR Score":                 ("TAR Score",               None),
@@ -1201,8 +1201,8 @@ def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
     fam    = families_by_doc.get(doc.get("Control Number",""), {})
     values = []
     for col in DAT_COLUMNS:
-        if col == "BegAttach":    v = fam.get("beg_attach","")
-        elif col == "EndAttach":  v = fam.get("end_attach","")
+        if col == "Control Number Beg Attach":    v = fam.get("beg_attach","")
+        elif col == "Control Number End Attach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
         elif col == "ExtractedTextFilePath":
             v = text_rel_path(doc["Control Number"]) if native_rel_path else ""
