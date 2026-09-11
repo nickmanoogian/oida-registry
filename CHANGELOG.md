@@ -21,9 +21,9 @@ categorisation was only ever asked easy questions.
 
 | | Small tier |
 |---|---|
-| A gap | the top custodian has **zero** documents across three months, while every other custodian's volume over those months is unchanged |
-| A spike | one month at **3.9x** the median: 108 documents against a median of 28 and a next-highest of 48 |
-| An ambiguous population | **25** documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
+| A gap | the top custodian has **zero** documents across three months that hold **28, 32 and 26** for everybody else, against a median month of 28 |
+| A spike | one month at **3.9x** the median: 108 documents against a median of 28 and a next-highest of 43 |
+| An ambiguous population | **24** documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
 
 The gap is **one custodian's, not the collection's**, which is how a real hole appears: one
 mailbox preserved late while everybody else's data is fine. Asserted both ways, that the
@@ -41,15 +41,30 @@ window and inside the document's own narrative phase, and every date on a docume
 together. Rule 19's window assertions still pass on the built package afterwards, which is
 checked rather than assumed.
 
-Two things caught while building it:
+Four things caught while building it, all of them a planted anomaly quietly damaging
+something else:
 
 - **Pulling the spike from two neighbouring months halved them**, which is its own anomaly
   and not one anybody asked for. The donor window is eight months wide now, so the dip is a
-  few documents each: neighbours sit at 15 to 24 against a median of 28.
+  few documents each: neighbours sit at 16 to 23 against a median of 28.
 - **The manifest disagreed with the corpus on an edge tier.** `missing_date` and
   `sentinel_date` move documents off the date axis after this rule runs, and two leaving the
   spike month was enough. The shape is recounted after the edge cases, the same fix the
   entity census needed for the same reason.
+- **The gap was placed by position, so it landed where the corpus was empty anyway.** Taking
+  the window a third of the way along the month list put it in the thin leading tail: on the
+  medium tier those three months held **35 documents between every other custodian against a
+  median of 137**, so an empty row there was indistinguishable from the matter not having
+  started yet. The window is now the busiest quarter the custodian appears in, and the check
+  asserts every gap month **month by month** rather than summed, which is what let the weak
+  placement through.
+- **The gap and the spike were fighting each other.** The gap sent every document it moved to
+  the single nearest eligible month, which at xlarge is thousands of documents and an
+  accidental spike bigger than the planted one; and the spike drew 4,057 documents out of the
+  eight months around it on the large tier, three of which were the gap months, so the gap's
+  claim that everybody else's volume there is unchanged stopped being true. The gap now
+  spreads across six receiving months in proportion to what they already carry, the spike
+  never draws from the gap window, and the spike month can never be inside it.
 
 ### Changed — v1.16.0 packages
 

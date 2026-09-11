@@ -32,6 +32,13 @@ from datetime import datetime
 # preserved late, or a migration lost a period, and everybody else's data is fine.
 GAP_MONTHS = 3
 
+# How many months absorb the documents moved out of the gap. The gap custodian holds
+# hundreds of documents per busy month at the larger tiers, and the first version of
+# this rule sent all of them to the single nearest eligible month, which built an
+# accidental spike bigger than the planted one. Spread across six months the receiving
+# months grow by a few percent each.
+GAP_RECEIVERS = 6
+
 # The spike, as a multiple of the median month. 3.5x is past anything the organic
 # variation reaches, so it is unambiguous rather than a judgement call.
 SPIKE_MULTIPLE = 3.5
@@ -126,18 +133,41 @@ def apply(all_docs, tier_name, seed=42):
     volumes = collections.Counter(d.get("Custodian", "") for d in dated if d.get("Custodian"))
     gap_cust = volumes.most_common(1)[0][0] if volumes else None
     if gap_cust and len(months) > GAP_MONTHS + 4:
-        start = len(months) // 3
+        # Placed by density, not by position. Taking the window a third of the way in
+        # put it in the corpus's thin leading tail: on the medium tier those three
+        # months held 35 documents between every other custodian against a median of
+        # 137, so an empty row there was indistinguishable from the matter not having
+        # started yet. A hole is only detectable where the collection is busy, so the
+        # window is the quarter with the highest floor that the custodian appears in.
+        def _score(i):
+            window = months[i:i + GAP_MONTHS]
+            mine = sum(1 for d in dated
+                       if d.get("Custodian") == gap_cust
+                       and _month(d["Primary Date"]) in window)
+            return (1 if mine else 0, min(per_month[m] for m in window), -i)
+
+        start = max(range(len(months) - GAP_MONTHS + 1), key=_score)
         window = months[start:start + GAP_MONTHS]
+
+        # Where the moved documents go: the nearest months outside the window that hold
+        # the document's own narrative phase, filled in proportion to what they already
+        # carry so the surrounding shape is preserved rather than lumped.
+        receivers = {}
+        added = collections.Counter()
         moved = []
         for d in dated:
             if d.get("Custodian") != gap_cust or _month(d["Primary Date"]) not in window:
                 continue
             phase = str(d.get("Narrative Phase", ""))
-            # nearest month outside the window that already holds this phase
-            options = [m for m in months if m not in window and phase in phases[m]]
+            if phase not in receivers:
+                options = [m for m in months if m not in window and phase in phases[m]]
+                options.sort(key=lambda m: abs(months.index(m) - months.index(window[0])))
+                receivers[phase] = options[:GAP_RECEIVERS]
+            options = receivers[phase]
             if not options:
                 continue
-            target = min(options, key=lambda m: abs(months.index(m) - months.index(window[0])))
+            target = min(options, key=lambda m: added[m] / max(1, per_month[m]))
+            added[target] += 1
             y, mo = int(target[:4]), int(target[5:7])
             _move(d, y, mo)
             moved.append(d["Control Number"])
@@ -157,14 +187,24 @@ def apply(all_docs, tier_name, seed=42):
 
     # ── The spike: one month, unmistakably ──
     per_month = collections.Counter(_month(d["Primary Date"]) for d in dated)
-    target_month = max(per_month, key=lambda m: per_month[m])
+    # Never inside the gap window. Both anomalies now aim at the busy middle of the
+    # corpus, so without this they can land on the same month and read as one
+    # confusing event rather than two separate things to detect.
+    gap_window = set(report.get("gap", {}).get("months", ()))
+    candidates = [m for m in per_month if m not in gap_window] or list(per_month)
+    target_month = max(candidates, key=lambda m: per_month[m])
     want = int(median * SPIKE_MULTIPLE)
     ty, tm = int(target_month[:4]), int(target_month[5:7])
     idx = months.index(target_month)
     # A wide donor window on purpose. Pulling 80 documents from two neighbouring
     # months halved them, which is its own anomaly and not one anybody asked for.
     # Spread across eight months the dip is a few documents each.
-    donors = [m for m in months[max(0, idx - 4): idx + 5] if m != target_month]
+    # The gap window is never a donor. The spike drew 4,057 documents out of the eight
+    # months around it on the large tier, three of which were the gap months, so the
+    # gap's own claim that every other custodian's volume there is unchanged stopped
+    # being true. Two planted anomalies have to be independently readable.
+    donors = [m for m in months[max(0, idx - 4): idx + 5]
+              if m != target_month and m not in gap_window]
     pulled = []
     pool = [d for d in dated
             if _month(d["Primary Date"]) in donors
