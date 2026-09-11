@@ -40,6 +40,10 @@
 # raw document archive (16 single-letter prefix directories)
 /[a-z]/
 
+# local dev environment (make setup). python -m venv writes its own .gitignore
+# inside the directory, but only for versions that do; ignore it explicitly too.
+/.venv/
+
 # DVC internals
 .dvc/cache
 .dvc/tmp

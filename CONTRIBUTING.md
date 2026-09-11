@@ -4,6 +4,23 @@ This repo has two distinct areas that can be updated independently.
 
 ---
 
+## Setting up
+
+```bash
+make setup
+```
+
+Creates `.venv` and installs `requirements-dev.txt`, which is `requirements.txt` plus ruff and
+mypy. Takes about two minutes, most of it `dvc[s3]`. You only need it once.
+
+The gate prefers `.venv` when it exists, so `make check` runs against what `make setup` installed
+rather than whichever `python3` happens to be on your PATH. Nothing needs activating.
+
+Skipping this leaves you with a gate that cannot run: ruff and mypy are not in `requirements.txt`,
+and the error scenario matrix needs `fpdf2`. `make check` starts with a dependency check that
+names anything missing and points back here, rather than failing 35 lines into the matrix with a
+`ModuleNotFoundError`.
+
 ## Before you raise a PR
 
 Run the gate:
@@ -12,7 +29,7 @@ Run the gate:
 make check
 ```
 
-That is lint, typecheck, an import cycle check, the RULES.md validators against both the default and
+That is a dependency check, lint, typecheck, an import cycle check, the RULES.md validators against both the default and
 the edge-case tier, the error scenario matrix and the determinism check, ordered cheapest first so a typo fails in seconds rather than after a two
 minute build. CI runs the same things plus the package builds; `make check` is what keeps you
 from finding out on GitHub.

@@ -336,8 +336,8 @@ package adds `EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`,
 ### Option B — Build from scratch
 
 ```bash
-# install native file dependencies
-pip install python-docx openpyxl python-pptx fpdf2
+# install dependencies (once)
+make setup
 
 # build with real OIDA OCR content
 make load-small

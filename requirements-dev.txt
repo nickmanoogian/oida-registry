@@ -1,0 +1,7 @@
+# Everything `make check` needs, on top of the runtime dependencies.
+# Fresh clone: `make setup`.
+-r requirements.txt
+
+# The quality gate itself (make lint / make typecheck)
+ruff>=0.6
+mypy>=1.11
