@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/xlarge-documents.csv.gz
-  size: 59794302
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.19.0/xlarge-documents.csv.gz
+  size: 60520757
 outs:
 - path: documents.csv.gz
-  size: 59794302
+  size: 60520757
   isexec: false

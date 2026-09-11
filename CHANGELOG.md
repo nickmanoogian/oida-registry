@@ -6,6 +6,31 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.19.0 packages
+
+Every tier republished, because `Email CC` and `Email BCC` were declared and never
+populated on any row of any tier. Both load packages now carry an extracted text layer.
+**Pull the tiers again**: unlike v1.18.0 the tier files really did change.
+
+| | v1.18.0 | v1.19.0 |
+|---|---|---|
+| Load file fields | 59 | **61**, adding `Language` and `ExtractedTextFilePath` |
+| Extracted text | none | **`text/` sidecars, 1.0 KB a document** |
+| Emails carrying a CC | 0 | **32% to 35% by tier** |
+| Pointers | 30 at v1.18.0 | **30 at v1.19.0** |
+
+| | medium | large | extra large |
+|---|---|---|---|
+| Emails | 5,214 | 70,014 | 130,014 |
+| Carrying a CC | 1,670 (32%) | 24,004 (34%) | 44,925 (35%) |
+| Carrying a BCC | 244 | 3,622 | 6,840 |
+| External addresses | 60 | 120 | 120 |
+
+Verified: all 30 pointers `curl` to a 200 whose `content-length` equals the byte count
+declared, 0 mismatched, and both `releases/latest/download/...` links resolve to v1.19.0
+at 11,645,085 and 11,325,901 bytes.
+
+
 ### Changed — v1.18.0 packages
 
 Both load packages rebuilt with the standard Concordance delimiters. **Anyone holding
