@@ -25,6 +25,10 @@ import sys
 import urllib.request
 from pathlib import Path
 
+from dat_format import DAT_FIELD_SEP as DAT_SEP
+from dat_format import DAT_NEWLINE as DAT_NL
+from dat_format import DAT_QUOTE
+
 try:
     import duckdb
 except ModuleNotFoundError as err:
@@ -35,9 +39,6 @@ PARQUET = f"{BUCKET}/metadata/oida-index.parquet"
 COLLECTION = "Insys Litigation Documents"
 MAX_PDF_BYTES = 400_000  # keep the package small
 
-DAT_SEP = chr(254)   # þ
-DAT_QUOTE = chr(255) # ÿ
-DAT_NL = chr(174)    # ® — replaces newlines inside a field value
 
 COLUMNS = [
     "Control Number", "Bates Begin", "Bates Alias", "Custodian",

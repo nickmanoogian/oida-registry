@@ -43,6 +43,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from dat_format import DAT_FIELD_SEP, DAT_NEWLINE, DAT_QUOTE, DELIMITER_NOTE  # noqa: F401
 from tier_files import GROUND_TRUTH_FILES
 
 import error_natives
@@ -62,9 +63,6 @@ OCR_CACHE_PATH = ".ocr-content-cache.json"
 OCR_SAMPLES_PER_TYPE = 80  # number of OCR files to fetch per document category
 
 # Relativity .dat Concordance delimiters
-DAT_FIELD_SEP = chr(254)  # þ
-DAT_QUOTE     = chr(255)  # ÿ
-DAT_NEWLINE   = chr(174)  # ® (replaces newlines within field values)
 
 # ── Scripted hot document content ────────────────────────────────────────
 
@@ -1218,10 +1216,10 @@ STEP B1 — Copy the package to a location Relativity can reach (as in A1).
 STEP B2 — Workspace → Import → Relativity Load File → select load-file.dat
 
 STEP B3 — Field mapping
-  The .dat file uses Concordance delimiters:
-    Column separator: þ (ASCII 254)
-    Text qualifier:   ÿ (ASCII 255)
-    Newline in field: ® (ASCII 174)
+  The .dat file uses the standard Concordance delimiters. Set these before
+  mapping, or the importer reads the whole row as one field and the mapping
+  screen shows a single column instead of 59:
+    {delimiters}
 
   Map these .dat columns to Relativity fields:
     BegDoc#              → Control Number
@@ -1565,6 +1563,7 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
         f.write(IMPORT_README.replace("{tier}", tier_name)
+                            .replace("{delimiters}", DELIMITER_NOTE)
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
                 + expected_errors_readme_block(error_rows)
                 + ground_truth_readme_block(out_dir, ground_truth)

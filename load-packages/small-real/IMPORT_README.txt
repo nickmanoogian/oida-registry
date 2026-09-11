@@ -22,8 +22,8 @@ STEP 2 — Import
   Workspace -> Import/Export -> Import -> Document Load File
   Select load-file.dat with:
     File encoding:    UTF-8
-    Column separator: þ (ASCII 254)
-    Quote character:  ÿ (ASCII 255)
+    Column separator: ASCII 20
+    Quote character:  þ (ASCII 254)
     Newline:          ® (ASCII 174)
 
 STEP 3 — Field mapping (all real, sourced from the OIDA index)
