@@ -620,8 +620,8 @@ def run(tier_name, tier_dir, verbose):
         findings = {f["id"]: f for f in payload["findings"]}
         by_ctrl_f = {d["Control Number"]: d for d in docs}
 
-        if not check("the matched pair and the decoy are all present",
-                     {"metadata_only", "content_only", "decoy"} <= set(findings),
+        if not check("the matched pair, the decoy and the planted negative are present",
+                     {"metadata_only", "content_only", "decoy", "no_overlap_pair"} <= set(findings),
                      f"present: {sorted(findings)}", verbose): failures += 1
 
         ghosts = [f["control_number"] for f in payload["findings"]
@@ -672,6 +672,49 @@ def run(tier_name, tier_dir, verbose):
             if not check("the decoy's distinguishing document exists",
                          decoy["distinguisher"]["control_number"] in by_ctrl_f,
                          decoy["distinguisher"]["control_number"], verbose): failures += 1
+
+        # The planted negative is only useful if it is genuinely negative.
+        pair = findings.get("no_overlap_pair")
+        if pair:
+            import planted_findings
+            ids = pair["document_ids"]
+            edge = [by_ctrl_f[c] for c in ids if c in by_ctrl_f]
+            names = set(pair["pair"])
+            off_edge = [d["Control Number"] for d in edge
+                        if {d.get("Email From",""), d.get("Email To","")} != names]
+            if not check("the no-overlap pair's documents are all between the pair",
+                         not off_edge, f"{len(off_edge)} are not: {off_edge[:3]}", verbose):
+                failures += 1
+
+            tagged = [d["Control Number"] for d in edge if d.get("Issue Tags","").strip()]
+            if not check("the no-overlap pair carries no issue tag", not tagged,
+                         f"{len(tagged)} tagged: {tagged[:3]}", verbose): failures += 1
+
+            hits = set()
+            for d in edge:
+                text = (d.get("Email Subject","") + " " +
+                        d.get("Extracted Text Preview","")).lower()
+                hits |= {k for k in planted_findings.MATTER_KEYWORDS if k in text}
+            if not check("the no-overlap pair hits zero matter keywords", not hits,
+                         f"hits: {sorted(hits)}", verbose): failures += 1
+
+            # Its vocabulary has to be unique, or the negative is not isolated.
+            marker = "blood drive"
+            elsewhere = [d["Control Number"] for d in docs
+                         if d["Control Number"] not in set(ids)
+                         and marker in (d.get("Email Subject","") + " " +
+                                        d.get("Conversation Topic","") + " " +
+                                        d.get("Extracted Text Preview","")).lower()]
+            if not check("the pair's subject appears nowhere else in the corpus",
+                         not elsewhere, f"{len(elsewhere)} elsewhere: {elsewhere[:3]}",
+                         verbose): failures += 1
+
+            # And the pair must have other volume, or the edge is their whole story.
+            own = {n: sum(1 for d in docs if d.get("Custodian") == n) for n in names}
+            broad = all(v > len(ids) * 2 for v in own.values())
+            if not check("both halves of the pair have volume beyond this correspondence",
+                         broad, ", ".join(f"{n}: {v}" for n, v in own.items()), verbose):
+                failures += 1
 
         content = findings.get("content_only")
         if content:

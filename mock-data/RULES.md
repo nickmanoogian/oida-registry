@@ -713,6 +713,7 @@ So each tier plants a matched pair, a decoy, and one extraction-depth case:
 | `content_only` | reading it | every keyword filter on the matter, and every metadata cut |
 | `decoy` | the same filter that catches the principal, and it is innocent | nothing: it is meant to be caught |
 | `buried_deep` | full extraction: the payload is on tab 11 of 12 | any extraction that stops at the first sheet |
+| `no_overlap_pair` | the pair itself: two custodians corresponding at volume, so the edge is real | any topical link to the matter, because there is none |
 
 The decoy's distinguisher is **buried in the record, not stated**: a second message to the
 same address shows it belongs to an external assurance provider on an internal controls
@@ -734,12 +735,26 @@ Requirements:
   `--with-errors` fabricates a genuinely encrypted native for it (Rule 12).
 - **Families stay true.** The attachment is re-parented from a loose document of the same
   custodian, and both sides' claims are updated together (Rule 15).
-- **Planted documents are off limits to the edge cases.** Starving one falsifies its own
-  ground truth.
+- **Planted documents are off limits to the edge cases**, and to Rule 20. Starving one
+  falsifies its own ground truth, and `no_overlap_pair` owns a whole correspondence rather
+  than a single document, so rewriting a recipient anywhere in it would break the very edge
+  the finding asserts.
 
-Known gap: the prompt this rule came from also asks for a communicator pair with zero
-topical overlap, so that a negative result in Key Relationships is expected rather than a
-gap. That is not planted yet.
+### The planted negative
+
+`no_overlap_pair` is the odd one out: the other four are things to find, and this one is a
+thing to correctly find nothing in. Two custodians exchange 18 documents, every one of them
+about an employee blood drive. They share no issue tag, and the vocabulary of that
+correspondence appears in no other document in the corpus.
+
+So a feature asked what connects them should find one mundane subject and nothing else, and
+a feature asked whether they discuss the matter should say no. **Without a planted negative
+there is no way to tell a correct "nothing here" from a broken analysis**, which is the only
+reason it exists.
+
+Both halves of the pair keep substantial volume elsewhere, asserted at more than twice the
+correspondence, so the edge is not their whole story and the pair cannot be dismissed as
+noise.
 
 ---
 

@@ -6,6 +6,37 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — a planted negative, the fifth finding (Rule 18)
+
+Rule 18 had four findings, all of them things to find. It also carried a note saying the
+prompt it came from asks for a communicator pair with zero topical overlap, and that it was
+not planted yet. It is now.
+
+`no_overlap_pair` is two custodians exchanging 18 documents, every one of them about an
+employee blood drive. They share no issue tag, and the vocabulary of that correspondence
+appears in no other document in the corpus. So a feature asked what connects them should
+find one mundane subject and nothing else, and asked whether they discuss the matter should
+say no.
+
+**Without a planted negative there is no way to tell a correct "nothing here" from a broken
+analysis**, which is the only reason it exists. The other four findings prove a feature can
+see something; this one proves it can correctly see nothing.
+
+Five properties are asserted rather than assumed, because a negative that is not actually
+negative is worse than no negative at all:
+
+- every document in the set is between the two of them, so the edge is real
+- none of them carries an issue tag
+- their text hits **zero** of the matter keywords
+- `blood drive` appears in **no** other document in the corpus
+- both halves keep more than twice that volume elsewhere, so the pair cannot be dismissed
+  as noise and the edge is not their whole story
+
+The correspondence is protected from Rule 20 and from the edge cases. It owns a whole
+conversation rather than a single document, so rewriting one recipient anywhere in it would
+break the edge the finding asserts.
+
+This closes the last named Key Relationships gap in the widget coverage table.
 ### Added — `load-packages/small-real/` is documented
 
 60 real produced PDFs with real OCR text, real Bates numbers, 19 real custodians and a

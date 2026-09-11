@@ -1505,6 +1505,9 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     protected = set()
     for f in (findings or []):
         protected.add(f["control_number"])
+        # no_overlap_pair owns a whole correspondence, not one document: rewriting a
+        # recipient in it would break the very edge the finding asserts.
+        protected |= set(f.get("document_ids", []))
         for key in ("attachment", "distinguisher"):
             if isinstance(f.get(key), dict):
                 protected.add(f[key]["control_number"])
