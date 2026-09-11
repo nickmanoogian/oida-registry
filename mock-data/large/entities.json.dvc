@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.16.0/large-entities.json
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/large-entities.json
   size: 42047
 outs:
 - path: entities.json

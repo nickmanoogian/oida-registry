@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/large-collection-shape.json
+  size: 3428
+outs:
+- path: collection-shape.json
+  size: 3428
+  isexec: false

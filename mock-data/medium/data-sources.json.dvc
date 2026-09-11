@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.16.0/medium-data-sources.json
-  size: 5197
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/medium-data-sources.json
+  size: 5233
 outs:
 - path: data-sources.json
-  size: 5197
+  size: 5233
   isexec: false
