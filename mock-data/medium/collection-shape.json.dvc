@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/medium-collection-shape.json
+  size: 3422
+outs:
+- path: collection-shape.json
+  size: 3422
+  isexec: false

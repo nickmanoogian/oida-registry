@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.16.0/xlarge-custodians.json
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/xlarge-custodians.json
   size: 15406
 outs:
 - path: custodians.json

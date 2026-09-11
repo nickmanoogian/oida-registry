@@ -6,6 +6,29 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.17.0 packages
+
+Every tier republished with the planted collection shape, and both load packages rebuilt
+because the small tier's dates moved with it.
+
+| | v1.16.0 | v1.17.0 |
+|---|---|---|
+| Files per tier | 9 | **10**, adding `collection-shape.json` |
+| Release assets | 29 | **32**: 30 tier files plus the two load package zips |
+| Pointers | 27 at v1.16.0 | **30 at v1.17.0**, generated from the published files |
+
+| Planted shape | medium | large | extra large |
+|---|---|---|---|
+| The top custodian's empty quarter | 2014-10 to 2014-12 | 2014-03 to 2014-05 | 2014-03 to 2014-05 |
+| Those months, for every other custodian | 155, 143, 147 | 1,797, 1,722, 1,811 | 3,386, 3,206, 3,273 |
+| Median month | 138 | 1,783 | 3,306 |
+| The spike, as a multiple of the median | 3.6x | 3.5x | 3.6x |
+| Documents in two categories at once | 98 | 978 | 1,849 |
+
+Verified: every one of the 30 pointers `curl`s to a 200 with a `content-length` equal to the
+byte count it declares, and both `releases/latest/download/...` links resolve to the rebuilt
+zips at 10,646,339 and 10,210,526 bytes.
+
 ### Added — a planted gap, a planted spike, and an ambiguous population (Rule 22)
 
 The last two gaps in the widget coverage table, and they share a shape: both are about

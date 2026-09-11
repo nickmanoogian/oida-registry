@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.16.0/large-findings.json
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.17.0/large-findings.json
   size: 10175
 outs:
 - path: findings.json
