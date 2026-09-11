@@ -67,7 +67,7 @@ def duplicate_control(header, rows):
 
 
 def bad_date(header, rows):
-    i = header.index("Primary Date")
+    i = header.index("Primary Date/Time")
     hit = rows[:MUTATED_ROWS]
     for n, r in enumerate(hit):
         r[i] = "13/45/2011" if n == 0 else "not a date"
@@ -232,7 +232,7 @@ def verify(out_dir, package):
                 dupes = len(ctrls) - len(set(ctrls))
                 ok, detail = dupes > 0, f"{dupes} duplicated control numbers"
             elif name == "bad-date":
-                i = header.index(DAT_QUOTE + "Primary Date" + DAT_QUOTE)
+                i = header.index(DAT_QUOTE + "Primary Date/Time" + DAT_QUOTE)
                 bad = [r[i].strip(DAT_QUOTE) for r in body
                        if r[i].strip(DAT_QUOTE) and not r[i].strip(DAT_QUOTE)[:4].isdigit()]
                 ok, detail = bool(bad), f"{len(bad)} unparseable dates, e.g. {bad[:1]}"

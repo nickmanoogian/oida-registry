@@ -391,7 +391,7 @@ def main():
     # ── Rule 19: no native carries a library's date or a library's name ───
     print("\n  Date layer (Rule 19)\n")
 
-    i_date     = header.index("Primary Date")
+    i_date     = header.index("Primary Date/Time")
     i_created  = header.index("Created Date/Time")       if "Created Date/Time"       in header else None
     i_modified = header.index("Last Modified Date/Time") if "Last Modified Date/Time" in header else None
     has_both = i_created is not None and i_modified is not None
@@ -410,7 +410,7 @@ def main():
     # document last modified after the last email is normal in a real
     # collection; a document stamped by a library is not.
     date_cols = [header.index(c) for c in
-                 ("Primary Date","Created Date/Time","Last Modified Date/Time",
+                 ("Primary Date/Time","Created Date/Time","Last Modified Date/Time",
                   "Sent Date/Time","Email Received Date/Time")
                  if c in header]
     dated = [r[i][:10] for r in rows if r[i_ctrl] not in sentinels

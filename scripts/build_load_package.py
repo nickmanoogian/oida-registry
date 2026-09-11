@@ -1096,9 +1096,9 @@ DAT_COLUMNS = [
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
     "Control Number","EndDoc#","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
-    "Custodian Org","File Name","File Type","File Size","Primary Date","Email From","Email From (SMTP Address)",
+    "Custodian Org","File Name","File Type","File Size","Primary Date/Time","Email From","Email From (SMTP Address)",
     "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
-    "Email Has Attachments","Number of Attachments","Email Threading ID","Email Threading Inclusive",
+    "Email Has Attachments","Number of Attachments","Email Threading ID","Inclusive Email",
     "Conversation Topic","Author","Title","Company","Page Count",
     "Created Date/Time","Last Modified Date/Time","Data Source",
     "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
@@ -1108,7 +1108,7 @@ DAT_COLUMNS = [
     "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
     # Language so a language breakdown has something to read from metadata alone,
     # and the extracted text path so the two LLM widgets have text to read.
-    "Language","NativeFilePath","ExtractedTextFilePath",
+    "Primary language","NativeFilePath","ExtractedTextFilePath",
 ]
 
 
@@ -1142,7 +1142,7 @@ _COLUMN_MAP = {
     "File Name":                 ("File Name",               None),
     "File Type":                 ("File Extension",          None),
     "File Size":                 ("File Size (bytes)",       None),
-    "Primary Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
+    "Primary Date/Time":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
     "Email From":                      ("Email From",              None),
     "Email From (SMTP Address)":               ("Email From SMTP",         None),
     "Email To":                        ("Email To",                None),
@@ -1158,7 +1158,7 @@ _COLUMN_MAP = {
     "Email Has Attachments":           ("Has Attachments",         None),
     "Number of Attachments":          ("Attachment Count",        None),
     "Email Threading ID":        ("Email Thread ID",         None),
-    "Email Threading Inclusive": ("Email Threading Inclusive",None),
+    "Inclusive Email": ("Email Threading Inclusive",None),
     "Conversation Topic":        ("Conversation Topic",      None),
     "Author":                    ("Author",                  None),
     "Title":                     ("Title",                   None),
@@ -1193,7 +1193,7 @@ _COLUMN_MAP = {
     "Record Type":               ("Record Type",             None),
     "Processing Status":         ("Processing Status",       None),
     "Processing Error Type":     ("Processing Error Type",   None),
-    "Language":                  ("Language",                None),
+    "Primary language":                  ("Language",                None),
 }
 
 
