@@ -146,12 +146,20 @@ def native_text(path):
         return " ".join(parts)
     if ext == ".pdf":
         out = []
-        for m in re.finditer(rb"stream\r?\n(.*?)\r?\nendstream", raw, re.S):
+        for m in re.finditer(rb"stream\r?\n(.*?)endstream", raw, re.S):
             blob = m.group(1)
-            try:
-                blob = zlib.decompress(blob)
-            except zlib.error:
-                pass
+            # The EOL before `endstream` is optional per the PDF spec, and the
+            # deflate payload's own last bytes can be \r\n. Trimming first cost a
+            # real stream at xlarge scale: one PDF in 75,315 compressed to bytes
+            # ending 0x0D 0x0A, zlib then failed on the truncated payload, and the
+            # PI check reported three values missing from a file that held all
+            # three. Try the payload whole, then trimmed.
+            for candidate in (blob, blob[:-2], blob[:-1]):
+                try:
+                    blob = zlib.decompress(candidate)
+                    break
+                except zlib.error:
+                    continue
             for token in re.findall(rb"\((?:\\.|[^\\()])*\)", blob):
                 out.append(token[1:-1].replace(b"\\(", b"(").replace(b"\\)", b")")
                            .decode("latin-1"))
@@ -437,7 +445,7 @@ def main():
         with open(pi_path, encoding="utf-8") as f:
             pi_rows = list(csv.DictReader(f))
 
-        cache, absent, broken, checked = {}, [], 0, 0
+        cache, absent, unreadable, broken, checked = {}, [], [], 0, 0
         for r in pi_rows:
             ctrl = r["Control Number"]
             rel  = paths.get(ctrl)
@@ -450,8 +458,16 @@ def main():
             if rel not in cache:
                 cache[rel] = native_text(full(rel))
             checked += 1
+            # A native this decoder cannot read is a decoder problem, not missing
+            # data, and reporting it as missing sends you looking for a seeding bug
+            # that is not there. Counted separately and failed on its own.
+            if not cache[rel].strip():
+                unreadable.append(f"{ctrl}: {rel}"); continue
             if r["Value"] not in cache[rel]:
                 absent.append(f"{ctrl} {r['PI Type']}: {r['Value']}")
+        check("every native carrying seeded PI can be read", not unreadable,
+              f"{len(unreadable)} unreadable: {unreadable[:3]}" if unreadable
+              else f"{len(cache):,} natives decoded")
         check("every seeded PI value is in its native", not absent,
               f"{len(absent)} missing: {absent[:3]}" if absent
               else f"{checked:,} instances across {len(cache)} natives"
