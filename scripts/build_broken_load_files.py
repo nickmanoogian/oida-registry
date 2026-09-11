@@ -59,7 +59,7 @@ def missing_native(header, rows):
 
 
 def duplicate_control(header, rows):
-    i = header.index("BegDoc#")
+    i = header.index("Control Number")
     donor, victims = rows[0], rows[1:1 + MUTATED_ROWS]
     for r in victims:
         r[i] = donor[i]
@@ -101,7 +101,7 @@ def short_row(header, rows):
 
 
 def blank_required(header, rows):
-    i = header.index("BegDoc#")
+    i = header.index("Control Number")
     hit = rows[:MUTATED_ROWS]
     for r in hit:
         r[i] = ""
@@ -166,7 +166,7 @@ def build(package, out_dir, only):
         rows, raw, encoding, note, hit = fn(header, rows)
         target = os.path.join(out_dir, name, "load-file.dat")
         write_dat(target, header, rows, encoding=encoding, raw_lines=raw)
-        ctrls = [r[header.index("BegDoc#")] or "(blanked)" for r in hit]
+        ctrls = [r[header.index("Control Number")] or "(blanked)" for r in hit]
         manifest.append({
             "Scenario": name,
             "Load File": os.path.join(name, "load-file.dat"),
@@ -227,7 +227,7 @@ def verify(out_dir, package):
                         if c and not os.path.exists(os.path.join(package, c.replace("\\", os.sep)))]
                 ok, detail = bool(gone), f"{len(gone)} rows point at a file that is not there"
             elif name == "duplicate-control":
-                i = header.index(DAT_QUOTE + "BegDoc#" + DAT_QUOTE)
+                i = header.index(DAT_QUOTE + "Control Number" + DAT_QUOTE)
                 ctrls = [r[i] for r in body]
                 dupes = len(ctrls) - len(set(ctrls))
                 ok, detail = dupes > 0, f"{dupes} duplicated control numbers"
@@ -240,7 +240,7 @@ def verify(out_dir, package):
                 off = [w for w in widths if w != len(header)]
                 ok, detail = bool(off), f"row widths present: {sorted(widths)} against a {len(header)} field header"
             elif name == "blank-required":
-                i = header.index(DAT_QUOTE + "BegDoc#" + DAT_QUOTE)
+                i = header.index(DAT_QUOTE + "Control Number" + DAT_QUOTE)
                 blanks = [r for r in body if r[i].strip(DAT_QUOTE) == ""]
                 ok, detail = bool(blanks), f"{len(blanks)} rows with an empty control number"
 

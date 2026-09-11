@@ -1007,7 +1007,11 @@ def write_custodian_sources(stats, out_dir, flat):
 # silently dropped at parse time. Lint found it. DAT_COLUMNS below is the real thing.
 
 DAT_COLUMNS = [
-    "BegDoc#","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
+    # Field 1 is named to match the workspace identifier, so Import/Export auto-maps
+    # it instead of leaving the mapping screen demanding one. It used to be "BegDoc#",
+    # which named a Bates range it does not hold (BegBates/EndBates are separate
+    # columns), forced a manual mapping step, and put a "#" in a header.
+    "Control Number","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
     "Custodian Org","File Name","File Type","File Size","Date","From","From (SMTP)",
     "To","To (SMTP)","CC","Subject","Date Sent","Date Received","Message ID",
     "Has Attachments","Attachment Count","Email Thread ID","Email Threading Inclusive",
@@ -1029,10 +1033,21 @@ def dat_row(values):
     return DAT_FIELD_SEP.join(DAT_QUOTE + clean(v) + DAT_QUOTE for v in values) + "\n"
 
 
+# Columns Relativity will split into several values. Its multi-value delimiter is
+# ASCII 59, a *bare* semicolon: "Lay, Kenneth;Doe, John" in Relativity's own example.
+# The generator writes "; " with a space, which is friendlier in documents.csv and
+# wrong here, because a multiple-choice mapping "creates a unique value for each
+# choice option": splitting on ASCII 59 yields " Prior Auth Fraud" with a leading
+# space as a choice distinct from "Prior Auth Fraud". So the space is stripped on
+# the way into the .dat only, leaving documents.csv readable.
+MULTI_VALUE_COLUMNS = ("Issue Tags", "Rsmf Participants")
+MULTI_VALUE_SEP = ";"
+
+
 # Declarative mapping: .dat column name → (source key in doc dict, optional transform)
 # None transform = direct doc.get(key, ""); callable transform receives the full doc.
 _COLUMN_MAP = {
-    "BegDoc#":                   ("Control Number",          None),
+    "Control Number":            ("Control Number",          None),
     "EndDoc#":                   ("Control Number",          None),
     "Custodian":                 ("Custodian",               None),
     "Custodian Email":           ("Custodian Email",         None),
@@ -1106,6 +1121,8 @@ def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
             v = transform(doc) if transform else doc.get(src_key,"")
         else:
             v = ""
+        if col in MULTI_VALUE_COLUMNS and v:
+            v = MULTI_VALUE_SEP.join(part.strip() for part in str(v).split(";") if part.strip())
         values.append(v)
     return values
 
@@ -1222,7 +1239,7 @@ STEP B3 — Field mapping
     {delimiters}
 
   Map these .dat columns to Relativity fields:
-    BegDoc#              → Control Number
+    Control Number       → Control Number  (the identifier; auto-maps by name)
     Custodian            → Custodian
     Custodian Org        → Custodian Org (custom text field)
     Responsive           → Responsiveness (single choice)
