@@ -855,17 +855,31 @@ def run(tier_name, tier_dir, verbose):
                          not inside, f"{len(inside)} remain: {inside[:3]}", verbose):
                 failures += 1
 
-            # A hole in one custodian, not a collection-wide dip: the months must
-            # still hold everybody else's documents.
-            others = sum(1 for d in docs
-                         if d.get("Custodian") not in ("", gap["custodian"])
-                         and d.get("Primary Date","")[:7] in gap["months"])
-            if not check("the gap is one custodian's, not the whole collection's",
-                         others > median, f"{others} documents from other custodians",
+            # A hole in one custodian, not a collection-wide dip, asserted month by
+            # month rather than summed. The summed version passed a window in the
+            # corpus's thin leading tail where every other custodian held 35 documents
+            # across the quarter against a median of 137: an empty row there proves
+            # nothing, because the whole collection was empty too.
+            by_month = {m: sum(1 for d in docs
+                               if d.get("Custodian") not in ("", gap["custodian"])
+                               and d.get("Primary Date","")[:7] == m)
+                        for m in gap["months"]}
+            floor = int(median * 0.6)
+            if not check("every gap month is busy for everybody else, so the hole shows",
+                         all(v >= floor for v in by_month.values()),
+                         ", ".join(f"{m}: {v}" for m, v in sorted(by_month.items()))
+                         + f" against a median of {median} (floor {floor})",
                          verbose): failures += 1
 
         spike = shape.get("spike")
         if spike:
+            # The two anomalies must be in different places. Both now aim at the busy
+            # middle of the corpus, and a spike inside the gap window reads as one
+            # confusing event rather than two things to detect separately.
+            if gap and not check("the spike is not inside the gap window",
+                                 spike["month"] not in gap["months"],
+                                 f"spike {spike['month']} in {gap['months']}", verbose):
+                failures += 1
             got = per_month.get(spike["month"], 0)
             if not check("the spike month really carries the volume claimed",
                          got == spike["documents"],

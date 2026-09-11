@@ -950,9 +950,9 @@ two categories is the one that tells you whether a classifier commits, hedges, o
 
 | | Small tier |
 |---|---|
-| **A gap** | The highest-volume custodian has **zero** documents across a three month window, while every other custodian's volume over those months is unchanged |
-| **A spike** | One month carries **3.9x** the median, 108 documents against a median of 28 and a next-highest of 48 |
-| **An ambiguous population** | 25 documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
+| **A gap** | The highest-volume custodian has **zero** documents across a three month window that holds **28, 32 and 26** documents for everybody else, against a median month of 28 |
+| **A spike** | One month carries **3.9x** the median, 108 documents against a median of 28 and a next-highest of 43 |
+| **An ambiguous population** | 24 documents carrying both `Speaker Bureau Payments` and `Prior Auth Fraud`, with content that supports both |
 
 The gap is **one custodian's, not the collection's**. That is how a real hole appears: one
 person's mailbox preserved late, or a migration that lost a period, while everybody else's
@@ -974,9 +974,21 @@ something if the two categories exist separately.
 - **Every date on a document moves together**: `Primary Date`, `Sort Date`, `Date Sent`,
   `Date Received`, `Date Created`, `Date Last Modified`, `Date Taken` and the RSMF range.
   Moving one and not the others would plant an inconsistency nobody asked for.
+- **The gap goes where the collection is busy**, chosen as the highest-floor quarter the
+  custodian appears in rather than by position in the month list. Placed positionally it
+  landed in the corpus's thin leading tail, where the medium tier held 35 documents between
+  every other custodian against a median of 137: an empty row there is indistinguishable
+  from the matter not having started yet. Asserted **month by month**, not summed, because
+  three months summed against a one-month median is what let the weak placement through.
 - **The spike draws from eight surrounding months, not two.** Pulling eighty documents from
   two neighbours halved them, which is its own anomaly; spread wide, the dip is a few
   documents each.
+- **The two anomalies never touch.** The gap spreads the documents it moves across six
+  receiving months in proportion to what they already carry, rather than stacking them into
+  the nearest one, which at xlarge builds an accidental spike bigger than the planted one.
+  The spike never draws from the gap window, and its month can never be inside it. Both are
+  asserted. Two planted anomalies have to be independently readable, or they read as one
+  confusing event.
 - **Runs first of all**, before Rule 21, because `Processing Folder Path` carries year and
   month and Rule 11 makes that path a contract with the tree on disk.
 - **Every tier ships `collection-shape.json`**: the gap's custodian and months, the spike's

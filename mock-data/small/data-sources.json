@@ -35,7 +35,7 @@
         "Unsupported"
       ],
       "measured_share_of_its_documents": {
-        "Office properties": 0.744
+        "Office properties": 0.751
       }
     },
     "Network Share": {
@@ -60,7 +60,7 @@
       ],
       "measured_share_of_its_documents": {
         "container": 0.036,
-        "Office properties": 0.658
+        "Office properties": 0.649
       }
     },
     "Mobile Extraction (UFDR)": {
@@ -92,7 +92,8 @@
         "PDF - Scanned"
       ],
       "measured_share_of_its_documents": {
-        "OCR required": 1.0
+        "OCR required": 1.0,
+        "Office properties": 0.037
       }
     },
     "Microsoft Teams": {
