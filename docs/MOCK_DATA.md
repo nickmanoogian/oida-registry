@@ -155,7 +155,46 @@ TAR scores, custodian rules, threading, production rules) lives in
 [`../mock-data/RULES.md`](../mock-data/RULES.md). A demo walkthrough of the
 narrative lives in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.md).
 
-### 3.2 Real OIDA data-products and raw archive
+### 3.2 Real-data load package (`small-real`)
+
+A second native-file load package alongside the synthetic ones in §3.1, built entirely
+from real archive content rather than the MDL 2804 narrative.
+`scripts/build_real_load_package.py` reads the OIDA index parquet directly
+(`collection = 'Insys Litigation Documents'`) and emits a small, fully real,
+ready-to-import package at `load-packages/small-real/`. Default 60 documents.
+
+**Every value is real.** No synthetic fields, no review decisions, no invented people,
+which is the same principle `export_insys_documents.py` applies at full scale (§3.4). The
+load file is 23 fields and deliberately carries no `Responsive`, `Privileged` or `TAR
+Score`: those are created during review inside Relativity and do not exist in a produced
+archive.
+
+| File | What it is |
+|------|-----------|
+| `natives/{id}.pdf` | 60 real produced PDFs, 26 KB to 378 KB each, 8.5 MB in total. Kept small on purpose so the package stays committable |
+| `text/{id}.txt` | The real OCR extracted text for the same 60 documents |
+| `load-file.dat` | Concordance load file, 23 fields: Control Number, real Bates (present on all 60), Bates Alias, Custodian, file metadata, MD5, email fields, dates, page count, Redacted, `Collection`, and a `Source URL` back to industrydocuments.ucsf.edu |
+| `IMPORT_README.txt` | Step-by-step Relativity import instructions |
+
+The 60 documents span **19 real custodians**, so even at this size the package has a
+custodian distribution rather than a single name.
+
+```bash
+pip install -r requirements.txt        # duckdb
+python scripts/build_real_load_package.py --count 60
+```
+
+**This one is tracked in git rather than published**, unlike every other package. It is
+real archive content, not generated output, so no `make` target reproduces it and no seed
+recreates it: delete it and it is gone until someone re-queries the index. That is why
+`load-packages/small-real/` is the one path under `load-packages/` that `.gitignore` does
+not exclude.
+
+Use it when the question is whether something works against genuine produced documents,
+with real OCR text, real Bates numbers and a real citation back to the public archive.
+Use §3.1 when you need review fields, a narrative, or a particular failure mode.
+
+### 3.3 Real OIDA data-products and raw archive
 
 The real, analysis-ready datasets and the raw document archive that back the whole
 project. Pulled the same way (`dvc get …` or a direct S3 URL).
@@ -175,7 +214,7 @@ project. Pulled the same way (`dvc get …` or a direct S3 URL).
 Column definitions for the structured CSVs are in
 [`../data-products/SCHEMA.md`](../data-products/SCHEMA.md).
 
-### 3.3 ECI real-data export (real processing fields)
+### 3.4 ECI real-data export (real processing fields)
 
 `scripts/export_insys_documents.py` reads `metadata/oida-index.parquet`
 (`collection = 'Insys Litigation Documents'`) and emits **all 1,633,778 real

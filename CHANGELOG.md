@@ -6,6 +6,24 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Added — `load-packages/small-real/` is documented
+
+60 real produced PDFs with real OCR text, real Bates numbers, 19 real custodians and a
+`Source URL` back to industrydocuments.ucsf.edu, built by
+`scripts/build_real_load_package.py` from the OIDA index parquet. It has been tracked in
+git since v1.6.0 and nothing described it: not the README, not `docs/MOCK_DATA.md`, not
+Confluence. The only written account of it was the diff of a closed PR.
+
+It is the one package that is tracked rather than published, because it is real archive
+content rather than generated output: no seed recreates it and no `make` target rebuilds
+it from nothing. That is also why `load-packages/small-real/` is the single path under
+`load-packages/` that `.gitignore` does not exclude.
+
+Now `docs/MOCK_DATA.md` §3.2 with the file inventory and the 23-field load file, and a
+short Option C in the README pointing at it. Every figure verified against the package:
+60 documents, 60 natives and 60 text files, 26 KB to 378 KB each, 8.5 MB total, 19
+custodians, Bates on all 60, and no review fields in the load file.
+
 ### Fixed — `entities.json` reached nobody, and the published tiers predated Rule 20
 
 Rule 20 produces `entities.json` and it was committed in the small tier, but it was wired
