@@ -31,6 +31,7 @@ import email.mime.multipart
 import email.mime.text
 import email.utils
 import gzip
+import io
 import json
 import os
 import random
@@ -39,8 +40,10 @@ import shutil
 import sys
 import time
 import urllib.request
+import zlib
 from datetime import datetime
 from pathlib import Path
+from zipfile import ZipFile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dat_format import DAT_FIELD_SEP, DAT_NEWLINE, DAT_QUOTE, DELIMITER_NOTE  # noqa: F401
@@ -945,6 +948,14 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         with open(native_path, "wb") as f:
             f.write(blob)
 
+        # The same text, as a sidecar Relativity can load without the native.
+        # Document Categories and PI Detect are LLM passes over *extracted text*,
+        # so text is what feeds them, not the file. A metadata-only package could
+        # not reach either widget; with these it can, for about 1.1 KB a document
+        # against 8 KB for the native.
+        write_text_sidecar(ctrl, blob, os.path.splitext(native_path)[1].lstrip("."),
+                           out_dir, errored=bool((doc.get("Processing Error Type") or "").strip()))
+
         # Rule 12: a document the metadata flags as an error gets a native that
         # actually fails that way. Fabricated in place, over the healthy file.
         record = error_natives.fabricate(doc, native_path, blob) if with_errors else None
@@ -966,10 +977,83 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         if with_errors and error_natives.scenario_for(doc) is not None:
             raise
         fallback = dest("txt")
+        text = f"[{ft}]\n\n{body[:500]}"
         with open(fallback, "w", encoding="utf-8") as f:
-            f.write(f"[{ft}]\n\n{body[:500]}")
+            f.write(text)
+        write_text_sidecar(ctrl, text.encode("utf-8", "replace"), "txt", out_dir)
         stamp_file_dates(fallback, *dates)
         return dat_native_path(fallback, out_dir)
+
+
+def text_rel_path(ctrl):
+    """The .dat value for a document's extracted text sidecar."""
+    return f"text\\{ctrl}.txt"
+
+
+_XML_TAG = re.compile(rb"<[^>]+>")
+
+
+def extracted_text(blob, ext):
+    """The text Relativity would extract from these bytes.
+
+    Deliberately derived from the native rather than from the body that went into
+    it. Writing the body was wrong: the spreadsheet PI scenario puts its values
+    into cells via make_xlsx, not into the body, so a body-derived sidecar held
+    only 39 of the small tier's 102 seeded values. Extracting from the file finds
+    everything that is really in it, which is what Relativity does too.
+    """
+    try:
+        if ext in ("docx", "xlsx", "pptx"):
+            parts = []
+            with ZipFile(io.BytesIO(blob)) as z:
+                for n in z.namelist():
+                    if n.endswith(".xml") and ("document" in n or "sharedStrings" in n
+                                               or "sheet" in n or "slide" in n):
+                        parts.append(_XML_TAG.sub(b" ", z.read(n)))
+            text = b" ".join(parts).decode("utf-8", "replace")
+        elif ext == "eml":
+            import email as _email
+            msg = _email.message_from_bytes(blob)
+            text = " ".join((part.get_payload(decode=True) or b"").decode("utf-8", "replace")
+                            for part in msg.walk()
+                            if part.get_content_type() == "text/plain")
+        elif ext == "pdf":
+            out = []
+            for m in re.finditer(rb"stream\r?\n(.*?)endstream", blob, re.S):
+                chunk = m.group(1)
+                for cand in (chunk, chunk[:-2], chunk[:-1]):
+                    try:
+                        chunk = zlib.decompress(cand); break
+                    except zlib.error:
+                        continue
+                for tok in re.findall(rb"\((?:\\.|[^\\()])*\)", chunk):
+                    out.append(tok[1:-1].replace(b"\\(", b"(").replace(b"\\)", b")")
+                               .decode("latin-1"))
+            text = " ".join(out)
+        else:
+            text = blob.decode("utf-8", "replace")
+    except Exception:
+        return ""
+    return re.sub(r"[ \t]+", " ", text).strip()
+
+
+def write_text_sidecar(ctrl, blob, ext, out_dir, errored=False):
+    """Write the document's extracted text where the load file says it is.
+
+    Relativity takes extracted text either inline in a long text column or as a
+    path to a per-document file. The path form is what `load-packages/small-real/`
+    already uses, and it keeps the .dat readable rather than carrying 0.3 GB of
+    prose inline.
+
+    A document the metadata flags as a processing error gets an empty sidecar,
+    because extraction is exactly what failed on it (Rule 12). Claiming text for
+    a file that cannot be read would be the same lie the native layer avoids.
+    """
+    d = os.path.join(out_dir, "text")
+    os.makedirs(d, exist_ok=True)
+    text = "" if errored else extracted_text(blob, ext)
+    with open(os.path.join(d, f"{ctrl}.txt"), "w", encoding="utf-8") as f:
+        f.write(text)
 
 
 # ── Custodian data source sheet ───────────────────────────────────────────
@@ -1021,7 +1105,10 @@ DAT_COLUMNS = [
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
-    "Rsmf Message Count","Record Type","Processing Status","Processing Error Type","NativeFilePath",
+    "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
+    # Language so a language breakdown has something to read from metadata alone,
+    # and the extracted text path so the two LLM widgets have text to read.
+    "Language","NativeFilePath","ExtractedTextFilePath",
 ]
 
 
@@ -1106,6 +1193,7 @@ _COLUMN_MAP = {
     "Record Type":               ("Record Type",             None),
     "Processing Status":         ("Processing Status",       None),
     "Processing Error Type":     ("Processing Error Type",   None),
+    "Language":                  ("Language",                None),
 }
 
 
@@ -1116,6 +1204,8 @@ def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
         if col == "BegAttach":    v = fam.get("beg_attach","")
         elif col == "EndAttach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
+        elif col == "ExtractedTextFilePath":
+            v = text_rel_path(doc["Control Number"]) if native_rel_path else ""
         # The size on disk is the truth; the metadata describes a file that was
         # never written, and every size-based check downstream needs the real one.
         elif col == "File Size" and native_bytes is not None: v = native_bytes

@@ -1004,6 +1004,49 @@ python scripts/validate_mock_data.py --tier small
 
 ---
 
+## Rule 23 — The Extracted Text Layer
+
+Rule 12 governs whether a native fails the way its metadata claims, and Rule 19 governs its
+dates. This governs the **text**, and it exists because two of the six widgets read nothing
+else.
+
+**Document Categories and PI Detect are LLM passes over extracted text**, not over metadata and
+not over the native file. So a package with perfect metadata and no text reaches neither. Before
+this rule, the load file carried **none** of Rule 16: measured on the built small package, 0 of
+102 seeded PI values appeared anywhere in the `.dat`. They were inside the natives, which a
+metadata-only import never reads.
+
+### What it requires
+
+- **Every document with a native ships its extracted text** as a sidecar at
+  `text/{Control Number}.txt`, named by the `ExtractedTextFilePath` column. Relativity accepts
+  extracted text inline or as a per-document path; the path form is what
+  `load-packages/small-real/` already used, and it keeps the `.dat` readable instead of carrying
+  0.3 GB of prose inline.
+- **The text is extracted from the native, not from the body that went into it.** This is the
+  part that matters. A body-derived sidecar held only 39 of 102 seeded values, because the
+  spreadsheet PI scenario writes into cells via `make_xlsx` and never touches the body.
+  Extracting from the file finds everything actually in it, which is what Relativity does.
+- **A document flagged `Processing Status = Error` gets an empty sidecar.** Extraction is
+  precisely what failed on it. Claiming text for a file that cannot be read is the same lie the
+  native layer exists to avoid.
+- **`Language` is a load file column**, so a language breakdown has something to read from
+  metadata alone. Relativity derives its own during processing; this is for the import that has
+  no natives to process.
+- Asserted on the built package: every declared path exists, no healthy document has empty
+  text, and **every seeded PI value is reachable from the text without the native**.
+
+Cost, measured on the small tier: **1.0 KB a document**, against roughly 8 KB for the native.
+At the extra large tier that is about 0.3 GB of text against 2.2 GB of natives.
+
+Verify with:
+
+```bash
+python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:

@@ -469,6 +469,9 @@ def main():
     find_path = os.path.join(pkg, "findings.json")
     i_err     = header.index("Processing Error Type") if "Processing Error Type" in header else None
     paths     = {r[i_ctrl]: r[i_nat] for r in rows if r[i_nat]}
+    i_txtcol  = header.index("ExtractedTextFilePath") if "ExtractedTextFilePath" in header else None
+    paths_txt = ({r[i_ctrl]: r[i_txtcol] for r in rows if r[i_txtcol]}
+                 if i_txtcol is not None else {})
     err_type  = {r[i_ctrl]: (r[i_err] if i_err is not None else "") for r in rows}
 
     def full(rel):
@@ -512,6 +515,49 @@ def main():
         # slice, so asserting the spread here only ever failed the slice.
         places = {r["Where It Lives"] for r in pi_rows}
         print(f"       seeded PI places in this package: {', '.join(sorted(places))}")
+
+    # ── The extracted text layer ──────────────────────────────────────────
+    # Document Categories and PI Detect are LLM passes over extracted text, so a
+    # package without it cannot reach either widget however good the metadata is.
+    if "ExtractedTextFilePath" in header:
+        print("\n  Extracted text\n")
+        i_txt = header.index("ExtractedTextFilePath")
+        declared = [(r[i_ctrl], r[i_txt]) for r in rows if r[i_txt]]
+        gone = [c for c, rel in declared if not os.path.exists(full(rel))]
+        check("every declared extracted text file exists", not gone,
+              f"{len(gone)} missing: {gone[:3]}" if gone
+              else f"{len(declared):,} sidecars")
+
+        # Empty on an errored document is correct, not a gap: extraction is what
+        # failed. Empty on a healthy one means the text layer silently lost it.
+        blank = [c for c, rel in declared
+                 if not (err_type.get(c) or "").strip()
+                 and os.path.exists(full(rel))
+                 and not open(full(rel), encoding="utf-8").read().strip()]
+        check("no healthy document has empty extracted text", not blank,
+              f"{len(blank)} blank: {blank[:3]}" if blank
+              else "every healthy document carries text")
+
+        # The whole point of the layer: the seeded PI has to be findable in the
+        # text, because that is what aDAP reads. Derived from the native rather
+        # than from the body that went into it, which missed the spreadsheet
+        # scenario entirely.
+        if os.path.exists(pi_path):
+            with open(pi_path, encoding="utf-8") as fh:
+                want = [r for r in csv.DictReader(fh)]
+            txt_absent = []
+            for r in want:
+                c = r["Control Number"]
+                if (err_type.get(c) or "").strip():
+                    continue
+                rel = paths_txt.get(c)
+                if not rel or not os.path.exists(full(rel)):
+                    txt_absent.append(f"{c}: no text"); continue
+                if r["Value"] not in open(full(rel), encoding="utf-8").read():
+                    txt_absent.append(f"{c} {r['PI Type']}")
+            check("every seeded PI value is in the extracted text too", not txt_absent,
+                  f"{len(txt_absent)} missing: {txt_absent[:3]}" if txt_absent
+                  else f"{len(want)} instances reachable without the native")
 
     if os.path.exists(find_path):
         print("\n  Rule 18 — planted findings\n")

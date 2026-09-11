@@ -51,7 +51,7 @@ are building, so this is the table to read first. Measured on the **small** tier
 | **Collection Coverage** | 48 months of dates, **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, and a **planted gap and spike** (Rule 22): the top custodian has zero documents across three months that hold 28, 32 and 26 for everybody else against a median of 28, and one month carries 3.9x the median. Every native stamped from the manifest (Rule 19) | — |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6) | — |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, one document dense with PI and irrelevant to the matter, and **24 documents that belong to two categories at once** (Rule 22) | — |
-| **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against | — |
+| **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against. **All 102 are reachable from the extracted text layer (Rule 23), so a load file with no natives still feeds this widget** | — |
 | **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large and extra large add Spanish. |
 
 For scale rather than coverage, the **extra large** tier is the same matter at 275,273
@@ -84,6 +84,16 @@ produces load files that fail at import.
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, its file types, and the metadata profile measured from the data (Rule 21). |
+
+**A note on what a load file can and cannot feed.** Three of the six widgets read metadata and
+are satisfied by the `.dat` alone: Collection Coverage (custodian plus `Sent Date/Time`, falling
+back to created date), Key Relationships (the participant fields) and File Types (`File Type`).
+Two read **extracted text** through an LLM pass, Document Categories and PI Detect, so they need
+Rule 23's `text/` sidecars, which a package carries at about 1 KB a document. One,
+**Primary Language Composition**, comes from Relativity's own Language Identification during
+processing, so it needs the natives; the `Language` column is there for a metadata-only import
+to read, but it is our value rather than Relativity's.
+
 | `collection-shape.json` | The planted date gap and spike, and the population that belongs to two categories, each with what to expect and how to verify it (Rule 22). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
