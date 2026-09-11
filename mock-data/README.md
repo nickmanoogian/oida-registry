@@ -35,7 +35,7 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
 | **`documents.csv`** | 1.4 MB | 9 MB | 130 MB | 260 MB |
-| **Where it lives** | in git | v1.14.0 release, via DVC | v1.14.0 release, via DVC | v1.14.0 release, via DVC |
+| **Where it lives** | in git | v1.15.0 release, via DVC | v1.15.0 release, via DVC | v1.15.0 release, via DVC |
 
 ---
 
@@ -81,6 +81,7 @@ produces load files that fail at import.
 | `pi-ground-truth.csv` | One row per seeded PI instance, with the literal value and whether it is expected to be detected (Rule 16). |
 | `language-mix.json` | The second-language slice: requested share, achieved share, and why it is irrelevant to the matter (Rule 17). |
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
+| `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
 

@@ -30,13 +30,13 @@ REPO = "https://github.com/nickmanoogian/oida-registry"
 TIER_FILES = {
     "medium": ["documents.csv", "custodians.json", "email-families.json",
                "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
+               "findings.json", "entities.json"],
     "large":  ["documents.csv.gz", "custodians.json", "email-families.json.gz",
                "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
+               "findings.json", "entities.json"],
     "xlarge": ["documents.csv.gz", "custodians.json", "email-families.json.gz",
                "batches.json", "pi-ground-truth.csv", "language-mix.json",
-               "findings.json"],
+               "findings.json", "entities.json"],
 }
 
 TEMPLATE = """deps:

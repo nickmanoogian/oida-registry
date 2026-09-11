@@ -19,12 +19,15 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
+import build_load_package as pkg
 import entity_population
 import generate_mock_metadata as gen
 import language_mix
 import pi_layer
 import validate_mock_data as val
+import write_dvc_pointers as ptr
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PASS = "\033[32mok  \033[0m"
 FAIL = "\033[31mFAIL\033[0m"
@@ -64,7 +67,28 @@ def main():
         check(f"PI scenario {scenario} covers every tier", not missing,
               f"missing: {missing}" if missing else "")
 
-    # 2. A narrative parent has to be a tier that exists.
+    # 2. Every file the generator writes for a tier is actually distributed.
+    #    entities.json shipped in Rule 20 and reached none of the four places that
+    #    hand a tier to anybody: no pointer, no make target, no release asset, and
+    #    the load package did not copy it. A file that only exists in the committed
+    #    small tier is a file nobody else gets, and nothing failed.
+    produced = {"documents.csv", "custodians.json", "email-families.json",
+                "batches.json"} | set(pkg.GROUND_TRUTH_FILES)
+    for tier, names in ptr.TIER_FILES.items():
+        # the pointer list gzips the big two above the medium tier
+        declared = {n.removesuffix(".gz") for n in names}
+        missing = sorted(produced - declared)
+        check(f"{tier}: every produced file has a pointer declared", not missing,
+              f"not distributed: {missing}" if missing else f"{len(declared)} files")
+
+    mk = open(os.path.join(ROOT, "Makefile")).read()
+    for tier in ptr.TIER_FILES:
+        unpulled = [n for n in ptr.TIER_FILES[tier]
+                    if f"mock-data/{tier}/{n}" not in mk]
+        check(f"{tier}: every pointer is pulled by make mock-{tier}", not unpulled,
+              f"not pulled: {unpulled}" if unpulled else f"{len(ptr.TIER_FILES[tier])} files")
+
+    # 3. A narrative parent has to be a tier that exists.
     orphan = {t: p for t, p in gen.NARRATIVE_PARENT.items() if p not in tiers}
     check("every narrative parent is a real tier", not orphan,
           f"{orphan}" if orphan else ", ".join(f"{t} -> {p}" for t, p

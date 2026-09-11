@@ -1,5 +1,5 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.14.0/medium-email-families.json
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.15.0/medium-email-families.json
   size: 572611
 outs:
 - path: email-families.json

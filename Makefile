@@ -159,6 +159,7 @@ mock-medium:
 	dvc get $(REGISTRY) mock-data/medium/pi-ground-truth.csv  --out $(MOCK_OUT)/medium/pi-ground-truth.csv
 	dvc get $(REGISTRY) mock-data/medium/language-mix.json    --out $(MOCK_OUT)/medium/language-mix.json
 	dvc get $(REGISTRY) mock-data/medium/findings.json        --out $(MOCK_OUT)/medium/findings.json
+	dvc get $(REGISTRY) mock-data/medium/entities.json        --out $(MOCK_OUT)/medium/entities.json
 	@echo "Medium tier ready at $(MOCK_OUT)/medium/"
 
 mock-large:
@@ -170,6 +171,7 @@ mock-large:
 	dvc get $(REGISTRY) mock-data/large/pi-ground-truth.csv    --out $(MOCK_OUT)/large/pi-ground-truth.csv
 	dvc get $(REGISTRY) mock-data/large/language-mix.json      --out $(MOCK_OUT)/large/language-mix.json
 	dvc get $(REGISTRY) mock-data/large/findings.json          --out $(MOCK_OUT)/large/findings.json
+	dvc get $(REGISTRY) mock-data/large/entities.json          --out $(MOCK_OUT)/large/entities.json
 	gunzip -f $(MOCK_OUT)/large/documents.csv.gz
 	gunzip -f $(MOCK_OUT)/large/email-families.json.gz
 	@echo "Large tier ready at $(MOCK_OUT)/large/"
@@ -183,6 +185,7 @@ mock-xlarge:
 	dvc get $(REGISTRY) mock-data/xlarge/pi-ground-truth.csv    --out $(MOCK_OUT)/xlarge/pi-ground-truth.csv
 	dvc get $(REGISTRY) mock-data/xlarge/language-mix.json      --out $(MOCK_OUT)/xlarge/language-mix.json
 	dvc get $(REGISTRY) mock-data/xlarge/findings.json          --out $(MOCK_OUT)/xlarge/findings.json
+	dvc get $(REGISTRY) mock-data/xlarge/entities.json          --out $(MOCK_OUT)/xlarge/entities.json
 	gunzip -f $(MOCK_OUT)/xlarge/documents.csv.gz
 	gunzip -f $(MOCK_OUT)/xlarge/email-families.json.gz
 	@echo "Extra large tier ready at $(MOCK_OUT)/xlarge/"
