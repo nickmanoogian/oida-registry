@@ -910,6 +910,12 @@ def phase_date_range(phase, tier_dr):
 
 # ── Document Builder ──────────────────────────────────────────────────────
 
+# Share of emails carrying a CC, and the share of those that also carry a BCC.
+# Kept modest: a corpus where most mail is CC'd reads as noise rather than signal.
+CC_SHARE        = 0.35
+BCC_SHARE_OF_CC = 0.15
+
+
 def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, org):
     pdr    = phase_date_range(phase, tier_dr)
     date   = random_date(*pdr)
@@ -950,6 +956,32 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
                                            {"name": "Ohio AG Office",          "email": "inquiry@ag.state.us"}])
     to_name  = to_cust.get("name","")
     to_email = to_cust.get("email","")
+
+    # CC and BCC. Both were declared and never populated, so every email in every
+    # tier had exactly one recipient and Key Relationships could not tell a
+    # To-only edge from a To+CC one. A CC recipient is a real edge in an email
+    # graph, and the commonest way a name enters a matter without ever being
+    # collected.
+    #
+    # Drawn from a per-document stream seeded off the control number, NOT the
+    # global one: adding draws to the global stream would shift every later
+    # random call and reshuffle the whole corpus, changing custodian assignments,
+    # dates and every measured number in the docs. This way only these four
+    # fields change.
+    cc_name = cc_email = bcc_name = bcc_email = ""
+    if is_email:
+        crng = random.Random(f"cc:{ctrl}")
+        others = [c for c in all_custs
+                  if c.get("email") not in (custodian["email"], to_email)]
+        if others and crng.random() < CC_SHARE:
+            picks = crng.sample(others, min(len(others), crng.choice([1, 1, 2, 2, 3])))
+            cc_name  = "; ".join(c["name"] for c in picks)
+            cc_email = "; ".join(c["email"] for c in picks)
+            rest = [c for c in others if c not in picks]
+            # BCC is rarer, and one recipient, the way it really appears.
+            if rest and crng.random() < BCC_SHARE_OF_CC:
+                b = crng.choice(rest)
+                bcc_name, bcc_email = b["name"], b["email"]
 
     # RSMF
     rsmf_app=rsmf_parts=rsmf_begin=rsmf_end=rsmf_evt=""; rsmf_msgs=0; rsmf_ph="No"
@@ -1056,10 +1088,10 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
         "Email From SMTP":         custodian["email"] if is_email else "",
         "Email To":                to_name if is_email else "",
         "Email To SMTP":           to_email if is_email else "",
-        "Email CC":                "",
-        "Email CC SMTP":           "",
-        "Email BCC":               "",
-        "Email BCC SMTP":          "",
+        "Email CC":                cc_name,
+        "Email CC SMTP":           cc_email,
+        "Email BCC":               bcc_name,
+        "Email BCC SMTP":          bcc_email,
         "Email Subject":           subject,
         "Message ID":              fake_message_id() if is_email else "",
         "In Reply To":             "",

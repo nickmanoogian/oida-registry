@@ -31,6 +31,7 @@ import email.mime.multipart
 import email.mime.text
 import email.utils
 import gzip
+import io
 import json
 import os
 import random
@@ -39,8 +40,10 @@ import shutil
 import sys
 import time
 import urllib.request
+import zlib
 from datetime import datetime
 from pathlib import Path
+from zipfile import ZipFile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dat_format import DAT_FIELD_SEP, DAT_NEWLINE, DAT_QUOTE, DELIMITER_NOTE  # noqa: F401
@@ -945,6 +948,14 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         with open(native_path, "wb") as f:
             f.write(blob)
 
+        # The same text, as a sidecar Relativity can load without the native.
+        # Document Categories and PI Detect are LLM passes over *extracted text*,
+        # so text is what feeds them, not the file. A metadata-only package could
+        # not reach either widget; with these it can, for about 1.1 KB a document
+        # against 8 KB for the native.
+        write_text_sidecar(ctrl, blob, os.path.splitext(native_path)[1].lstrip("."),
+                           out_dir, errored=bool((doc.get("Processing Error Type") or "").strip()))
+
         # Rule 12: a document the metadata flags as an error gets a native that
         # actually fails that way. Fabricated in place, over the healthy file.
         record = error_natives.fabricate(doc, native_path, blob) if with_errors else None
@@ -966,10 +977,83 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
         if with_errors and error_natives.scenario_for(doc) is not None:
             raise
         fallback = dest("txt")
+        text = f"[{ft}]\n\n{body[:500]}"
         with open(fallback, "w", encoding="utf-8") as f:
-            f.write(f"[{ft}]\n\n{body[:500]}")
+            f.write(text)
+        write_text_sidecar(ctrl, text.encode("utf-8", "replace"), "txt", out_dir)
         stamp_file_dates(fallback, *dates)
         return dat_native_path(fallback, out_dir)
+
+
+def text_rel_path(ctrl):
+    """The .dat value for a document's extracted text sidecar."""
+    return f"text\\{ctrl}.txt"
+
+
+_XML_TAG = re.compile(rb"<[^>]+>")
+
+
+def extracted_text(blob, ext):
+    """The text Relativity would extract from these bytes.
+
+    Deliberately derived from the native rather than from the body that went into
+    it. Writing the body was wrong: the spreadsheet PI scenario puts its values
+    into cells via make_xlsx, not into the body, so a body-derived sidecar held
+    only 39 of the small tier's 102 seeded values. Extracting from the file finds
+    everything that is really in it, which is what Relativity does too.
+    """
+    try:
+        if ext in ("docx", "xlsx", "pptx"):
+            parts = []
+            with ZipFile(io.BytesIO(blob)) as z:
+                for n in z.namelist():
+                    if n.endswith(".xml") and ("document" in n or "sharedStrings" in n
+                                               or "sheet" in n or "slide" in n):
+                        parts.append(_XML_TAG.sub(b" ", z.read(n)))
+            text = b" ".join(parts).decode("utf-8", "replace")
+        elif ext == "eml":
+            import email as _email
+            msg = _email.message_from_bytes(blob)
+            text = " ".join((part.get_payload(decode=True) or b"").decode("utf-8", "replace")
+                            for part in msg.walk()
+                            if part.get_content_type() == "text/plain")
+        elif ext == "pdf":
+            out = []
+            for m in re.finditer(rb"stream\r?\n(.*?)endstream", blob, re.S):
+                chunk = m.group(1)
+                for cand in (chunk, chunk[:-2], chunk[:-1]):
+                    try:
+                        chunk = zlib.decompress(cand); break
+                    except zlib.error:
+                        continue
+                for tok in re.findall(rb"\((?:\\.|[^\\()])*\)", chunk):
+                    out.append(tok[1:-1].replace(b"\\(", b"(").replace(b"\\)", b")")
+                               .decode("latin-1"))
+            text = " ".join(out)
+        else:
+            text = blob.decode("utf-8", "replace")
+    except Exception:
+        return ""
+    return re.sub(r"[ \t]+", " ", text).strip()
+
+
+def write_text_sidecar(ctrl, blob, ext, out_dir, errored=False):
+    """Write the document's extracted text where the load file says it is.
+
+    Relativity takes extracted text either inline in a long text column or as a
+    path to a per-document file. The path form is what `load-packages/small-real/`
+    already uses, and it keeps the .dat readable rather than carrying 0.3 GB of
+    prose inline.
+
+    A document the metadata flags as a processing error gets an empty sidecar,
+    because extraction is exactly what failed on it (Rule 12). Claiming text for
+    a file that cannot be read would be the same lie the native layer avoids.
+    """
+    d = os.path.join(out_dir, "text")
+    os.makedirs(d, exist_ok=True)
+    text = "" if errored else extracted_text(blob, ext)
+    with open(os.path.join(d, f"{ctrl}.txt"), "w", encoding="utf-8") as f:
+        f.write(text)
 
 
 # ── Custodian data source sheet ───────────────────────────────────────────
@@ -1012,16 +1096,19 @@ DAT_COLUMNS = [
     # which named a Bates range it does not hold (BegBates/EndBates are separate
     # columns), forced a manual mapping step, and put a "#" in a header.
     "Control Number","EndDoc#","BegAttach","EndAttach","Custodian","Custodian Email",
-    "Custodian Org","File Name","File Type","File Size","Date","From","From (SMTP)",
-    "To","To (SMTP)","CC","Subject","Date Sent","Date Received","Message ID",
-    "Has Attachments","Attachment Count","Email Thread ID","Email Threading Inclusive",
+    "Custodian Org","File Name","File Type","File Size","Primary Date","Email From","Email From (SMTP Address)",
+    "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
+    "Email Has Attachments","Number of Attachments","Email Threading ID","Email Threading Inclusive",
     "Conversation Topic","Author","Title","Company","Page Count",
-    "Date Created","Date Last Modified","Data Source",
-    "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issue Tags",
+    "Created Date/Time","Last Modified Date/Time","Data Source",
+    "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
     "BegBates","EndBates","Production Set","Redacted","TAR Score","AL Predicted Relevant",
     "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
-    "Rsmf Message Count","Record Type","Processing Status","Processing Error Type","NativeFilePath",
+    "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
+    # Language so a language breakdown has something to read from metadata alone,
+    # and the extracted text path so the two LLM widgets have text to read.
+    "Language","NativeFilePath","ExtractedTextFilePath",
 ]
 
 
@@ -1040,7 +1127,7 @@ def dat_row(values):
 # choice option": splitting on ASCII 59 yields " Prior Auth Fraud" with a leading
 # space as a choice distinct from "Prior Auth Fraud". So the space is stripped on
 # the way into the .dat only, leaving documents.csv readable.
-MULTI_VALUE_COLUMNS = ("Issue Tags", "Rsmf Participants")
+MULTI_VALUE_COLUMNS = ("Issues", "Rsmf Participants")
 MULTI_VALUE_SEP = ";"
 
 
@@ -1055,34 +1142,37 @@ _COLUMN_MAP = {
     "File Name":                 ("File Name",               None),
     "File Type":                 ("File Extension",          None),
     "File Size":                 ("File Size (bytes)",       None),
-    "Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
-    "From":                      ("Email From",              None),
-    "From (SMTP)":               ("Email From SMTP",         None),
-    "To":                        ("Email To",                None),
-    "To (SMTP)":                 ("Email To SMTP",           None),
-    "CC":                        ("Email CC",                None),
-    "Subject":                   ("Email Subject",           lambda d: d.get("Email Subject","") or d.get("Title","")),
-    "Date Sent":                 ("Date Sent",               lambda d: d.get("Date Sent","")[:10] if d.get("Date Sent") else ""),
-    "Date Received":             ("Date Received",           lambda d: d.get("Date Received","")[:10] if d.get("Date Received") else ""),
+    "Primary Date":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
+    "Email From":                      ("Email From",              None),
+    "Email From (SMTP Address)":               ("Email From SMTP",         None),
+    "Email To":                        ("Email To",                None),
+    "Email To (SMTP Address)":                 ("Email To SMTP",           None),
+    "Email CC":                        ("Email CC",                None),
+    # Email-only now that the column is named after Relativity's own "Email
+    # Subject" field. The document title it used to fall back to is already its
+    # own "Title" column, so the fallback only mislabelled EDocs.
+    "Email Subject":                   ("Email Subject",           None),
+    "Sent Date/Time":                 ("Date Sent",               lambda d: d.get("Date Sent","")[:10] if d.get("Date Sent") else ""),
+    "Email Received Date/Time":             ("Date Received",           lambda d: d.get("Date Received","")[:10] if d.get("Date Received") else ""),
     "Message ID":                ("Message ID",              None),
-    "Has Attachments":           ("Has Attachments",         None),
-    "Attachment Count":          ("Attachment Count",        None),
-    "Email Thread ID":           ("Email Thread ID",         None),
+    "Email Has Attachments":           ("Has Attachments",         None),
+    "Number of Attachments":          ("Attachment Count",        None),
+    "Email Threading ID":        ("Email Thread ID",         None),
     "Email Threading Inclusive": ("Email Threading Inclusive",None),
     "Conversation Topic":        ("Conversation Topic",      None),
     "Author":                    ("Author",                  None),
     "Title":                     ("Title",                   None),
     "Company":                   ("Company",                 None),
     "Page Count":                ("Page Count",              None),
-    "Date Created":              ("Date Created",            lambda d: d.get("Date Created","")[:10]),
-    "Date Last Modified":        ("Date Last Modified",      lambda d: d.get("Date Last Modified","")[:10]),
+    "Created Date/Time":              ("Date Created",            lambda d: d.get("Date Created","")[:10]),
+    "Last Modified Date/Time":        ("Date Last Modified",      lambda d: d.get("Date Last Modified","")[:10]),
     "Data Source":               ("Data Source",             None),
     "Workflow Stage":            ("Workflow Stage",          None),
     "Responsive":                ("Responsiveness",          None),
     "Privileged":                ("Privilege",               None),
     "Privilege Reason":          ("Privilege Reason",        None),
     "Hot Doc":                   ("Hot Doc",                 None),
-    "Issue Tags":                ("Issue Tags",              None),
+    "Issues":                ("Issue Tags",              None),
     "BegBates":                  ("Bates Begin",             None),
     "EndBates":                  ("Bates End",               None),
     "Production Set":            ("Production Set",          None),
@@ -1103,6 +1193,7 @@ _COLUMN_MAP = {
     "Record Type":               ("Record Type",             None),
     "Processing Status":         ("Processing Status",       None),
     "Processing Error Type":     ("Processing Error Type",   None),
+    "Language":                  ("Language",                None),
 }
 
 
@@ -1113,6 +1204,8 @@ def doc_to_dat_row(doc, native_rel_path, families_by_doc, native_bytes=None):
         if col == "BegAttach":    v = fam.get("beg_attach","")
         elif col == "EndAttach":  v = fam.get("end_attach","")
         elif col == "NativeFilePath": v = native_rel_path or ""
+        elif col == "ExtractedTextFilePath":
+            v = text_rel_path(doc["Control Number"]) if native_rel_path else ""
         # The size on disk is the truth; the metadata describes a file that was
         # never written, and every size-based check downstream needs the real one.
         elif col == "File Size" and native_bytes is not None: v = native_bytes
@@ -1238,18 +1331,49 @@ STEP B3 — Field mapping
   screen shows a single column instead of 59:
     {delimiters}
 
-  Map these .dat columns to Relativity fields:
-    Control Number       → Control Number  (the identifier; auto-maps by name)
-    Custodian            → Custodian
-    Custodian Org        → Custodian Org (custom text field)
-    Responsive           → Responsiveness (single choice)
-    Privileged           → Privilege (single choice)
-    Hot Doc              → Hot Doc (yes/no)
-    Issue Tags           → Issue Tags (multi-choice or long text)
-    Narrative Phase      → Narrative Phase (number)
-    Narrative Phase Name → Narrative Phase Name (text)
-    TAR Score            → TAR Score (decimal)
-    NativeFilePath       → (mapped to native file upload)
+  MOST COLUMNS AUTO-MAP, because they are named after Relativity's own document
+  fields: Control Number, Custodian, File Name, File Type, File Size, Email From,
+  Email From (SMTP Address), Email To, Email To (SMTP Address), Email CC,
+  Email Subject, Sent Date/Time, Email Received Date/Time, Created Date/Time,
+  Last Modified Date/Time, Email Has Attachments, Number of Attachments,
+  Message ID, Author, Title, Company, Issues, Record Type, Responsive.
+
+  DO NOT USE "Map with AI" ON THIS FILE. Checked against a real workspace, it
+  mapped "Primary Date" to "Meeting End Date" and "Rsmf Message Count" to
+  "Email Recipient Count", and pointed several text columns at Multiple Object
+  fields that expect object references. Wrong mappings import silently and then
+  a date breakdown is quietly built on meeting end dates. Auto-map by name, then
+  map the rest by hand.
+
+  Create these as custom fields, they are ours rather than Relativity's:
+    Custodian Email      → Fixed-Length Text(50)
+    Custodian Org        → Single Choice
+    Data Source          → Single Choice          (Rule 21)
+    Workflow Stage       → Single Choice
+    Privileged           → Single Choice
+    Privilege Reason     → Single Choice
+    Hot Doc              → Yes/No
+    Narrative Phase      → Whole Number
+    Narrative Phase Name → Single Choice
+    TAR Score            → Decimal
+    AL Predicted Relevant→ Yes/No
+    Batch Name/Status    → Fixed-Length Text(50) / Single Choice
+    Reviewer             → Single Choice
+    Dedup Method         → Single Choice
+    OCR Flag             → Yes/No
+    Redacted             → Yes/No
+    Primary Date         → Date
+    Page Count           → Whole Number
+    Processing Status    → Single Choice
+    Processing Error Type→ Single Choice
+    Rsmf Application     → Single Choice
+    Rsmf Participants    → Multiple Choice
+    Rsmf Message Count   → Whole Number
+    EndDoc#, BegAttach, EndAttach, BegBates, EndBates, Production Set
+                         → Fixed-Length Text(50)
+
+  IF YOU ARE NOT IMPORTING NATIVES, leave NativeFilePath unmapped and set the
+  overwrite mode to Append. An Overlay against an empty workspace fails.
 
 STEP B4 — Set the native file path base
   When prompted for the native file path, set the base path to the location of

@@ -504,7 +504,7 @@
       "primary": "michael.brennan@mallinckrodt.com",
       "alias": "michael.brennan@covidien.com",
       "why": "legacy domain from before the spin-off",
-      "documents_from_primary": 183,
+      "documents_from_primary": 223,
       "documents_from_alias": 45
     },
     {
@@ -512,7 +512,7 @@
       "primary": "james.whitfield@mallinckrodt.com",
       "alias": "jwhitfield@mallinckrodt.com",
       "why": "an older account format still in use",
-      "documents_from_primary": 92,
+      "documents_from_primary": 134,
       "documents_from_alias": 12
     }
   ],
