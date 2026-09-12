@@ -77,6 +77,65 @@ def _post(base, path, payload, auth):
         return e.code, e.read().decode()
 
 
+def inherited_analytics_sets(base, ws, auth):
+    """Structured Analytics Sets the workspace already has, and should not.
+
+    A workspace cloned from a template that has had Early Insights run in it
+    inherits that template's Structured Analytics Sets, and with them the
+    document-result fields those sets own: EI_R001, EI_R002 and their sub-fields.
+
+    That breaks the first analysis in every workspace made from the template.
+    Each ECI run creates a new set and asks Structured Analytics to create its
+    result fields under a prefix; the prefix resolves to EI_R001, which already
+    exists and is already assigned to an inherited set, and Relativity refuses:
+
+        ValidationException: Field already exists with a name that matches the
+        set prefix, but is not valid to be assigned to this set.
+        at Relativity.Threads.Service.Manager.DocumentResultFieldManager
+           .CreateDocumentResultsField
+
+    The run dies there with no report and no partial results, and the error
+    names a field rather than the template, so it reads as a data problem. It is
+    not. Deleting the inherited sets releases the prefix, and the delete
+    cascades to their result fields.
+
+    Returns a list of (artifactID, name, status). Empty is the healthy case.
+    """
+    # The object type's own ArtifactID differs per workspace, so resolve by name.
+    status, body = _post(base, QUERY.format(ws=ws), {
+        "request": {
+            "objectType": {"artifactTypeID": 25},
+            "fields": [{"name": "Name"}],
+            "condition": "'Name' == 'Structured Analytics Set'",
+        },
+        "start": 0, "length": 1,
+    }, auth)
+    if status != 200:
+        return None
+    objects = (json.loads(body).get("Objects") or [])
+    if not objects:
+        return []
+    type_id = objects[0]["ArtifactID"]
+
+    status, body = _post(base, QUERY.format(ws=ws), {
+        "request": {
+            "objectType": {"artifactID": type_id},
+            "fields": [{"name": "Structured analytics set name"}, {"name": "Status"}],
+            "condition": "",
+        },
+        "start": 0, "length": 50,
+    }, auth)
+    if status != 200:
+        return None
+    out = []
+    for o in (json.loads(body).get("Objects") or []):
+        name, state = o["Values"][0], o["Values"][1]
+        if isinstance(state, dict):
+            state = state.get("Name")
+        out.append((o["ArtifactID"], name, state))
+    return out
+
+
 def existing_document_fields(base, ws, auth):
     """Every Document field name in the workspace, lowercased."""
     names, start = set(), 0
@@ -144,6 +203,33 @@ def main():
 
     verb = "would create" if args.dry_run else "created"
     print(f"\n{verb} {created}, skipped {skipped}, failed {failed}")
+
+    # Worth knowing before anyone runs an analysis, and cheap to check while we
+    # are already authenticated against the workspace.
+    if not args.dry_run:
+        sets = inherited_analytics_sets(args.url, args.workspace, auth)
+        if sets is None:
+            print("\n  could not read Structured Analytics Sets, skipping that check")
+        elif sets:
+            print(f"\n  WARNING: {len(sets)} Structured Analytics Set(s) already in this workspace:")
+            for aid, name, state in sets:
+                print(f"    {aid}  {name}  [{state}]")
+            print("""
+  If these arrived with the workspace template rather than from a run you
+  started here, the first Early Insights analysis in this workspace will fail.
+  They own the EI_R001 / EI_R002 result fields, a new run needs that same
+  prefix, and Relativity refuses to reassign it:
+
+      ValidationException: Field already exists with a name that matches the
+      set prefix, but is not valid to be assigned to this set.
+
+  The run dies with no report and no partial results, and the error names a
+  field rather than the template, so it reads as a problem with your data. It
+  is not. A set carrying a date older than this workspace is the giveaway.
+
+  Deleting the inherited sets releases the prefix and cascades to their result
+  fields. Do that before running an analysis, not after.""")
+
     return 1 if failed else 0
 
 

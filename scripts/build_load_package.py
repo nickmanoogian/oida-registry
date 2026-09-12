@@ -1481,28 +1481,45 @@ STEP B3 — Field mapping
   The 59th is ExtractedTextFilePath, and no amount of naming fixes it. See the
   extracted text section below.
 
-  IF AN ANALYSIS OVER THIS DATA FAILS, DO NOT START WITH THE LOAD FILE
-  --------------------------------------------------------------------
+  CHECK THE WORKSPACE TEMPLATE BEFORE YOU RUN AN ANALYSIS
+  -------------------------------------------------------
   Creating fields alters the Document table schema and an overlay rewrites a
   column on every row, so do not do either underneath a running import. That
-  much is ordinary caution.
+  much is ordinary caution. This next part is not, and it cost us an evening.
 
-  The part worth writing down is what a failure afterwards does NOT tell you. An
-  Early Insights run on our 9,980 document workspace failed twice, about 7
-  minutes in each time, at a step named RunningStructuredAnalytics, with no
-  report and no partial results. Both times the service's own readiness endpoint
-  reported ready with no missing dependencies, before and after, so readiness
-  passing is not evidence a run will complete.
+  A workspace cloned from a template that has had Early Insights run in it
+  inherits that template's Structured Analytics Sets, and with them the
+  document-result fields those sets own: EI_R001, EI_R002 and their sub-fields.
 
-  What made the corpus an unlikely cause: no workspace anywhere on that instance
-  had ever completed an Early Insights report, including one that predated this
-  data entirely. A failure reachable in a workspace that never held these
-  documents is not a fact about these documents.
+  That breaks the FIRST analysis in every workspace made from the template. Each
+  run creates a new set and asks Structured Analytics to create its result
+  fields under a prefix. The prefix resolves to EI_R001, which already exists
+  and is already assigned to an inherited set, so Relativity refuses:
 
-  So the first check is not "what is wrong with my load file". It is "has any
-  workspace on this instance ever completed one of these". If none has, the
-  problem sits upstream of whatever you just imported, and the load file is the
-  most expensive place to go looking for it.
+      ValidationException: Field already exists with a name that matches the
+      set prefix, but is not valid to be assigned to this set.
+      at Relativity.Threads.Service.Manager.DocumentResultFieldManager
+         .CreateDocumentResultsField
+
+  The run dies with no report and no partial results. The UI says only that "the
+  analysis service encountered an error before any insights could be produced".
+  Readiness reports ready with no missing dependencies throughout, before and
+  after, so nothing warns you and nothing explains it.
+
+  Because the error names a field, it reads as a problem with your data. It is
+  not. The giveaway is a set whose name carries a date older than the workspace
+  itself: ours inherited four, dated 27 Aug through 3 Sep, into a workspace
+  created on 12 Sep.
+
+  Deleting the inherited sets releases the prefix, and the delete cascades to
+  their result fields. On our 9,980 document workspace that removed 30 Document
+  fields, and the next run cleared Structured Analytics and went on to the
+  analysis stages, having failed twice at the same step before.
+
+      python3 scripts/create_workspace_fields.py --workspace <id>
+
+  warns about this after it creates the fields, so a normal import run tells you
+  before an analysis does.
 
   THREE SMALLER RULES FROM THE GUIDE
   ----------------------------------
