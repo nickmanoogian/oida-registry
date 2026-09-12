@@ -6,6 +6,58 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.21.0 packages
+
+Load packages only. The tier files are untouched, so the 30 pointers stay at v1.19.0.
+
+The load file did not change shape, it changed three column names and one value
+spelling, so that everything in it can actually reach a workspace.
+
+| | v1.20.0 | v1.21.0 |
+|---|---|---|
+| Columns | 60 | 60, unchanged |
+| Auto-map on a stock template | 33 of 60 | **34 of 60** |
+| Auto-map after `create_workspace_fields.py` | not possible | **58 of 60**, verified live |
+| Columns that import as nothing | 25 | **0** |
+
+**The 25 columns that imported as nothing.** Auto Map matches a column to a
+workspace field of the exact same name. A stock template has 472 Document fields
+and 34 of ours matched one, so the other 25 were *ignored*: no error, no value,
+nothing. Deleting them was tempting, since they are 29% of the load file, but
+measuring each one says they are not filler. `Data Source` is Rule 21, which the
+widget coverage table measures Collection Coverage against. The three RSMF
+columns carry 640 documents and 40,882 chat messages, and are the **only** route
+that layer has, because no RSMF, short message or chat field exists in the
+template and the package ships no `.rsmf` natives for processing to read.
+
+So the gap was the workspace, not the load file. `scripts/workspace_fields.py`
+declares the 24 fields a stock template lacks, with every type derived by
+measuring the extra large tier, and `scripts/create_workspace_fields.py` creates
+them. `scripts/build_overlay_load_file.py` populates them on documents that are
+already imported, without re-extracting text.
+
+Two renames, from reading the stock template properly rather than guessing:
+
+* `Privilege Reason` is now **`Privilege`**. The stock `Privilege` field is
+  multiple choice and documented as the "reason for privilege assertion
+  determined by document reviewers". Our four values are exactly that. The
+  boolean keeps the name `Privileged` and is now spelled `Yes`/`No` rather than
+  `""`/`"Privileged"`, because a Relativity Yes/No field rejects the word, and
+  because feeding Yes/No into the reason field would have created two junk
+  choices beside the real ones.
+* `Batch Name`/`Batch Status` are now **`Review Batch Name`/`Review Batch
+  Status`**. `Batch Status` is refused as a reserved name: Relativity's Batch
+  application already owns `Batch`, `Batch::Status` and `Batch::Assigned To`.
+  These columns simulate review batching rather than being that application.
+
+Verified against a live workspace: all 24 fields created, then 58 of the 60
+columns match an existing field by name. The two that do not are `NativeFilePath`
+and `ExtractedTextFilePath`, both deliberate. `ExtractedTextFilePath` cannot be
+fixed by naming at any price, because the "Text File" setting applies "to any
+Long Text field" and so is a property of the job, not of the column. An import
+profile carries it, and is the only thing that does.
+
+
 ### Changed — v1.20.0 packages
 
 Load packages only. The tier files are untouched, so the 30 pointers stay at v1.19.0.
