@@ -828,7 +828,7 @@ Measured on the small tier before this rule:
 | Distinct addresses in the collection | 15 | 54 |
 | Non-custodian entities | 12 | 44 |
 | Entities on exactly one document | 1, and it was planted by Rule 18 | 28 |
-| People sending from two addresses | 0 | 2 |
+| People reachable at two addresses | 0 | 2 |
 
 Twelve non-custodian entities against a production cap of **25** meant the tier could not
 reach the cut, so the "entities below the cut are not listed" behaviour was untestable with
@@ -1043,6 +1043,66 @@ Verify with:
 
 ```bash
 python scripts/validate_load_package.py load-packages/small
+```
+
+---
+
+## Rule 24 — Mail Direction
+
+Rule 14 fixed the custodian side of Key Relationships and Rule 20 fixed the external side.
+Both are about **who** is in the graph. This is about which way the edges point, and it was
+wrong in every tier shipped before it.
+
+Measured on the medium tier before this rule, over its 5,214 emails:
+
+| | Before | After |
+|---|---|---|
+| Emails sent by their own custodian | 5,214 of 5,214 | 3,016 of 5,214 |
+| Emails the custodian received | 0 | 2,198 |
+| Addressed to their own sender | 396 | 18 |
+| Carrying more than one To recipient | 0 | 1,474 |
+| Distinct senders | 13 | 25 |
+
+The generator set `Email From` to the custodian's own name unconditionally, so the corpus
+contained **no inbound mail at all**. A collection is a set of mailboxes, and a mailbox is
+mostly things other people sent you. Ten custodians radiating outward with nothing coming
+back is not a shape a matter produces, and it is the one shape that makes a relationship
+graph look deliberate.
+
+The recipient was drawn from a pool that included the custodian without excluding them, so
+one email in thirteen was a person writing to themselves. A self edge carries no relationship
+and production has to special-case it.
+
+And CC went multi-value under Rule 20 while To never did, so **the semicolon path in the To
+column was never exercised by any tier**. That is the path an importer is most likely to get
+wrong, which makes it the one worth having in the data.
+
+### What it requires
+
+- **Direction is made by swapping, never by rewriting.** An inbound email exchanges the From
+  pair with the first To pair. The two people on the document do not change and neither does
+  any address count, because the entity census in Rule 20 counts all four address fields
+  rather than the To column alone. Only the arrow moves. Rewriting a participant would
+  falsify Rule 20's counts and Rule 18's findings; a swap cannot, by construction.
+- **`Custodian` is left alone on a flipped document.** The mail is in that custodian's mailbox
+  because they received it, which is the ordinary case.
+- **Extra To recipients come from the custodian roster only.** An external here would move a
+  Rule 20 singleton off the singleton tail, and that tail is an asserted number in
+  `entities.json`.
+- **Protected documents are skipped**, the same set the edge cases honour: anything carrying a
+  planted finding, a PI instance, a second language or a Rule 20 entity rewrite. A swap
+  preserves counts, but Rule 18 asserts correspondence it describes in prose, and prose has a
+  direction in it. Those documents are why a handful of self-addressed emails survive.
+- Between a quarter and three quarters of email arrives rather than departs. Real collections
+  run further toward inbound than that, but the custodians are the narrative's authors: push
+  it past half and the planted story stops being told by the people it is about.
+
+Applied after generation on its own RNG stream. Turn it off with `--no-direction`.
+
+Verify with:
+
+```bash
+python scripts/validate_mock_data.py --tier medium
 ```
 
 ---

@@ -47,7 +47,7 @@ are building, so this is the table to read first. Measured on the **small** tier
 
 | Widget | What the tier gives it | Gaps |
 |---|---|---|
-| **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), **44 non-custodian entities** past the production cap of 25, **28 of them on a single document**, and **2 people sending from two addresses** for name normalisation (Rule 20). Plus Rule 18's principal, its decoy, and a **planted negative**: a pair corresponding at volume about one subject that touches no matter issue and appears nowhere else, so a correct "nothing here" can be told from a broken analysis | — |
+| **Key Relationships** | 10 custodians, 45 internal pairs, an 8.5x volume spread (323 documents down to 38), **44 non-custodian entities** past the production cap of 25, **28 of them on a single document**, and **2 people reachable at two addresses** for name normalisation (Rule 20). **304 of the 806 emails arrive rather than depart, and 188 carry more than one To recipient** (Rule 24), so the graph has direction in it and the semicolon path in the To column is exercised. Plus Rule 18's principal, its decoy, and a **planted negative**: a pair corresponding at volume about one subject that touches no matter issue and appears nowhere else, so a correct "nothing here" can be told from a broken analysis | **Direction is capped below what a real collection looks like.** Real mailboxes run heavily inbound; this tier stops near 40% because the custodians are the narrative's authors, and pushing past half stops the planted story being told by the people it is about. Three emails are still addressed to their own sender, each on a document Rule 18 or Rule 20 protects |
 | **Collection Coverage** | 48 months of dates, **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, and a **planted gap and spike** (Rule 22): the top custodian has zero documents across three months that hold 28, 32 and 26 for everybody else against a median of 28, and one month carries 3.9x the median. Every native stamped from the manifest (Rule 19) | — |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6). The load file carries the category in `File Type` and the extension in `File Extension` | **Depends on which field the widget reads.** `Relativity Native Type` is only written by processing: Relativity reserves it, and Import/Export does not offer it as a mapping target, so no load file can populate it. A widget keyed on that field reports every document as `Unidentified` after an import, whatever the corpus contains. Measured on 9,980 imported documents |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, one document dense with PI and irrelevant to the matter, and **24 documents that belong to two categories at once** (Rule 22) | — |
@@ -83,6 +83,7 @@ produces load files that fail at import.
 | `language-mix.json` | The second-language slice: requested share, achieved share, and why it is irrelevant to the matter (Rule 17). |
 | `findings.json` | Known-answer findings and the decoy, each with what it is findable by and what it is invisible to (Rule 18). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
+| `mail-direction.json` | Which way the email edges point: how many arrive, how many carry more than one recipient, and how many documents were left alone because another rule owns them (Rule 24). |
 | `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, its file types, and the metadata profile measured from the data (Rule 21). |
 
 **A note on what a load file can and cannot feed.** Three of the six widgets read metadata and
@@ -96,6 +97,7 @@ to read, but it is our value rather than Relativity's.
 
 | `collection-shape.json` | The planted date gap and spike, and the population that belongs to two categories, each with what to expect and how to verify it (Rule 22). |
 | `entities.json` | The external entity population: each entity's organisation, kind and document count, the alias addresses, and the singleton tail (Rule 20). |
+| `mail-direction.json` | Which way the email edges point: how many arrive, how many carry more than one recipient, and how many documents were left alone because another rule owns them (Rule 24). |
 | `edge-cases.json` | Only with `--edge-cases`: the documents starved of an input (Rule 13). |
 
 ---
