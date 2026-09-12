@@ -182,10 +182,14 @@ _PDF_DATE   = re.compile(rb"/CreationDate\s*\(D:(\d{14})")
 # reaches Collection Coverage.
 LIBRARY_TELLS = ("Steve Canny", "openpyxl", "python-docx", "python-pptx")
 
-# Rule 4 gives ZIP children a deliberately unreliable date, because the ZIP
-# format carries no time zone. It is a documented wrong answer, so it neither
-# widens the matter window nor counts as a leak.
-DOCUMENTED_BAD_DATES = {"1980-01-01"}
+# Rule 4 used to stamp ZIP children with the DOS epoch, and this set existed to
+# stop that widening the matter window. The sentinel was dropped because Early
+# Insights buckets Collection Coverage on the created date and eleven documents
+# flattened the chart. The set stays, empty, for two reasons: a package built
+# before the change still validates, and the check below now asserts the sentinel
+# is actually absent rather than merely tolerated.
+DOCUMENTED_BAD_DATES: set[str] = set()
+RETIRED_SENTINELS = {"1980-01-01"}
 
 
 def ooxml_dates(path):
@@ -472,6 +476,18 @@ def main():
         lo, hi = (min(dated), max(dated)) if dated else ("", "")
         check("load file declares a matter window", bool(lo and hi),
               f"{lo} to {hi}, across {len(date_cols)} date columns")
+
+        # The retired DOS epoch must actually be gone, not merely tolerated. It is
+        # the one value that flattened Collection Coverage, and the temptation to
+        # reintroduce it is real because it is what processing genuinely writes.
+        revived = []
+        for r in rows:
+            for i in date_cols:
+                if r[i][:10] in RETIRED_SENTINELS:
+                    revived.append(f"{r[i_ctrl]}: {header[i]} = {r[i][:10]}")
+        check("no document carries a retired date sentinel", not revived,
+              f"{len(revived)} do: {revived[:3]}" if revived
+              else f"checked {len(date_cols)} date columns on {len(rows):,} rows")
 
         outside, tells, drift, inspected = [], [], [], 0
         for r in rows:

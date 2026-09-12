@@ -220,7 +220,13 @@ These must appear in every dataset to make the data realistic and useful for tes
 - `Date Taken` should match the document date range of the matter
 
 ### ZIP Children — Date Gap
-- `Date Created` and `Date Modified` on ZIP children should sometimes be blank or clearly wrong (e.g. 1980-01-01) to reflect the ZIP format's time zone limitation
+- `Date Created` and `Date Modified` on ZIP children may be blank, reflecting the ZIP format's
+  time zone limitation. **They are no longer stamped with the DOS epoch.** That was realistic,
+  and it made Collection Coverage unreadable: Early Insights buckets that chart on the created
+  date, so eleven documents on the medium tier stretched it from 96 real months to 456, of which
+  359 were empty. A corpus whose job is to exercise a coverage chart should not flatten it by
+  default. The behaviour is still recorded in the widget coverage table as something a real
+  collection will do to a real matter
 - Flag these with a note in `Processing Status` = "Warning - Date Unreliable"
 
 ### Teams RSMF — Placeholders
@@ -804,7 +810,7 @@ Requirements:
   `ExcelWriter` directly.
 - **A document with no date still gets one**, from the midpoint of the tier's window. Every
   real file has a date; it is the load file that is missing one (Rule 13 `missing_date`).
-- **Documented wrong dates stay wrong.** Rule 4's 1980-01-01 ZIP marker and Rule 13's
+- **Documented wrong dates stay wrong.** Rule 13's
   sentinels are exempted by name, not by widening the window.
 
 Verify with:

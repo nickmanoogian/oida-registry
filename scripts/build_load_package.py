@@ -955,6 +955,18 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
             if writer:
                 content = writer(doc, body)
                 native_path = dest(ext)
+            elif ext in ("docx", "xlsx", "pptx"):
+                # The file type did not match a branch above but the extension is
+                # OOXML, so an OOXML file is what it has to be. This is the whole
+                # Google Workspace family: "Google Workspace - Document" carries a
+                # .docx and matches neither "Word" nor anything else, so all 60 on
+                # the medium tier were written as text named .docx. Extraction then
+                # tried to unzip them, failed, and returned nothing: sixty healthy
+                # documents with a body and no extracted text at all.
+                content = {"docx": lambda: make_docx(doc, body, dates),
+                           "xlsx": lambda: make_xlsx(doc, hot, dates, plant=plant),
+                           "pptx": lambda: make_pptx(doc, hot, dates)}[ext]()
+                native_path = dest(ext)
             else:
                 content = make_txt(doc, body).encode("utf-8","replace")
                 native_path = dest(ext if ext else "txt")

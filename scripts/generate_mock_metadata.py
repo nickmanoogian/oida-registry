@@ -945,10 +945,24 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
     date_recv = fmt_dt(date + timedelta(minutes=random.randint(1,30))) if is_email else ""
     if is_calendar: date_sent = date_recv = ""
 
-    # ZIP children — date gap (Rule 4)
+    # ZIP children used to get a DOS epoch Date Created here, on a 30% roll, because
+    # that is genuinely what processing writes when a zip entry carries no timestamp.
+    # It was realistic and it was a problem: Early Insights buckets Collection
+    # Coverage on the created date, so eleven documents on the medium tier stretched
+    # the chart from 96 real months to 456, of which 359 were empty, and the eight
+    # years of actual collection were squeezed into the last fifth.
+    #
+    # The finding is written up in the widget coverage table and stays there. The
+    # sentinel does not, because a corpus whose job is to exercise a coverage chart
+    # should not make that chart unreadable by default.
+    #
+    # THE DRAW STAYS EVEN THOUGH ITS RESULT IS DISCARDED. Removing it would shift
+    # the global RNG stream and reshuffle every later decision in the tier:
+    # custodian assignments, dates, file types, the lot. Keeping the call costs one
+    # unused random number and keeps every other measured figure in the docs true.
     date_created = fmt_d(date)
-    if ft_meta.get("date_unreliable") and random.random() < 0.30:
-        date_created = "1980-01-01"
+    if ft_meta.get("date_unreliable"):
+        random.random()
 
     # To/From
     to_cust  = random.choice(all_custs + [{"name": "DEA Diversion Control", "email": "diversion@dea.gov"},
