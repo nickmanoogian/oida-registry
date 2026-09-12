@@ -6,6 +6,86 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+---
+
+## [1.22.0] — natives that are what they claim, mail with a direction, and the field script in the box
+
+Four fixes, every one found by importing this corpus into a real workspace and
+reading what came back rather than trusting what the generator said it wrote.
+
+### Fixed — the field creation script ships in the package
+
+`IMPORT_README.txt` has told people to run `python3 scripts/create_workspace_fields.py`
+for as long as that section has existed, and **no package has ever contained a
+`scripts/` directory**. It only worked for someone with the repo checked out beside
+the zip.
+
+| Measured on a stock template workspace | |
+|---|---|
+| Columns in the package | 61 |
+| Auto Map matched | **35** |
+| Ignored | **26** = the 24 declared fields + the two file-path columns |
+
+Relativity ignores an unmatched column *silently*, so twenty-four columns of real
+data imported as nothing while the job reported success. That included the entire
+RSMF chat layer, which reaches a workspace through three columns and no other route.
+
+### Fixed — natives are the format their extension claims (Rule 25)
+
+Anything without a dedicated writer became a plain text file named with the declared
+extension. A JPEG was a text file called `.jpg`; an RSMF container was raw JSON.
+
+On an import with natives attached, `Relativity Native Type` came back as six real
+formats and **162 documents as ASCII Text**: 30 RSMF containers, 50 images, and the
+RTF and HTML. Relativity was not wrong about any of them.
+
+Every one is now a real container, hand-built from the specification, so a build
+needs nothing beyond the standard library and produces identical bytes on every
+machine. EXIF is written rather than merely claimed: the GPS, camera and date the
+generator has always put on image rows now read back through a real decoder.
+
+### Fixed — email has a direction and more than one recipient (Rule 24)
+
+| medium, 5,214 emails | before | after |
+|---|---|---|
+| Sent by their own custodian | **5,214 of 5,214** | 3,016 |
+| The custodian received | **0** | 2,198 |
+| Addressed to their own sender | 396 | 18 |
+| More than one To recipient | **0** | 1,474 |
+
+Direction is made by swapping, never rewriting, so every pair and every address
+count is preserved. Against a `--no-direction` build of the same seed, `entities.json`
+differs by six lines and `documents.csv` by four columns.
+
+### Fixed — the seeded languages were transliterated and half unreadable
+
+A run reported 122 of 150 planted German and 81 of 100 Polish. The bodies were
+ASCII-folded, so **zero of 250 contained a diacritic**, and the pool included
+spreadsheets and presentations whose writers take no body at all.
+
+Measured from the extracted text rather than the generator's claim: **250 of 250**
+planted documents now carry their language, against 207 before.
+
+### Documented
+
+- **Collection Coverage buckets on a file system date.** Eleven ZIP containers with
+  a DOS-epoch `Date Created` stretch its axis across 37 years, against a `Primary Date`
+  span of 96 months. Deliberately not "fixed" in the corpus: dateless zip entries are
+  ubiquitous in real collections, so any tool bucketing on a created date does this to
+  a real matter too.
+- **File Types is reachable after all**, correcting a claim made in v1.21.0's wake. No
+  *column* can populate `Relativity Native Type`, but attaching the natives lets
+  Relativity derive it.
+- Email participant field types measured rather than assumed.
+
+### Packages
+
+`small.zip` and `small-errors.zip` repointed to v1.22.0, byte counts verified against
+what the release actually serves and confirmed by downloading and unpacking the asset.
+
+---
+
+
 ### Changed — v1.21.0 packages
 
 Load packages only. The tier files are untouched, so the 30 pointers stay at v1.19.0.
