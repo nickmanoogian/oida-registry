@@ -73,6 +73,27 @@ STOCK_FIELDS_TO_BACKFILL = [
     "File Extension",
 ]
 
+# Named column sets, so a targeted repair does not mean hand-typing a column list
+# and getting one of them subtly wrong. "fields" is the default and carries
+# everything a stock template lacks; the rest are one rule each.
+COLUMN_SETS = {
+    # Everything from workspace_fields.py, plus the stock fields the load file
+    # started addressing by the wrong name.
+    "fields": [name for name, _t, _l, _why in WORKSPACE_FIELDS] + STOCK_FIELDS_TO_BACKFILL,
+
+    # Rule 24. The four columns the direction pass rewrites, and only those: it is
+    # the whole of what changed, verified by diffing the tier against a build with
+    # --no-direction. Email CC is deliberately absent because Rule 20 set it and
+    # Rule 24 does not touch it, and in Overlay mode a column you did not mean to
+    # map is a column you erase.
+    "direction": [
+        "Email From",
+        "Email From (SMTP Address)",
+        "Email To",
+        "Email To (SMTP Address)",
+    ],
+}
+
 
 def _split(line):
     return [c.strip(DAT_QUOTE) for c in line.split(DAT_FIELD_SEP)]
@@ -87,9 +108,11 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--in", dest="src", required=True, help="the full load-file.dat")
     ap.add_argument("--out", dest="dst", required=True, help="overlay .dat to write")
+    ap.add_argument("--columns", default="fields", choices=sorted(COLUMN_SETS),
+                    help="which column set to project (default: fields)")
     args = ap.parse_args()
 
-    wanted = [name for name, _t, _l, _why in WORKSPACE_FIELDS] + STOCK_FIELDS_TO_BACKFILL
+    wanted = COLUMN_SETS[args.columns]
 
     with open(args.src, encoding="utf-8") as f:
         header = _split(f.readline().rstrip("\n"))

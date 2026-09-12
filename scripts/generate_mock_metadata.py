@@ -1147,7 +1147,7 @@ def make_doc(ctrl, custodian, ft_name, ft_meta, tier_dr, all_custs, wf, phase, o
 
 def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
              language_on=True, findings_on=True, entities_on=True,
-             sources_on=True, shape_on=True, ssn_range="9xx",
+             sources_on=True, shape_on=True, direction_on=True, ssn_range="9xx",
              second_language_share=None):
     random.seed(seed)
     # xlarge borrows large's narrative: same roster, same scripted content, same
@@ -1593,6 +1593,19 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         for ext in entity_report["externals"]:
             protected |= {c for c in ext["document_ids"] if c != "..."}
 
+    # Direction, last of the participant rules, so it sees the entity rewrites and
+    # can protect what they and the findings assert.
+    direction_report = None
+    if direction_on:
+        import mail_direction
+        direction_report = mail_direction.apply(all_docs, custs, tier_name, seed,
+                                                protected=protected)
+        m = direction_report["measured"]
+        print(f"  Rule 24: {m['received_by_their_own_custodian']:,} of "
+              f"{m['emails_with_both_ends']:,} emails now arrive rather than depart, "
+              f"{m['with_more_than_one_recipient']:,} carry more than one recipient, "
+              f"{direction_report['self_addressed_repaired']:,} self-addressed repaired")
+
     # ── Edge cases (opt in) ──
     # Applied last, on its own RNG stream, so the default output is byte-identical
     # and the committed tiers plus the CI determinism check are unaffected.
@@ -1613,6 +1626,9 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
     if shape_report is not None:
         import collection_shape
         collection_shape.recount(all_docs, shape_report)
+    if direction_report is not None:
+        import mail_direction
+        mail_direction.recount(all_docs, direction_report)
 
     # ── Write outputs ──
     Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -1653,6 +1669,8 @@ def generate(tier_name, out_dir, seed, edge_cases_on=False, pi_on=True,
         outputs.append(("data-sources.json", data_sources.manifest(all_docs)))
     if shape_report is not None:
         outputs.append(("collection-shape.json", shape_report))
+    if direction_report is not None:
+        outputs.append(("mail-direction.json", direction_report))
     if findings is not None:
         import planted_findings
         outputs.append(("findings.json", {
@@ -1710,6 +1728,9 @@ def main():
     p.add_argument("--no-sources", action="store_true",
                    help="Skip the data source dimension (Rule 21). Collection Coverage "
                         "then has custodian as its only axis.")
+    p.add_argument("--no-direction", action="store_true",
+                   help="skip Rule 24: leave every email sent by its own custodian "
+                        "to exactly one recipient")
     p.add_argument("--no-entities", action="store_true",
                    help="Skip the external entity population (Rule 20). Key "
                         "Relationships then has 15 addresses and no alias to resolve.")
@@ -1726,6 +1747,7 @@ def main():
              entities_on=not args.no_entities,
              sources_on=not args.no_sources,
              shape_on=not args.no_shape,
+             direction_on=not args.no_direction,
              ssn_range=args.ssn_range,
              second_language_share=args.second_language_share)
 

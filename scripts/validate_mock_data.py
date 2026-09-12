@@ -777,7 +777,7 @@ def run(tier_name, tier_dir, verbose):
         # Aliases: the whole point is that two addresses resolve to one person, so
         # both have to be present and the person has to be a real custodian.
         aliases = ent.get("aliases", [])
-        if not check("at least one person sends from two addresses", bool(aliases),
+        if not check("at least one person is reachable at two addresses", bool(aliases),
                      f"{len(aliases)} aliased", verbose): failures += 1
         cust_names = {c["name"] for c in custs}
         bad_alias = []
@@ -911,6 +911,62 @@ def run(tier_name, tier_dir, verbose):
             if not check("both categories also occur on their own, so the overlap means something",
                          all(v > 0 for v in alone.values()),
                          ", ".join(f"{c}: {v}" for c, v in alone.items()), verbose):
+                failures += 1
+
+    # ── Rule 24 — mail direction ──────────────────────────────────────────
+    dir_path = os.path.join(tier_dir, "mail-direction.json")
+    if not os.path.exists(dir_path):
+        print(f"\nRule 24 — mail direction\n  {WARN}  no mail-direction.json "
+              f"(built with --no-direction: every email is sent by its own custodian)")
+    else:
+        print("\nRule 24 — mail direction")
+        emails = [d for d in docs
+                  if (d.get("Email From SMTP") or "").strip()
+                  and (d.get("Email To SMTP") or "").strip()]
+        recipients = lambda d: [p.strip() for p in d["Email To SMTP"].split(";") if p.strip()]
+
+        # The defect this rule exists for: a corpus where the custodian sends
+        # everything is ten hubs with nothing arriving, and no graph looks like that.
+        inbound = [d for d in emails if d.get("Email From","") != d.get("Custodian","")]
+        share = len(inbound) / len(emails) if emails else 0
+        if not check("email arrives as well as departs",
+                     0.25 <= share <= 0.75,
+                     f"{len(inbound):,} of {len(emails):,} inbound ({share:.0%})",
+                     verbose): failures += 1
+
+        # A person writing to themselves is not an edge. A few survive because they
+        # sit on a protected document, so this is a ceiling rather than a zero.
+        selfed = [d for d in emails
+                  if d["Email From SMTP"].strip().lower()
+                  in {a.lower() for a in recipients(d)}]
+        if not check("almost no email is addressed to its own sender",
+                     len(selfed) <= len(emails) * 0.02,
+                     f"{len(selfed):,} of {len(emails):,} self-addressed", verbose):
+            failures += 1
+
+        # The semicolon path in the To column is the one an importer is most likely
+        # to get wrong, and no tier exercised it before this rule.
+        multi = [d for d in emails if len(recipients(d)) > 1]
+        if not check("the To column carries more than one recipient somewhere",
+                     len(multi) >= len(emails) * 0.10,
+                     f"{len(multi):,} of {len(emails):,} multi-recipient", verbose):
+            failures += 1
+
+        # Names and addresses are written as parallel semicolon lists. If they fall
+        # out of step, every participant past the first resolves to the wrong person.
+        ragged = [d["Control Number"] for d in emails
+                  if len([p for p in (d.get("Email To") or "").split(";") if p.strip()])
+                  != len(recipients(d))]
+        if not check("every To name lines up with a To address", not ragged,
+                     f"{len(ragged)} ragged: {ragged[:3]}", verbose): failures += 1
+
+        # The claim in the manifest is checked against the corpus, not against itself.
+        m = json.load(open(dir_path, encoding="utf-8")).get("measured", {})
+        claimed = m.get("received_by_their_own_custodian")
+        if claimed is not None:
+            if not check("the inbound count matches the corpus",
+                         claimed == len(inbound),
+                         f"manifest {claimed:,}, corpus {len(inbound):,}", verbose):
                 failures += 1
 
     # ── Summary ───────────────────────────────────────────────────────────

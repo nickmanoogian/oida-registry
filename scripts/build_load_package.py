@@ -1170,6 +1170,23 @@ def dat_row(values):
 # choice option": splitting on ASCII 59 yields " Prior Auth Fraud" with a leading
 # space as a choice distinct from "Prior Auth Fraud". So the space is stripped on
 # the way into the .dat only, leaving documents.csv readable.
+#
+# The email participant columns are deliberately NOT in this list, and Rule 24 is
+# why the question came up: until it, every email had exactly one recipient, so no
+# column but these two ever carried a separator at all. Measured against the fields
+# in a stock workspace rather than assumed:
+#
+#     Email To                   Long Text
+#     Email To (SMTP Address)    Long Text
+#     Email CC                   Long Text
+#     Email From                 Fixed-Length Text, 255
+#     Issues                     Multiple Choice
+#     Rsmf Participants          Multiple Choice
+#
+# Long Text is stored verbatim and never split, so the separator is not Relativity's
+# business on the way in, and "; " with the space is both what a real processing
+# export writes and what reads properly in the viewer. Only the two Multiple Choice
+# columns need the bare form.
 MULTI_VALUE_COLUMNS = ("Issues", "Rsmf Participants")
 MULTI_VALUE_SEP = ";"
 

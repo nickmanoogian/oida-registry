@@ -20,8 +20,10 @@ Three things, therefore:
     volume distribution rather than a flat one.
   * **A long tail that is mostly singletons**, because that is the shape a real
     collection has and it is the part a cap hides.
-  * **Alias addresses**: a few people sending from two addresses, so resolving
-    them to one person is something that can be got right or wrong.
+  * **Alias addresses**: a few people reachable at two addresses, so resolving
+    them to one person is something that can be got right or wrong. Both counts
+    below census all four address fields, so Rule 24 can turn one of these
+    documents around without changing what the alias is worth.
 
 Applied after generation on its own RNG stream, so the narrative, the file type
 shares and the review coding are untouched.
@@ -33,7 +35,7 @@ import random
 # tier that lands on 26 tests the cap only until someone reseeds it.
 ROSTER_SIZE = {"small": 40, "medium": 60, "large": 120, "xlarge": 120}
 
-# People sending from two addresses.
+# People reachable at two addresses.
 ALIAS_COUNT = {"small": 2, "medium": 3, "large": 5, "xlarge": 5}
 
 # The volume shape. A real external population is mostly singletons with a short
@@ -140,7 +142,7 @@ def _tail_entities(n, taken):
 
 
 NOTE = ("The non-custodian half of Key Relationships. A skewed external roster with a "
-        "long singleton tail, plus people sending from two addresses so name "
+        "long singleton tail, plus people reachable at two addresses so name "
         "normalisation has something to resolve.")
 
 
