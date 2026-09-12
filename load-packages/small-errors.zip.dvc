@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.21.0/small-errors-load-package.zip
-  size: 11325760
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.22.0/small-errors-load-package.zip
+  size: 10820107
 outs:
 - path: small-errors.zip
-  size: 11325760
+  size: 10820107
   isexec: false
