@@ -1115,9 +1115,21 @@ DAT_COLUMNS = [
     "Email Has Attachments","Number of Attachments","Email Threading ID","Inclusive Email",
     "Conversation Topic","Author","Title","Company","Page Count",
     "Created Date/Time","Last Modified Date/Time","Data Source",
-    "Workflow Stage","Responsive","Privileged","Privilege Reason","Hot Doc","Issues",
+    # "Privilege Reason" is called "Privilege" here because that IS the stock
+    # workspace field: a multiple-choice field whose documented purpose is the
+    # "reason for privilege assertion determined by document reviewers". Our four
+    # values are exactly that, so it auto-maps. The boolean stays "Privileged",
+    # because the stock "Privilege" field is the reason, not a flag, and feeding
+    # it Yes/No would create two junk choices alongside the real reasons.
+    "Workflow Stage","Responsive","Privileged","Privilege","Hot Doc","Issues",
     "Bates Beg","Bates End","Production Set","Redacted","TAR Score","AL Predicted Relevant",
-    "Batch Name","Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
+    # "Batch Status" is a reserved name: Relativity's own Batch application owns
+    # Batch, Batch::Status and Batch::Assigned To, and creating a Document field
+    # called "Batch Status" is refused outright. These two simulate review
+    # batching rather than being that application, so both carry the Review
+    # prefix. Renaming only the half that was refused would have left a
+    # mismatched pair.
+    "Review Batch Name","Review Batch Status","Reviewer","Narrative Phase","Narrative Phase Name",
     "Dedup Method","MD5 Hash","OCR Flag","Rsmf Application","Rsmf Participants",
     "Rsmf Message Count","Record Type","Processing Status","Processing Error Type",
     # Language so a language breakdown has something to read from metadata alone,
@@ -1188,8 +1200,11 @@ _COLUMN_MAP = {
     "Data Source":               ("Data Source",             None),
     "Workflow Stage":            ("Workflow Stage",          None),
     "Responsive":                ("Responsiveness",          None),
-    "Privileged":                ("Privilege",               None),
-    "Privilege Reason":          ("Privilege Reason",        None),
+    # The source holds "Privileged" or blank. Every other boolean in this load
+    # file is Yes/No, and a Relativity Yes/No field will not accept the literal
+    # "Privileged", so normalise here rather than shipping the odd one out.
+    "Privileged":                ("Privilege",               lambda d: "Yes" if d.get("Privilege") else "No"),
+    "Privilege":                 ("Privilege Reason",        None),
     "Hot Doc":                   ("Hot Doc",                 None),
     "Issues":                ("Issue Tags",              None),
     "Bates Beg":                  ("Bates Begin",             None),
@@ -1198,8 +1213,8 @@ _COLUMN_MAP = {
     "Redacted":                  ("Redacted",                None),
     "TAR Score":                 ("TAR Score",               None),
     "AL Predicted Relevant":     ("AL Predicted Relevant",   None),
-    "Batch Name":                ("Batch Name",              None),
-    "Batch Status":              ("Batch Status",            None),
+    "Review Batch Name":         ("Batch Name",              None),
+    "Review Batch Status":       ("Batch Status",            None),
     "Reviewer":                  ("Reviewer",                None),
     "Narrative Phase":           ("Narrative Phase",         None),
     "Narrative Phase Name":      ("Narrative Phase Name",    None),
@@ -1443,11 +1458,35 @@ STEP B3 — Field mapping
   Fixed-Length Text field whose category is Generic or Identifier. Control
   Number qualifies; most of the other columns do not.
 
+  TWENTY-FOUR COLUMNS NEED A FIELD CREATING FIRST
+  -----------------------------------------------
+  Auto Map Fields matches a column to a workspace field of the exact same name,
+  case-insensitively. A stock workspace template has 472 Document fields and 34
+  of these 59 columns match one, so on a stock template Auto Map reports 34/59
+  and the other 25 are ignored: they import as nothing at all, silently.
+
+  Twenty-four of those 25 are not junk. They carry the data a stock template has
+  nowhere to put: the Rule 21 data source dimension that Collection Coverage is
+  measured against; the RSMF chat layer, whose messages reach the workspace
+  through three columns and no other route, because this package ships no .rsmf
+  natives for processing to read; and the scripted review state.
+
+  Create them once per workspace and 58 of the 59 map:
+
+      python3 scripts/create_workspace_fields.py --workspace <id>
+
+  It is idempotent, so re-running after a partial failure is safe, and --dry-run
+  prints the list without contacting the instance. Do not run it while an import
+  is in flight on that workspace: each create alters the Document table schema.
+
+  The 59th is ExtractedTextFilePath, and no amount of naming fixes it. See the
+  extracted text section below.
+
   THREE SMALLER RULES FROM THE GUIDE
   ----------------------------------
   * "Only fields matched or those with additional settings selected are loaded
-    into the workspace. Other fields... are ignored." So leaving 27 columns
-    unmapped costs nothing: they are simply not read.
+    into the workspace. Other fields... are ignored." So an unmapped column
+    costs bytes and nothing else: it is simply not read, with no error.
   * "You must always match the identifier field for the load file." Field 1 is
     Control Number and auto-maps by name, so this is one less thing to get
     wrong than it used to be.
