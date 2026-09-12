@@ -8,6 +8,58 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [1.22.1] — the date sentinel and the Google Workspace natives
+
+A patch on v1.22.0, which shipped a few hours before both of these landed.
+
+### Fixed — the DOS epoch sentinel is gone
+
+Rule 4 stamped ZIP children with a `1980-01-01` `Date Created` on a 30% roll. It is
+genuinely what processing writes when a zip entry has no timestamp, and it made
+Collection Coverage unreadable, because Early Insights buckets that chart on the
+**created** date.
+
+Measured in a live workspace before and after the fix:
+
+| Collection Coverage | before | after |
+|---|---|---|
+| Month buckets | **444** | **48** |
+| Buckets with data | 49 | **48** |
+| Range | 1980-01 to 2016-12 | 2013-01 to 2016-12 |
+
+The random draw stays even though its result is discarded, so the global RNG stream
+is unchanged: against the pre-fix build of the same seed, exactly **12 rows differ
+and all 12 are `Date Created`**.
+
+I had documented this as an ECI finding and kept the sentinel, reasoning that
+dateless zip entries are ubiquitous and the corpus should surface the behaviour.
+That was a judgement about the corpus to offer rather than to make alone. The
+finding stays in the widget coverage table; the sentinel does not.
+
+### Fixed — Google Workspace natives were text files with OOXML extensions
+
+`Google Workspace - Document` carries a `.docx` and matched no branch in the native
+writer, so it was written as plain text named `.docx`. Extraction tried to unzip it,
+failed, and returned nothing.
+
+| medium tier | before | after |
+|---|---|---|
+| Google Workspace documents with extracted text | **0 of 100** | **97 of 100** |
+
+Across Document, Spreadsheet and Presentation, all `Complete`, all with a body, all
+feeding nothing to Document Categories or PI Detect. The remaining 3 are Rule 12
+processing errors, which correctly get empty sidecars.
+
+### Packages
+
+`small.zip` and `small-errors.zip` repointed to v1.22.1, byte counts verified against
+what the release serves.
+
+---
+
+
+---
+
 ## [1.22.0] — natives that are what they claim, mail with a direction, and the field script in the box
 
 Four fixes, every one found by importing this corpus into a real workspace and
