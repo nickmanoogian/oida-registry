@@ -609,6 +609,37 @@ def run(tier_name, tier_dir, verbose):
                          not tagged, f"{len(tagged)} tagged: {tagged[:3]}", verbose):
                 failures += 1
 
+            # The characters that make a language identifiable are the ones a lazy
+            # transliteration removes. Every body here was once ASCII-folded, and a
+            # run over medium reported 122 of 150 planted German documents and 81 of
+            # 100 Polish. Assert the diacritics are present rather than trusting that
+            # nobody folds them back in.
+            marks = LANGUAGE_MARKS.get(lang)
+            if marks:
+                flat = [c for c in listed
+                        if c in by_ctrl_l
+                        and not any(m in by_ctrl_l[c].get("Extracted Text Preview", "")
+                                    for m in marks)]
+                if not check(f"{lang}: every seeded document carries its own diacritics",
+                             not flat, f"{len(flat)} transliterated: {flat[:3]}",
+                             verbose): failures += 1
+
+            # A language planted into a native whose writer takes no body never
+            # reaches extracted text, and the widget reads extracted text. Spreadsheet
+            # and presentation writers take no body; a document planted with a
+            # processing error gets an empty sidecar on purpose under Rule 12.
+            unreachable = [c for c in listed
+                           if c in by_ctrl_l
+                           and (by_ctrl_l[c].get("Processing Status") == "Error"
+                                or not by_ctrl_l[c].get("File Type Category", "")
+                                       .startswith(("Email -", "Office - Word", "PDF")))]
+            if not check(f"{lang}: every seeded document can carry text through extraction",
+                         not unreachable,
+                         f"{len(unreachable)} cannot: "
+                         + ", ".join(f"{c} ({by_ctrl_l[c].get('File Type Category')})"
+                                     for c in unreachable[:3]),
+                         verbose): failures += 1
+
     # ── Rule 18 — planted findings ────────────────────────────────────────
     find_path = os.path.join(tier_dir, "findings.json")
     if not os.path.exists(find_path):
@@ -977,6 +1008,14 @@ def run(tier_name, tier_dir, verbose):
         print(f"  {FAIL}  {failures} check(s) failed — see above for details")
     print(f"{'='*60}\n")
     return failures
+
+
+# Characters that identify each seeded language, used to catch a transliterated body.
+LANGUAGE_MARKS = {
+    "German":  "\u00e4\u00f6\u00fc\u00df\u00c4\u00d6\u00dc",
+    "Polish":  "\u0105\u0107\u0119\u0142\u0144\u00f3\u015b\u017a\u017c",
+    "Spanish": "\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1",
+}
 
 
 def main():
