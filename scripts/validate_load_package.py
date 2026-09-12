@@ -260,6 +260,12 @@ def main():
     # It must also run from where it lands, with no checkout on the path. Importing
     # the copy in the package is the cheapest honest proof of that.
     spec_ok, detail = False, "not attempted"
+    # Importing writes a __pycache__ beside the module unless told not to, and this
+    # check runs against the package itself: left alone it drops a directory of
+    # .pyc into the thing it is validating, which then ships. Caught by building a
+    # package, validating it, and finding scripts/__pycache__ in the output.
+    _prev_bytecode = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
     try:
         import importlib.util
         spec = importlib.util.spec_from_file_location(
@@ -270,6 +276,8 @@ def main():
         detail = f"declares {len(getattr(mod, 'WORKSPACE_FIELDS', []))} fields, expected 24"
     except Exception as exc:                      # noqa: BLE001 - report, do not raise
         detail = f"{type(exc).__name__}: {exc}"
+    finally:
+        sys.dont_write_bytecode = _prev_bytecode
     check("the shipped copy imports and declares all 24 fields", spec_ok, detail)
     print()
 
