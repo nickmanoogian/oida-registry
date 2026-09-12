@@ -26,6 +26,14 @@ already-built package does not have to be regenerated to be overlaid:
     Batch Name       -> Review Batch Name      ("Batch Status" is reserved)
     Batch Status     -> Review Batch Status
     Privileged       -> Yes/No                 (was ""/"Privileged")
+
+This rewrites a column on every document, so do not run it underneath an import.
+
+If an analysis over the result fails afterwards, see the note in
+create_workspace_fields.py before suspecting the overlay: an Early Insights run
+on our workspace failed twice at RunningStructuredAnalytics while its own
+readiness check reported ready, and the same failure was reachable in a
+workspace that had never held any of this data.
 """
 
 import argparse

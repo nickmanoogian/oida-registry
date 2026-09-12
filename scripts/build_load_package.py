@@ -1476,11 +1476,33 @@ STEP B3 — Field mapping
       python3 scripts/create_workspace_fields.py --workspace <id>
 
   It is idempotent, so re-running after a partial failure is safe, and --dry-run
-  prints the list without contacting the instance. Do not run it while an import
-  is in flight on that workspace: each create alters the Document table schema.
+  prints the list without contacting the instance.
 
   The 59th is ExtractedTextFilePath, and no amount of naming fixes it. See the
   extracted text section below.
+
+  IF AN ANALYSIS OVER THIS DATA FAILS, DO NOT START WITH THE LOAD FILE
+  --------------------------------------------------------------------
+  Creating fields alters the Document table schema and an overlay rewrites a
+  column on every row, so do not do either underneath a running import. That
+  much is ordinary caution.
+
+  The part worth writing down is what a failure afterwards does NOT tell you. An
+  Early Insights run on our 9,980 document workspace failed twice, about 7
+  minutes in each time, at a step named RunningStructuredAnalytics, with no
+  report and no partial results. Both times the service's own readiness endpoint
+  reported ready with no missing dependencies, before and after, so readiness
+  passing is not evidence a run will complete.
+
+  What made the corpus an unlikely cause: no workspace anywhere on that instance
+  had ever completed an Early Insights report, including one that predated this
+  data entirely. A failure reachable in a workspace that never held these
+  documents is not a fact about these documents.
+
+  So the first check is not "what is wrong with my load file". It is "has any
+  workspace on this instance ever completed one of these". If none has, the
+  problem sits upstream of whatever you just imported, and the load file is the
+  most expensive place to go looking for it.
 
   THREE SMALLER RULES FROM THE GUIDE
   ----------------------------------
