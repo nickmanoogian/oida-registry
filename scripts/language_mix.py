@@ -29,59 +29,114 @@ LANGUAGE_MIX = {
 
 # One line per document. Real sentences: a language classifier fed lorem ipsum
 # reports Latin, and a classifier fed one word reports nothing.
+#
+# WRITTEN WITH THEIR DIACRITICS, AND THAT IS THE WHOLE POINT. Every string here was
+# once ASCII-folded: "Parkplaetze" for "Parkplätze", "Buero" for "Büro", "stolowka"
+# for "stołówka". It reads as German and Polish to a person and costs a classifier
+# its strongest signal, because the characters that make a language identifiable are
+# exactly the ones folding removes. Measured against a run over the medium tier:
+# 150 planted German documents came back as 122, and 100 Polish as 81. Roughly a
+# fifth of the population this rule exists to create was invisible to the widget it
+# exists to test.
+#
+# The bodies are also longer than they were. The folded set had a median of about
+# 190 characters of extracted text, which is short enough that detection is a coin
+# flip on its own, independent of the characters.
+#
+# So: if you add a language, write it properly. No transliteration, no "ss" for "ß",
+# no "ue" for "ü". If your editor cannot hold the characters, that is a problem with
+# the editor.
 BODIES = {
     "German": [
         "Sehr geehrte Kolleginnen und Kollegen, die Kantine bleibt am Freitag wegen "
-        "Wartungsarbeiten geschlossen. Warme Getraenke stehen im Foyer bereit. "
-        "Wir bitten um Ihr Verstaendnis. Mit freundlichen Gruessen, Facility Management",
-        "Die Parkplaetze im Untergeschoss werden in der naechsten Woche neu markiert. "
-        "Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. "
-        "Die Arbeiten dauern voraussichtlich drei Tage.",
-        "Hinweis zur Brandschutzuebung am kommenden Dienstag um 10 Uhr. Bitte verlassen "
-        "Sie das Gebaeude ueber den naechstgelegenen Ausgang und sammeln Sie sich auf "
-        "dem Parkplatz. Die Uebung dauert etwa zwanzig Minuten.",
+        "Wartungsarbeiten geschlossen. Warme Getränke stehen im Foyer bereit. Der "
+        "Automat im zweiten Obergeschoss wird in dieser Zeit täglich nachgefüllt. "
+        "Wir bitten um Ihr Verständnis. Mit freundlichen Grüßen, Facility Management",
+        "Die Parkplätze im Untergeschoss werden in der nächsten Woche neu markiert. "
+        "Bitte nutzen Sie in dieser Zeit den Besucherparkplatz an der Nordseite. Die "
+        "Zufahrt über die Seitenstraße bleibt geöffnet, die Schranke wird tagsüber "
+        "besetzt. Die Arbeiten dauern voraussichtlich drei Tage.",
+        "Hinweis zur Brandschutzübung am kommenden Dienstag um zehn Uhr. Bitte "
+        "verlassen Sie das Gebäude über den nächstgelegenen Ausgang und sammeln Sie "
+        "sich auf dem Parkplatz. Die Stockwerksbeauftragten prüfen anschließend die "
+        "Räume und melden die Vollzähligkeit. Die Übung dauert etwa zwanzig Minuten.",
         "Die neuen Zugangskarten werden ab Montag am Empfang ausgegeben. Alte Karten "
-        "verlieren am Ende des Monats ihre Gueltigkeit. Bitte bringen Sie einen "
-        "Lichtbildausweis mit.",
-        "Wir stellen die Abfalltrennung im Buero um. Ab Mitte des Monats stehen auf "
-        "jeder Etage getrennte Behaelter fuer Papier, Verpackungen und Restmuell "
-        "bereit. Die Reinigung erfolgt weiterhin taeglich.",
+        "verlieren am Ende des Monats ihre Gültigkeit und können nicht verlängert "
+        "werden. Bitte bringen Sie einen Lichtbildausweis mit. Für Besucherausweise "
+        "wenden Sie sich bitte weiterhin an das Sekretariat.",
+        "Wir stellen die Abfalltrennung im Büro um. Ab Mitte des Monats stehen auf "
+        "jeder Etage getrennte Behälter für Papier, Verpackungen und Restmüll bereit. "
+        "Die bisherigen Einzelkörbe an den Arbeitsplätzen entfallen. Die Reinigung "
+        "erfolgt weiterhin täglich.",
     ],
     "Polish": [
-        "Szanowni Panstwo, w piatek stolowka bedzie zamknieta z powodu prac "
-        "konserwacyjnych. Cieple napoje beda dostepne w holu glownym. "
+        "Szanowni Państwo, w piątek stołówka będzie zamknięta z powodu prac "
+        "konserwacyjnych. Ciepłe napoje będą dostępne w holu głównym przez cały "
+        "dzień. Automat na drugim piętrze będzie uzupełniany codziennie. "
         "Przepraszamy za utrudnienia.",
-        "Miejsca parkingowe w garazu podziemnym zostana w przyszlym tygodniu ponownie "
-        "oznakowane. Prosimy w tym czasie korzystac z parkingu dla gosci od strony "
-        "polnocnej. Prace potrwaja okolo trzech dni.",
-        "Informujemy o probnej ewakuacji w najblizszy wtorek o godzinie dziesiatej. "
-        "Prosimy opuscic budynek najblizszym wyjsciem i zebrac sie na parkingu. "
-        "Cwiczenia potrwaja okolo dwudziestu minut.",
-        "Nowe karty dostepu bedziemy wydawac od poniedzialku w recepcji. Stare karty "
-        "przestana dzialac z koncem miesiaca. Prosimy o zabranie dokumentu ze zdjeciem.",
+        "Miejsca parkingowe w garażu podziemnym zostaną w przyszłym tygodniu ponownie "
+        "oznakowane. Prosimy w tym czasie korzystać z parkingu dla gości od strony "
+        "północnej. Wjazd od ulicy bocznej pozostaje otwarty, a szlaban będzie "
+        "obsługiwany w ciągu dnia. Prace potrwają około trzech dni.",
+        "Informujemy o próbnej ewakuacji w najbliższy wtorek o godzinie dziesiątej. "
+        "Prosimy opuścić budynek najbliższym wyjściem i zebrać się na parkingu. "
+        "Osoby odpowiedzialne za piętra sprawdzą pomieszczenia i zgłoszą stan "
+        "osobowy. Ćwiczenia potrwają około dwudziestu minut.",
+        "Nowe karty dostępu będziemy wydawać od poniedziałku w recepcji. Stare karty "
+        "przestaną działać z końcem miesiąca i nie będą przedłużane. Prosimy o "
+        "zabranie dokumentu ze zdjęciem. W sprawie kart dla gości prosimy kontaktować "
+        "się z sekretariatem.",
     ],
     "Spanish": [
-        "Estimados companeros, el comedor permanecera cerrado el viernes por trabajos "
-        "de mantenimiento. Habra bebidas calientes disponibles en el vestibulo. "
-        "Gracias por su comprension.",
-        "Las plazas de aparcamiento del sotano se volveran a senalizar la proxima "
-        "semana. Durante esos dias utilicen el aparcamiento de visitantes situado en "
-        "el lado norte. Los trabajos duraran unos tres dias.",
-        "Les informamos del simulacro de evacuacion del proximo martes a las diez de "
-        "la manana. Salgan por la puerta mas cercana y reunanse en el aparcamiento. "
-        "El simulacro durara unos veinte minutos.",
+        "Estimados compañeros, el comedor permanecerá cerrado el viernes por trabajos "
+        "de mantenimiento. Habrá bebidas calientes disponibles en el vestíbulo "
+        "durante toda la jornada. La máquina de la segunda planta se repondrá cada "
+        "día. Gracias por su comprensión.",
+        "Las plazas de aparcamiento del sótano se volverán a señalizar la próxima "
+        "semana. Durante esos días utilicen el aparcamiento de visitantes situado en "
+        "el lado norte. El acceso por la calle lateral seguirá abierto y la barrera "
+        "estará atendida durante el día. Los trabajos durarán unos tres días.",
+        "Les informamos del simulacro de evacuación del próximo martes a las diez de "
+        "la mañana. Salgan por la puerta más cercana y reúnanse en el aparcamiento. "
+        "Los responsables de planta revisarán las salas y confirmarán el recuento. "
+        "El simulacro durará unos veinte minutos.",
     ],
 }
 
 TITLES = {
     "German": ["Kantine — Wartungsarbeiten am Freitag", "Parkhaus — Neue Markierungen",
-               "Brandschutzuebung — Termin und Ablauf", "Neue Zugangskarten ab Montag",
-               "Abfalltrennung im Buero — Umstellung"],
-    "Polish": ["Stolowka — prace konserwacyjne w piatek", "Garaz — nowe oznakowanie miejsc",
-               "Probna ewakuacja — termin", "Nowe karty dostepu od poniedzialku"],
-    "Spanish": ["Comedor — cierre por mantenimiento", "Aparcamiento — nueva senalizacion",
-                "Simulacro de evacuacion — martes"],
+               "Brandschutzübung — Termin und Ablauf", "Neue Zugangskarten ab Montag",
+               "Abfalltrennung im Büro — Umstellung"],
+    "Polish": ["Stołówka — prace konserwacyjne w piątek", "Garaż — nowe oznakowanie miejsc",
+               "Próbna ewakuacja — termin", "Nowe karty dostępu od poniedziałku"],
+    "Spanish": ["Comedor — cierre por mantenimiento", "Aparcamiento — nueva señalización",
+                "Simulacro de evacuación — martes"],
 }
+
+# File types whose native is written from the body, and therefore the only ones a
+# language body can reach the extracted text through.
+#
+# This used to read ("Email -", "Office -", "PDF"), which swept in spreadsheets and
+# presentations. Their writers take no body: make_xlsx and make_pptx have no such
+# parameter, and build a metadata grid instead. A planted German spreadsheet came out
+# of extraction as "Field Value Control Number DOC-0007214 Custodian Sandra Nguyen
+# ... Title Neue Zugangskarten ab Montag" — English metadata with a German title
+# stapled on. Nothing a classifier could call German, and 26 of the 250 planted
+# documents on the medium tier were like that.
+#
+# Documents planted with a processing error are excluded for the same reason from the
+# other end: Rule 12 gives them an empty sidecar on purpose, so a language planted
+# there is a language nothing can read. That was another 17.
+#
+# Between them those two groups are the whole of the gap the widget showed: 150
+# German planted and 122 reported, 100 Polish and 81. Not a classifier being
+# imprecise, just documents that never carried the language in the first place.
+#
+# Rule 23 records the same shape of mistake for PI, and for the same reason: a
+# body-derived sidecar held 39 of 102 seeded values because the spreadsheet scenario
+# writes into cells and never touches the body. Anything that must survive extraction
+# has to go through a writer that reads it.
+BODY_BEARING = ("Email -", "Office - Word", "PDF")
 
 # The point of the slice is that nobody has to wonder whether it is responsive.
 NOTE = ("Facilities and office administration notices, deliberately unrelated to the "
@@ -115,7 +170,10 @@ def apply(all_docs, tier_name, seed=42, override=None):
             and d.get("Responsiveness", "") in ("", "Non-Responsive")
             and d.get("Privilege", "") != "Privileged"
             and not d.get("Bates Begin", "")
-            and (d.get("File Type Category", "").startswith(("Email -", "Office -", "PDF")))]
+            # Only file types whose native actually carries the body, and only
+            # documents whose extraction is supposed to succeed. See BODY_BEARING.
+            and d.get("Processing Status", "") != "Error"
+            and d.get("File Type Category", "").startswith(BODY_BEARING)]
     rng.shuffle(pool)
 
     report = {}
