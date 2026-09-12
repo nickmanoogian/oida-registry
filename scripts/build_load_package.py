@@ -2045,6 +2045,9 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         src = os.path.join(here, name)
         if os.path.exists(src):
             shutil.copyfile(src, os.path.join(scripts_dir, name))
+    # Belt and braces: a __pycache__ from an earlier run in the same directory is
+    # not part of the package and must not ship with it.
+    shutil.rmtree(os.path.join(scripts_dir, "__pycache__"), ignore_errors=True)
 
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
