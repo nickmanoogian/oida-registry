@@ -240,6 +240,36 @@ def main():
 
     print(f"\n  Validating {pkg} (Rule 11)\n")
 
+    # The field-creation script has to be IN the package. IMPORT_README has told
+    # people to run "python3 scripts/create_workspace_fields.py" since the
+    # twenty-four-fields section was written, and for just as long no package
+    # contained a scripts/ directory: the instruction pointed at a file nobody
+    # working from a release zip had. Without those fields a stock template maps 35
+    # of 61 columns and silently drops the rest, so this is the difference between a
+    # package that imports and one that looks like it imported.
+    print("  Field creation script")
+    scripts_dir = os.path.join(pkg, "scripts")
+    for name in ("create_workspace_fields.py", "workspace_fields.py"):
+        path = os.path.join(scripts_dir, name)
+        check(f"scripts/{name} ships in the package", os.path.exists(path),
+              "present" if os.path.exists(path)
+              else "NOT FOUND, and IMPORT_README tells the reader to run it")
+    # It must also run from where it lands, with no checkout on the path. Importing
+    # the copy in the package is the cheapest honest proof of that.
+    spec_ok, detail = False, "not attempted"
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_pkg_workspace_fields", os.path.join(scripts_dir, "workspace_fields.py"))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        spec_ok = len(getattr(mod, "WORKSPACE_FIELDS", [])) == 24
+        detail = f"declares {len(getattr(mod, 'WORKSPACE_FIELDS', []))} fields, expected 24"
+    except Exception as exc:                      # noqa: BLE001 - report, do not raise
+        detail = f"{type(exc).__name__}: {exc}"
+    check("the shipped copy imports and declares all 24 fields", spec_ok, detail)
+    print()
+
     header, rows = read_dat(dat)
     # A --no-natives package drops the column entirely: 17 MB of paths to files it
     # does not contain. The native checks below then have nothing to inspect,

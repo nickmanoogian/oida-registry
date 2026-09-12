@@ -1490,28 +1490,37 @@ STEP B3 — Field mapping
   Fixed-Length Text field whose category is Generic or Identifier. Control
   Number qualifies; most of the other columns do not.
 
-  TWENTY-FOUR COLUMNS NEED A FIELD CREATING FIRST
-  -----------------------------------------------
-  Auto Map Fields matches a column to a workspace field of the exact same name,
-  case-insensitively. A stock workspace template has 472 Document fields and 34
-  of these 59 columns match one, so on a stock template Auto Map reports 34/59
-  and the other 25 are ignored: they import as nothing at all, silently.
-
-  Twenty-four of those 25 are not junk. They carry the data a stock template has
-  nowhere to put: the Rule 21 data source dimension that Collection Coverage is
-  measured against; the RSMF chat layer, whose messages reach the workspace
-  through three columns and no other route, because this package ships no .rsmf
-  natives for processing to read; and the scripted review state.
-
-  Create them once per workspace and 58 of the 59 map:
-
+  RUN THIS FIRST, OR TWENTY-FOUR COLUMNS IMPORT AS NOTHING
+  --------------------------------------------------------
       python3 scripts/create_workspace_fields.py --workspace <id>
 
-  It is idempotent, so re-running after a partial failure is safe, and --dry-run
-  prints the list without contacting the instance.
+  The script is in this package, in scripts/, alongside the workspace_fields.py
+  it reads. It needs nothing else: no checkout, no install, stdlib only.
 
-  The 59th is ExtractedTextFilePath, and no amount of naming fixes it. See the
-  extracted text section below.
+      export RELATIVITY_URL=https://yourinstance.relativity.one
+      export RELATIVITY_TOKEN=...      # or RELATIVITY_USER + RELATIVITY_PASSWORD
+
+  It is idempotent, so re-running after a partial failure is safe, and --dry-run
+  prints the twenty-four without contacting the instance at all.
+
+  WHY. Auto Map Fields matches a column to a workspace field of the exact same
+  name, case-insensitively. A stock workspace template has 472 Document fields,
+  and measured against one: Auto Map matched 35 of the 61 columns in this
+  package. The other 26 were ignored, and Relativity ignores an unmatched column
+  silently rather than warning about it, so the job reports success and the data
+  is simply absent.
+
+  Those 26 are twenty-four columns plus the two file-path columns, which never
+  auto-map anywhere and are configured through Additional Field Settings instead
+  (Native File and Text File, both covered below).
+
+  The twenty-four are not junk. They carry the data a stock template has nowhere
+  to put: the Rule 21 data source dimension that Collection Coverage is measured
+  against; the RSMF chat layer, whose messages reach the workspace through three
+  columns and no other route, because this package ships no .rsmf natives for
+  processing to read; and the scripted review state.
+
+  Create them and every column but the two paths maps by name.
 
   CHECK THE WORKSPACE TEMPLATE BEFORE YOU RUN AN ANALYSIS
   -------------------------------------------------------
@@ -1962,6 +1971,30 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
         for root, _dirs, files in os.walk(nat_root, topdown=False):
             if not files and not os.listdir(root):
                 os.rmdir(root)
+
+    # Ship the field-creation script inside the package.
+    #
+    # IMPORT_README has told people to run "python3 scripts/create_workspace_fields.py"
+    # since the twenty-four-fields section was written, and no package has ever
+    # contained a scripts/ directory. Anyone working from a release zip, which is the
+    # documented way to get one of these, was reading an instruction that pointed at a
+    # file they did not have.
+    #
+    # Measured on a stock template workspace: without these fields Auto Map matches 35
+    # of the 61 columns. The other 26 are the 24 declared in workspace_fields.py plus
+    # the two file-path columns, which never auto-map anywhere. Twenty-four columns of
+    # real data import as nothing at all, silently, because Relativity ignores a column
+    # it cannot match rather than complaining about it.
+    #
+    # Both files, because create_workspace_fields.py imports workspace_fields from its
+    # own directory. Copied rather than generated so there is one copy to maintain.
+    scripts_dir = os.path.join(out_dir, "scripts")
+    os.makedirs(scripts_dir, exist_ok=True)
+    here = os.path.dirname(os.path.abspath(__file__))
+    for name in ("create_workspace_fields.py", "workspace_fields.py"):
+        src = os.path.join(here, name)
+        if os.path.exists(src):
+            shutil.copyfile(src, os.path.join(scripts_dir, name))
 
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
