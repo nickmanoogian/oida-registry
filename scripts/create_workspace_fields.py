@@ -14,9 +14,24 @@ is handled by the import profile instead. See workspace_fields.py for why.
 Idempotent: a field that already exists is reported and skipped, so re-running
 after a partial failure is safe. Pass --dry-run to print what it would create.
 
-Do not run this while an import job is in flight on the same workspace. Each
-create alters the Document table schema, and there is no reason to do that
-underneath a job that may be several hours into extracting text.
+Each create alters the Document table schema, so do not run this underneath an
+import job that may be hours into extracting text.
+
+IF AN ANALYSIS OVER THIS DATA FAILS, DO NOT START WITH THE LOAD FILE. An Early
+Insights run on our 9,980 document workspace failed twice, about 7 minutes in
+each time, at the step named RunningStructuredAnalytics, producing no report and
+no partial results. Both times the service's own readiness endpoint reported
+ready with no missing dependencies, before and after, so readiness passing is
+not evidence that a run will complete.
+
+What made the corpus an unlikely cause: no workspace anywhere on that instance
+had ever completed an Early Insights report, including one that predates this
+data entirely. A failure shared by a workspace that never held our documents is
+not about our documents.
+
+The useful check before blaming the data is therefore: has any workspace on this
+instance ever completed one? If none has, the problem is upstream of whatever
+you just imported.
 """
 
 import argparse
