@@ -53,12 +53,25 @@ RENAMES = {
     "Batch Status": "Review Batch Status",
 }
 
-# Columns that land in a field the template already had, but only under their new
-# name. "Privilege Reason" matched nothing, so its four reasons never imported;
-# renamed to "Privilege" it matches the stock multiple-choice field that is
-# documented for exactly that. It is not in WORKSPACE_FIELDS because there is no
-# field to create, which is precisely why it would otherwise be missed here.
-RENAMED_INTO_STOCK_FIELDS = ["Privilege"]
+# Columns that land in a field the template already had, so there is nothing to
+# create, which is precisely why they would otherwise be missed here: they are
+# not in WORKSPACE_FIELDS.
+#
+#   Privilege               was "Privilege Reason", which matched nothing, so its
+#                           four reasons never imported at all.
+#   File Type               used to carry the extension. The field's own
+#                           description asks for "Adobe Portable Document
+#                           Format", so it now carries the category.
+#   File Extension          never in the load file.
+#
+# "Relativity Native Type" is NOT here on purpose. Relativity reserves it, and
+# Import/Export does not offer it as a mapping target, so no load file and no
+# overlay can populate it. Only processing writes that field.
+STOCK_FIELDS_TO_BACKFILL = [
+    "Privilege",
+    "File Type",
+    "File Extension",
+]
 
 
 def _split(line):
@@ -76,7 +89,7 @@ def main():
     ap.add_argument("--out", dest="dst", required=True, help="overlay .dat to write")
     args = ap.parse_args()
 
-    wanted = [name for name, _t, _l, _why in WORKSPACE_FIELDS] + RENAMED_INTO_STOCK_FIELDS
+    wanted = [name for name, _t, _l, _why in WORKSPACE_FIELDS] + STOCK_FIELDS_TO_BACKFILL
 
     with open(args.src, encoding="utf-8") as f:
         header = _split(f.readline().rstrip("\n"))
