@@ -6,6 +6,29 @@ All notable changes to this repository are documented here.
 
 ## [Unreleased]
 
+### Changed — v1.20.0 packages
+
+Load packages only. The tier files are untouched, so the 30 pointers stay at v1.19.0.
+
+| | v1.19.0 | v1.20.0 |
+|---|---|---|
+| Columns | 61 | **60**, `EndDoc#` removed |
+| Auto-map by exact name | 26 of 61 | **33 of 60**, verified against a live workspace |
+| `--no-natives` build | no | **yes**, 6.3 MB against 21 MB |
+
+Seven more columns renamed to the workspace's own field names, on top of the
+fifteen in v1.19.0: `BegAttach`/`EndAttach` to the `Control Number * Attach` pair,
+`BegBates`/`EndBates` to `Bates Beg`/`Bates End`, `Primary Date` to
+`Primary Date/Time`, `Email Threading Inclusive` to `Inclusive Email`, and
+`Language` to `Primary language`.
+
+`IMPORT_README.txt` now carries what nine documentation sources say, including the
+6,375-line Import/Export Guide PDF. The three that break an import silently: the
+package is handed over in two parts with the text in its own zip rooted at `text/`;
+`ExtractedTextFilePath` needs the "Text File" additional setting and UTF-8 encoding
+or the text becomes a filename; and an Overlay erases what the load file leaves blank.
+
+
 ### Changed — v1.19.0 packages
 
 Every tier republished, because `Email CC` and `Email BCC` were declared and never
