@@ -1110,7 +1110,18 @@ DAT_COLUMNS = [
     # the extra large load file. Concordance brackets a page range with
     # BegDoc/EndDoc; every record here is one document, so it bracketed nothing.
     "Control Number","Control Number Beg Attach","Control Number End Attach","Custodian","Custodian Email",
-    "Custodian Org","File Name","File Type","File Size","Primary Date/Time","Email From","Email From (SMTP Address)",
+    # Two fields describe the file, and they are not interchangeable. "File Type"
+    # is documented in the workspace as a "description that represents the file
+    # type to the Windows Operating System", so it takes the category
+    # ("Email - EML"), not the extension. "File Extension" takes "eml".
+    #
+    # There is a third, "Relativity Native Type", and it is deliberately absent.
+    # Relativity reserves it: the field carries the System keyword, Import/Export
+    # does not offer it as a mapping target at all, and only processing writes
+    # it. A load file cannot populate it however it is spelled, so shipping the
+    # column would only add an inert field to every row and one more unmappable
+    # line on the mapping screen.
+    "Custodian Org","File Name","File Type","File Extension","File Size","Primary Date/Time","Email From","Email From (SMTP Address)",
     "Email To","Email To (SMTP Address)","Email CC","Email Subject","Sent Date/Time","Email Received Date/Time","Message ID",
     "Email Has Attachments","Number of Attachments","Email Threading ID","Inclusive Email",
     "Conversation Topic","Author","Title","Company","Page Count",
@@ -1171,7 +1182,11 @@ _COLUMN_MAP = {
     "Custodian Email":           ("Custodian Email",         None),
     "Custodian Org":             ("Custodian Org",           None),
     "File Name":                 ("File Name",               None),
-    "File Type":                 ("File Extension",          None),
+    # Was ("File Extension"), which put "eml" into a field whose own description
+    # asks for "Adobe Portable Document Format". The category is the right shape
+    # and the tier already carries 25 of them.
+    "File Type":                 ("File Type Category",      None),
+    "File Extension":            ("File Extension",          None),
     "File Size":                 ("File Size (bytes)",       None),
     "Primary Date/Time":                      ("Primary Date",            lambda d: d.get("Primary Date","")[:10]),
     "Email From":                      ("Email From",              None),
