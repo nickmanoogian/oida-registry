@@ -46,6 +46,7 @@ from pathlib import Path
 from zipfile import ZipFile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import media_natives
 from dat_format import DAT_FIELD_SEP, DAT_NEWLINE, DAT_QUOTE, DELIMITER_NOTE  # noqa: F401
 from tier_files import GROUND_TRUTH_FILES
 
@@ -936,13 +937,27 @@ def generate_native(doc, cache, out_dir, flat=False, with_errors=False,
             content = bytes(make_pdf(doc, body, dates))
             native_path = dest("pdf")
         elif "RSMF" in ft or "Bloomberg" in ft:
-            content = make_rsmf(doc, body if (plant.get("pi") or plant.get("body")) else "").encode("utf-8")
+            # RSMF is a ZIP holding rsmf_manifest.json, not the JSON on its own.
+            # The JSON was always right; shipping it bare is why 30 chat records
+            # identified to Relativity as ASCII Text.
+            manifest = make_rsmf(doc, body if (plant.get("pi") or plant.get("body")) else "")
+            content = media_natives.make_rsmf_container(manifest)
             native_path = dest("rsmf")
         elif "Container" in ft or doc.get("Has Natives","") == "No":
             return None  # containers don't have natives
         else:
-            content = make_txt(doc, body).encode("utf-8","replace")
-            native_path = dest("txt")
+            # Anything with a real container gets one. An image, an ISO base media
+            # file or an RTF written as text is a file that lies about itself, and
+            # Relativity reads the bytes: every one of these came back as
+            # "ASCII Text" on an import with natives attached. Extensions with no
+            # writer here (.txt, .log, and the Source Code set) genuinely are text.
+            writer = media_natives.writer_for(ext)
+            if writer:
+                content = writer(doc, body)
+                native_path = dest(ext)
+            else:
+                content = make_txt(doc, body).encode("utf-8","replace")
+                native_path = dest(ext if ext else "txt")
 
         blob = content if isinstance(content, bytes) else content.encode("utf-8","replace")
         with open(native_path, "wb") as f:
@@ -1003,6 +1018,13 @@ def text_rel_path(ctrl):
 _XML_TAG = re.compile(rb"<[^>]+>")
 
 
+# Formats that genuinely carry no extracted text. Named rather than inferred, so
+# adding a format is a decision someone makes rather than a default they inherit.
+_BINARY_NO_TEXT = frozenset({"png", "jpg", "jpeg", "tif", "tiff", "heic",
+                             "mp4", "mov", "m4a", "mp3", "wav"})
+_HTML_TAG = re.compile(r"(?s)<[^>]+>")
+
+
 def extracted_text(blob, ext):
     """The text Relativity would extract from these bytes.
 
@@ -1040,6 +1062,34 @@ def extracted_text(blob, ext):
                     out.append(tok[1:-1].replace(b"\\(", b"(").replace(b"\\)", b")")
                                .decode("latin-1"))
             text = " ".join(out)
+        elif ext in ("rsmf", "vsdx", "vsd"):
+            # Now a real container, so read what is inside it. Before this the
+            # RSMF was bare JSON and fell through to the decode below; leaving it
+            # there once it became a ZIP would have turned every chat record's
+            # extracted text into binary noise, and taken Rule 16's planted chat PI
+            # and Rule 17's planted chat language down with it.
+            parts = []
+            with ZipFile(io.BytesIO(blob)) as z:
+                for n in z.namelist():
+                    if n.endswith((".json", ".xml")):
+                        raw = z.read(n)
+                        parts.append(_XML_TAG.sub(b" ", raw) if n.endswith(".xml") else raw)
+            text = b" ".join(parts).decode("utf-8", "replace")
+        elif ext == "rtf":
+            body = blob.decode("cp1252", "replace")
+            body = re.sub(r"\\'[0-9a-fA-F]{2}", "", body)
+            body = re.sub(r"\\[a-zA-Z]+-?\d* ?", " ", body)
+            text = body.replace("{", " ").replace("}", " ")
+        elif ext == "html":
+            body = blob.decode("utf-8", "replace")
+            body = re.sub(r"(?is)<(script|style).*?</\1>", " ", body)
+            import html as _htmlmod
+            text = _htmlmod.unescape(_HTML_TAG.sub(" ", body))
+        elif ext in _BINARY_NO_TEXT:
+            # An image, an ISO base media file or a WAV has no extracted text, and
+            # saying so is the honest answer. Decoding the bytes as UTF-8 would
+            # write a page of replacement characters and call it a document.
+            text = ""
         else:
             text = blob.decode("utf-8", "replace")
     except Exception:

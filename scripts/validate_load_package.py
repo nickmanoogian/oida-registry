@@ -129,11 +129,14 @@ def native_text(path):
         raw = open(path, "rb").read()
     except OSError:
         return ""
-    if ext in (".docx", ".xlsx", ".pptx"):
+    # .rsmf and .vsdx joined this list when they stopped being bare JSON and bare
+    # text. An RSMF is a ZIP holding rsmf_manifest.json, and reading it as raw
+    # bytes reports seeded chat PI as missing when it is sitting there compressed.
+    if ext in (".docx", ".xlsx", ".pptx", ".rsmf", ".vsdx", ".vsd"):
         try:
             with zipfile.ZipFile(path) as z:
                 return " ".join(z.read(n).decode("utf-8", "replace")
-                                for n in z.namelist() if n.endswith(".xml"))
+                                for n in z.namelist() if n.endswith((".xml", ".json")))
         except (zipfile.BadZipFile, KeyError, OSError):
             return ""
     if ext == ".eml":
@@ -578,10 +581,26 @@ def main():
 
         # Empty on an errored document is correct, not a gap: extraction is what
         # failed. Empty on a healthy one means the text layer silently lost it.
+        #
+        # An image, a video and an audio file are the third case: they are healthy
+        # and they have no text, and that is the honest answer rather than a loss.
+        # This exemption arrived with the real media natives. Before them a .heic
+        # was a text file with a lying extension, so it "had text", and the check
+        # passed for the wrong reason.
+        textless = {"png", "jpg", "jpeg", "tif", "tiff", "heic",
+                    "mp4", "mov", "m4a", "mp3", "wav"}
+        i_ext_c = header.index("File Extension") if "File Extension" in header else None
+        def has_no_text_by_nature(ctrl):
+            if i_ext_c is None:
+                return False
+            row = next((r for r in rows if r[i_ctrl] == ctrl), None)
+            return bool(row) and (row[i_ext_c] or "").lower() in textless
+
         blank = [c for c, rel in declared
                  if not (err_type.get(c) or "").strip()
                  and os.path.exists(full(rel))
-                 and not open(full(rel), encoding="utf-8").read().strip()]
+                 and not open(full(rel), encoding="utf-8").read().strip()
+                 and not has_no_text_by_nature(c)]
         check("no healthy document has empty extracted text", not blank,
               f"{len(blank)} blank: {blank[:3]}" if blank
               else "every healthy document carries text")

@@ -1107,6 +1107,71 @@ python scripts/validate_mock_data.py --tier medium
 
 ---
 
+## Rule 25 — Natives That Are What They Claim
+
+Rule 12 governs whether a native fails the way its metadata says, Rule 19 governs its dates
+and Rule 23 governs its text. This governs the **bytes**, and it exists because Relativity
+reads them.
+
+Every native used to go through one of six writers, and anything matching none of them fell
+through to a plain text file named with the declared extension. A JPEG was a text file called
+`.jpg`. An RSMF chat container was raw JSON called `.rsmf`. Nothing in the pipeline ever
+noticed, because nothing in the pipeline looked at the bytes.
+
+Measured on an import of the small tier with natives attached, `Relativity Native Type` came
+back as six formats and a bucket:
+
+| Relativity Native Type | documents | |
+|---|---|---|
+| Internet Mail Message | 821 | the `.eml` were real |
+| Microsoft Word 2010/2011 | 202 | real |
+| **ASCII Text** | **162** | **everything that was a text file in disguise** |
+| Microsoft Excel 2007/2008 | 102 | real |
+| Adobe Acrobat (PDF) | 87 | real |
+| Microsoft PowerPoint 2010/2011 | 50 | real |
+
+The 162 were 30 RSMF containers, 50 images across JPEG, PNG, TIFF and HEIC, and the RTF and
+HTML from Text / Markup. Relativity was not wrong about any of them. It sniffed the content,
+found text, and said so. The corpus was claiming 25 file type categories while shipping six
+real formats.
+
+### What it requires
+
+- **Every native is the real container for its format.** Written by hand from the
+  specification in `media_natives.py`, so a build needs nothing beyond the standard library
+  and produces identical bytes on every machine. PNG, JPEG, TIFF, HEIC, MP4, MP3, WAV, RTF,
+  HTML, CSV, VSDX as an OPC package, and RSMF as the ZIP holding `rsmf_manifest.json` that
+  the format actually is.
+- **EXIF is written, not just claimed.** The generator has always put GPS coordinates, a
+  camera make and model and a date taken onto image rows, and none of it was ever in a file.
+  An image whose metadata claims a location and whose native has no EXIF cannot test anything
+  that reads EXIF. `make_jpeg` writes the row's own values into an APP1 segment, and they
+  read back through a real decoder.
+- **Formats that genuinely have no text say so.** An image, a video and an audio file get an
+  empty extracted text sidecar. That is the honest answer, and the validator exempts them by
+  name rather than by inference. Before the real natives a `.heic` was a text file, so it
+  "had text", and the check passed for the wrong reason.
+- **Formats that genuinely are text stay text.** `.txt`, `.log` and the whole Source Code set
+  are ASCII, and dressing them up would be the same mistake in the other direction.
+- **Extraction follows the container.** An RSMF is unzipped to reach its manifest, an RTF has
+  its control words stripped, HTML has its tags stripped. Skipping this would have turned
+  every chat record's extracted text into binary noise and taken Rule 16's planted chat PI and
+  Rule 17's planted chat language with it.
+
+**The Unsupported set is deliberately exempt.** `.mdb`, `.accdb`, `.pages`, `.numbers`, `.key`
+and `.olm` ship as text, because the entire purpose of that category is to fail processing,
+and a text file with a `.mdb` extension fails it in exactly the same way. They identify as
+ASCII Text and that is the intended outcome, not a gap.
+
+Verify with:
+
+```bash
+python scripts/validate_load_package.py load-packages/small
+find load-packages/small/natives -type f -exec file -b {} \; | sort | uniq -c
+```
+
+---
+
 ## Applying These Rules
 
 To regenerate any tier with these rules enforced:
