@@ -1469,6 +1469,13 @@ them misbehaves.
      Overlay against an empty workspace fails, and in any overlay mode a blank
      cell erases the existing value rather than being skipped.
 
+  6. CLICK "PRECHECK LOAD FILE" BEFORE "IMPORT". It sits next to the Import
+     button and it is the only thing that inspects the package before the job
+     commits to it: date formats, field type alignment, text length against
+     field maximums, column count consistency, and the file paths on a sample.
+     Measured on the extra large tier, 275,273 rows, about three minutes. Set
+     against a bad package failing a day later, that is nothing.
+
 Then: Import.
 
 
@@ -1629,6 +1636,27 @@ STEP B3 — Field mapping
   directory itself, the one holding load-file.dat, not at its parent and not at
   a stale copy: nothing in the wizard shows you the column count until the load
   file preview, by which point you have already spent the setup.
+
+  IF THE JOB STOPS AT "FAILED TO START UPLOAD". The message asks you to make
+  sure Express Transfer is running and to run its connectivity check. Check
+  whether it is running before you act on that, because ours was, and had been
+  for three days. A long lived Express Transfer can keep its process and its
+  local port alive while the listener behind them stops answering.
+
+  What that looked like, measured, so you can tell this apart from an app that
+  is genuinely closed:
+
+    the local port accepted a TCP connection but never answered an HTTP
+    request, hanging until the client gave up
+
+    six of its connections to the instance sat in CLOSE_WAIT, meaning the far
+    end had closed them and the app had not reaped them
+
+  Quitting and relaunching fixed both: the new listener answered in a tenth of
+  a second and held no half-closed sockets. Retry in the wizard then picked the
+  job straight back up with nothing else re-entered, so a restart costs you the
+  app sign-in and nothing more. On macOS, the process to look for is
+  Relativity.Express.Shell, and quitting the app may leave it behind.
 
   CHUNKING (when Express Transfer is not available). Split the package into
   batches that each land inside the range that works:
