@@ -1,17 +1,20 @@
 """The Document fields a stock Relativity workspace does not have.
 
-A default workspace template carries 472 Document fields, and 34 of the load
-file's 59 columns auto-map to one by exact name. The other 25 do not, and only
-one of those is a naming problem: ExtractedTextFilePath, which is handled by the
-import profile because the "Text File" setting cannot be expressed in a column
-name at all.
+A default workspace template carries 472 Document fields, and 35 of the load
+file's 61 columns auto-map to one by exact name. The other 26 do not, and two of
+those are not naming problems at all: NativeFilePath and ExtractedTextFilePath
+are set in the wizard's Additional Field Settings, to Native File and Text File,
+because neither setting can be expressed in a column name.
+
+A package built with --no-natives drops NativeFilePath, so the same reading is
+35 of 60 with 25 unmatched.
 
 The remaining 24 are not junk columns and should not be deleted from the load
 file. They carry the parts of this corpus a stock template has nowhere to put:
 Rule 21's data source dimension, which Collection Coverage is measured against;
-the RSMF chat layer, whose 40,882 messages reach the workspace through these
-columns and no other route, because the package ships no .rsmf natives for
-processing to read; and the scripted review state DEMO_GUIDE walks through.
+the RSMF chat layer, which reaches the workspace through these columns whenever
+a package is built without natives; and the scripted review state DEMO_GUIDE
+walks through.
 
 Relativity's Import/Export ignores an unmatched column, so shipping them costs
 bytes and nothing else. Create these fields once per workspace and all 24 land.
