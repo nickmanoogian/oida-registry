@@ -222,7 +222,7 @@ Output in `load-packages/small/`:
 | File | Description |
 |------|-------------|
 | `natives/` | ~1,400 actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files, each stamped with its manifest date (Rule 19) |
-| `load-file.dat` | Relativity Concordance load file — 58 fields, all metadata |
+| `load-file.dat` | Relativity Concordance load file — 61 fields with natives, 60 with `--no-natives` |
 | `custodian-sources.csv` | One row per custodian: the processing data source setup sheet |
 | `pi-ground-truth.csv`, `language-mix.json`, `findings.json` | Carried across from the tier, so the seeded content can be scored |
 | `IMPORT_README.txt` | Step-by-step Relativity import instructions |
