@@ -8,6 +8,95 @@ All notable changes to this repository are documented here.
 
 ---
 
+## [1.23.0] — the package imports without the steps we did by hand
+
+Everything here came out of importing these packages into four real workspaces.
+Each item is something that cost time the package itself should have saved.
+
+### Changed — IMPORT_README opens with a six step quickstart
+
+The prerequisite that decides whether the import works at all, creating the 24
+custom fields, was buried 150 lines into PATH B step B3. Anyone skimming ran the
+wizard first and got a job that reported success with 24 columns of data missing,
+because Relativity ignores an unmatched column silently rather than warning.
+
+### Added — the gotchas that were nowhere in the repo
+
+* **The wizard caches the workspace field list when it opens.** Create fields
+  underneath an open wizard and Auto Map keeps reporting the old count however
+  many times you go Back and Continue. Only cancelling and reloading clears it.
+* **A job name over 50 characters silently disables Continue,** with the error
+  hidden underneath the field. Its label does not reach the accessibility tree
+  either, so nothing announces it.
+* **Append Only** is what a first load into an empty workspace needs.
+* **Precheck Load File** is now a step rather than a buried bullet. On 275,273
+  rows it took about three minutes and came back clean.
+* **A long lived Express Transfer can wedge while still looking alive.** Ours had
+  been up three days: its local port still accepted TCP but the listener never
+  answered an HTTP request, and six connections to the instance sat in
+  CLOSE_WAIT. Quitting and relaunching fixed both, and Retry resumed the job with
+  nothing re-entered.
+* **The published zip unpacks to `load-packages/{tier}/`.** Express Transfer wants
+  the folder holding load-file.dat, two levels down, not the folder you land in.
+
+### Fixed — the transfer advice was wrong in the expensive direction
+
+IMPORT_README said to leave Express Transfer off because the package is well
+under the documented 20 GB cap. Measured: small, medium and large completed
+through the browser zip path; xlarge, at 199 MB dat plus a 168 MB zip, retried
+for 24.6 hours and then failed with an error Relativity could not name. The
+practical ceiling is nearer 100 MB, and TRANSFER ROUTE now says so with the two
+routes above it.
+
+### Fixed — every count in IMPORT_README is derived
+
+The hardcoded ones had drifted and contradicted each other: 59 columns in one
+place, 61 in another, "35 of 61" against "33 of them", for a package that ships
+61 with natives and 60 with `--no-natives`. README.md said 53 fields and
+mock-data/README.md said 58. All now computed from the package being built.
+
+README.md also called the package "ready to import immediately", which was the
+more expensive error, and now carries the one command that makes it true.
+
+### Fixed — the scripts IMPORT_README points at now ship
+
+`chunk_load_package.py`, `dat_format.py`, `validate_load_package.py` and
+`error_natives.py` go into every package alongside `create_workspace_fields.py`.
+The README told people to run the chunker and the validator; neither was there,
+and the validator needed two modules that were not either. The validator also
+defaults to the current directory now, since the common case is standing inside
+a package you just unzipped.
+
+### Fixed — chunked batches failed their own validator, four ways
+
+* `shutil.copyfile` does not carry mtimes and the builder dates every native and
+  sidecar to its document's date. Now `copy2`.
+* `custodian-sources.csv` was copied whole, so Documents, Natives Written and
+  Native Bytes described a corpus the batch did not hold. Recounted per batch
+  from the files actually copied, pairs contributing nothing dropped.
+* Ground truth legitimately describes documents in sibling batches. The chunker
+  writes `batch-manifest.json`; the validator scopes its ground truth checks to
+  rows actually present and reports how many it deferred. Without that manifest
+  an absent control number is still a real failure.
+
+Verified: a 40 row package splits into three batches that each pass every check
+standalone, and the three reconstruct the original set exactly with no duplicates.
+
+### Fixed — make check was red on main
+
+Two lint errors stopped the gate before it reached the rules. Behind them,
+`mock-data/small` was stale, last regenerated in #46 and so predating the
+language mix fix, failing the German diacritics checks. Both fixed.
+
+### Fixed — the release assets predated every fix above
+
+`load-packages/small` and `small-errors`, and the `small.zip` and
+`small-errors.zip` published from them, were built on 11 Sep. They carry 60
+columns with no `File Extension` and pre-fix language content. Rebuilt: 61
+columns, `File Extension` present, and the shipped `scripts/` directory.
+
+---
+
 ## [1.22.1] — the date sentinel and the Google Workspace natives
 
 A patch on v1.22.0, which shipped a few hours before both of these landed.

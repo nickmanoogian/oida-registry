@@ -1631,11 +1631,23 @@ STEP B3 — Field mapping
   Folder" step and you point it straight at this package directory. No zip, no
   path-root trap, no separate Native & Text upload.
 
-  Two things to know. The folder picker is a native OS dialog, so it cannot be
-  driven by anything scripting the browser. And point it at the package
-  directory itself, the one holding load-file.dat, not at its parent and not at
-  a stale copy: nothing in the wizard shows you the column count until the load
-  file preview, by which point you have already spent the setup.
+  Three things to know. The folder picker is a native OS dialog, so it cannot be
+  driven by anything scripting the browser.
+
+  Point it at the package directory ITSELF, the one holding load-file.dat. If
+  you unzipped a published release asset, that is not the folder you landed in:
+  the archive is built from the repository root, so it unpacks to
+  load-packages/{tier}/ and you have to go two levels down. Picking the parent
+  is the single easiest mistake here and we made it.
+
+  And check you are pointing at the current copy rather than an older build
+  sitting beside it. Nothing in the wizard shows you the column count until the
+  load file preview, several steps in, by which point you have spent the whole
+  setup on the wrong data. From a shell, before you start:
+
+      head -c 4000 load-file.dat | tr '\024' '\n' | grep -c .
+
+  A current package answers {field_count}.
 
   IF THE JOB STOPS AT "FAILED TO START UPLOAD". The message asks you to make
   sure Express Transfer is running and to run its connectivity check. Check
