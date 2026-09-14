@@ -1,11 +1,24 @@
 #!/usr/bin/env python3
 """Create the Document fields a stock workspace lacks, so the load file fully maps.
 
-Without these, Import/Export's Auto Map Fields matches 34 of the load file's 59
-columns and the other 25 sit inert: Relativity ignores an unmatched column, so
-they import as nothing at all. With them, 58 of 59 map by exact name. The last
-one is ExtractedTextFilePath, which cannot be fixed by naming at any price and
-is handled by the import profile instead. See workspace_fields.py for why.
+Measured against a stock template workspace, Import/Export's Auto Map Fields
+matches 35 of the load file's 61 columns and the other 26 sit inert: Relativity
+ignores an unmatched column, so they import as nothing at all. With these 24
+created, 59 of 61 map by exact name.
+
+The two that never auto-map are the file path columns, NativeFilePath and
+ExtractedTextFilePath, which cannot be fixed by naming at any price. They are
+set by hand in the wizard's Additional Field Settings column, to Native File and
+Text File, which takes the job to 61 of 61. See workspace_fields.py for why.
+
+A package built with --no-natives has no NativeFilePath column, so the same
+numbers read 35 of 60, then 59 of 60, then 60 of 60.
+
+RUN THIS BEFORE YOU OPEN THE IMPORT/EXPORT WIZARD. The wizard reads the
+workspace field list once, when it opens, and caches it for the rest of the
+session. Create fields underneath an open wizard and Auto Map keeps reporting
+35 however many times you go Back and Continue. Only cancelling and reloading
+the page clears it.
 
     export RELATIVITY_URL=https://yourinstance.relativity.one
     export RELATIVITY_TOKEN=...            # or RELATIVITY_USER + RELATIVITY_PASSWORD

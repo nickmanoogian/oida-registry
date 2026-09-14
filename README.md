@@ -248,7 +248,7 @@ make mock-xlarge
 
 275,273 documents. It is large's matter at 1.86x: the same 40 custodians, the same scripted
 documents and threads, the same file type mix, with the volumes and the production shape
-scaled up. `documents.csv` is 260 MB open and arrives gzipped at 59 MB.
+scaled up. `documents.csv` is 275 MB open and arrives gzipped in the release asset.
 
 To build it yourself with a different seed instead, `make mock-regen-xlarge`.
 
@@ -387,6 +387,50 @@ Output in `load-packages/small/`:
 - `custodian-sources.csv` — one row per custodian: the processing data source setup sheet
 - `IMPORT_README.txt` — step-by-step Relativity processing and import instructions
 
+### Getting the package into a workspace
+
+`IMPORT_README.txt` inside every package opens with the full six step quickstart. The
+short version, and the part people get wrong:
+
+**Pick the transfer route by size.** Relativity documents a 20 GB cap on a single import
+without Express Transfer. That is not the number that matters. Measured on a real
+instance, the browser zip upload path has a practical ceiling nearer **100 MB**:
+
+| Package | Size | Browser zip upload |
+|---|---|---|
+| small | 1.2 MB dat, 11 MB zip | completed in minutes |
+| medium | 8.3 MB dat, 5.4 MB zip | completed |
+| large | 107 MB dat, 90 MB zip | completed, and this is about the ceiling |
+| xlarge | 199 MB dat, 168 MB zip | **failed after 24.6 hours of retries** |
+
+Above roughly 100 MB use **Express Transfer**, a desktop app installed from the first
+screen of the wizard. It takes the package folder directly, no zip, and its own remit is
+data sets over 20 GB. If it is not available to you, `scripts/chunk_load_package.py`
+splits a package into self consistent batches instead.
+
+**Three steps fail silently.** The job reports success and the data is wrong or missing,
+with no error anywhere:
+
+1. **Create the 24 custom fields before you open the wizard.** Without them Auto Map
+   matches 35 of 61 and Relativity drops the rest without comment. The wizard also
+   caches the field list when it opens, so fields created underneath an open wizard do
+   not appear until you cancel and reload the page.
+2. **Set `ExtractedTextFilePath` to Text File** in Additional Field Settings, not just to
+   Extracted Text. Skip it and every document's extracted text becomes the literal string
+   `text\DOC-0000192.txt`.
+3. **Map `NativeFilePath` to Native File** the same way. Those two take the job to 61 of 61.
+
+Then **Precheck Load File**, set **Append Only** for a first load, and import.
+
+Every package ships the scripts it needs, standard library only, so none of this requires
+a checkout:
+
+```bash
+cd load-packages/small                      # the folder holding load-file.dat
+python3 scripts/create_workspace_fields.py --workspace <id>
+python3 scripts/validate_load_package.py    # no arguments, defaults to .
+```
+
 The 13 scripted hot documents (HOT- prefix) get hand-crafted MDL 2804 content —
 the SOM override email, the McKinsey turbocharge deck, the IRC call guide, and more.
 All other documents use real OIDA OCR text pulled from the S3 archive.
@@ -431,7 +475,7 @@ had nothing to work with, and nothing tested what metadata surfaces before anyon
 
 | Rule | What it seeds | Ground truth |
 |---|---|---|
-| **16** | 102 PI instances across 18 documents in the small tier, spread over email bodies, spreadsheet cells, a PDF form and a chat. Every value non-issuable: never-issued SSN areas, published test card numbers, the 555-01xx block, the `.invalid` TLD | `pi-ground-truth.csv`, one row per instance |
+| **16** | 99 PI instances across 18 documents in the small tier, spread over email bodies, spreadsheet cells, a PDF form and a chat. Every value non-issuable: never-issued SSN areas, published test card numbers, the 555-01xx block, the `.invalid` TLD | `pi-ground-truth.csv`, one row per instance |
 | **17** | A second language at ~2%, on facilities notices deliberately unrelated to the matter, with real prose in the natives | `language-mix.json` |
 | **18** | A matched pair and a decoy: one finding visible on metadata alone and unreadable, one visible only by reading with zero keyword hits, one innocent lookalike whose distinguisher is buried in a second record, and one workbook whose payload sits on tab 11 of 12 | `findings.json`, with what each is findable by and invisible to |
 
