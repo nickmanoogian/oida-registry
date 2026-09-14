@@ -1,18 +1,18 @@
 {
-  "note": "The non-custodian half of Key Relationships. A skewed external roster with a long singleton tail, plus people sending from two addresses so name normalisation has something to resolve.",
+  "note": "The non-custodian half of Key Relationships. A skewed external roster with a long singleton tail, plus people reachable at two addresses so name normalisation has something to resolve.",
   "externals": [
     {
       "name": "DEA Diversion Control",
       "email": "diversion@dea.gov",
       "org": "DEA",
       "kind": "Regulator",
-      "documents": 56,
+      "documents": 62,
       "document_ids": [
-        "DOC-0000215",
-        "DOC-0000423",
-        "DOC-0000743",
-        "DOC-0000162",
-        "DOC-0000444",
+        "DOC-0000666",
+        "DOC-0000226",
+        "DOC-0000480",
+        "DOC-0000588",
+        "DOC-0000249",
         "..."
       ],
       "assigned_by_this_rule": 9
@@ -22,13 +22,13 @@
       "email": "cder@fda.hhs.gov",
       "org": "FDA",
       "kind": "Regulator",
-      "documents": 53,
+      "documents": 51,
       "document_ids": [
-        "DOC-0000521",
-        "DOC-0000526",
-        "DOC-0000449",
-        "DOC-0000402",
-        "DOC-0000428",
+        "DOC-0000134",
+        "DOC-0000057",
+        "DOC-0000685",
+        "DOC-0000039",
+        "DOC-0000794",
         "..."
       ],
       "assigned_by_this_rule": 7
@@ -38,13 +38,13 @@
       "email": "inquiry@ag.state.us",
       "org": "State AG",
       "kind": "Regulator",
-      "documents": 52,
+      "documents": 51,
       "document_ids": [
-        "DOC-0000493",
-        "DOC-0000563",
-        "DOC-0000574",
-        "DOC-0000383",
-        "DOC-0000117",
+        "DOC-0000038",
+        "DOC-0000081",
+        "DOC-0000163",
+        "DOC-0000231",
+        "DOC-0000704",
         "..."
       ],
       "assigned_by_this_rule": 7
@@ -56,11 +56,11 @@
       "kind": "Distributor compliance",
       "documents": 50,
       "document_ids": [
-        "DOC-0000731",
-        "DOC-0000584",
-        "DOC-0000002",
-        "DOC-0000344",
-        "DOC-0000475",
+        "DOC-0000004",
+        "DOC-0000255",
+        "DOC-0000718",
+        "DOC-0000317",
+        "DOC-0000438",
         "..."
       ],
       "assigned_by_this_rule": 50
@@ -72,11 +72,11 @@
       "kind": "Distributor compliance",
       "documents": 44,
       "document_ids": [
-        "DOC-0000004",
-        "DOC-0000619",
-        "DOC-0000328",
         "DOC-0000393",
-        "DOC-0000559",
+        "DOC-0000347",
+        "DOC-0000002",
+        "DOC-0000448",
+        "DOC-0000744",
         "..."
       ],
       "assigned_by_this_rule": 44
@@ -88,11 +88,11 @@
       "kind": "Distributor compliance",
       "documents": 30,
       "document_ids": [
-        "DOC-0000696",
-        "DOC-0000269",
-        "DOC-0000799",
-        "DOC-0000137",
-        "DOC-0000184",
+        "DOC-0000386",
+        "DOC-0000620",
+        "DOC-0000202",
+        "DOC-0000676",
+        "DOC-0000561",
         "..."
       ],
       "assigned_by_this_rule": 30
@@ -104,11 +104,11 @@
       "kind": "Distributor compliance",
       "documents": 7,
       "document_ids": [
-        "DOC-0000056",
-        "DOC-0000011",
-        "DOC-0000045",
-        "DOC-0000167",
         "DOC-0000154",
+        "DOC-0000700",
+        "DOC-0000486",
+        "DOC-0000035",
+        "DOC-0000174",
         "..."
       ],
       "assigned_by_this_rule": 7
@@ -120,11 +120,11 @@
       "kind": "Diversion control",
       "documents": 7,
       "document_ids": [
-        "DOC-0000355",
-        "DOC-0000733",
-        "DOC-0000210",
-        "DOC-0000679",
-        "DOC-0000060",
+        "DOC-0000382",
+        "DOC-0000332",
+        "DOC-0000215",
+        "DOC-0000496",
+        "DOC-0000162",
         "..."
       ],
       "assigned_by_this_rule": 7
@@ -136,11 +136,11 @@
       "kind": "Regulator",
       "documents": 7,
       "document_ids": [
-        "DOC-0000800",
-        "DOC-0000123",
-        "DOC-0000710",
-        "DOC-0000001",
-        "DOC-0000364",
+        "DOC-0000745",
+        "DOC-0000603",
+        "DOC-0000434",
+        "DOC-0000526",
+        "DOC-0000329",
         "..."
       ],
       "assigned_by_this_rule": 7
@@ -152,11 +152,11 @@
       "kind": "Regulator",
       "documents": 6,
       "document_ids": [
-        "DOC-0000556",
-        "DOC-0000548",
-        "DOC-0000784",
-        "DOC-0000494",
-        "DOC-0000376",
+        "DOC-0000254",
+        "DOC-0000136",
+        "DOC-0000577",
+        "DOC-0000016",
+        "DOC-0000314",
         "..."
       ],
       "assigned_by_this_rule": 6
@@ -168,11 +168,11 @@
       "kind": "Order management",
       "documents": 5,
       "document_ids": [
-        "DOC-0000633",
-        "DOC-0000216",
-        "DOC-0000713",
-        "DOC-0000037",
-        "DOC-0000634"
+        "DOC-0000261",
+        "DOC-0000333",
+        "DOC-0000036",
+        "DOC-0000102",
+        "DOC-0000024"
       ],
       "assigned_by_this_rule": 5
     },
@@ -183,9 +183,9 @@
       "kind": "Regulator",
       "documents": 3,
       "document_ids": [
-        "DOC-0000249",
-        "DOC-0000745",
-        "DOC-0000075"
+        "DOC-0000759",
+        "DOC-0000629",
+        "DOC-0000545"
       ],
       "assigned_by_this_rule": 3
     },
@@ -196,7 +196,7 @@
       "kind": "Regulator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000272"
+        "DOC-0000659"
       ],
       "assigned_by_this_rule": 1
     },
@@ -207,7 +207,7 @@
       "kind": "Regulator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000082"
+        "DOC-0000650"
       ],
       "assigned_by_this_rule": 1
     },
@@ -218,7 +218,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000627"
+        "DOC-0000538"
       ],
       "assigned_by_this_rule": 1
     },
@@ -229,7 +229,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000411"
+        "DOC-0000452"
       ],
       "assigned_by_this_rule": 1
     },
@@ -240,7 +240,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000253"
+        "DOC-0000373"
       ],
       "assigned_by_this_rule": 1
     },
@@ -251,7 +251,7 @@
       "kind": "Outside counsel",
       "documents": 1,
       "document_ids": [
-        "DOC-0000147"
+        "DOC-0000114"
       ],
       "assigned_by_this_rule": 1
     },
@@ -262,7 +262,7 @@
       "kind": "Expert witness",
       "documents": 1,
       "document_ids": [
-        "DOC-0000664"
+        "DOC-0000183"
       ],
       "assigned_by_this_rule": 1
     },
@@ -273,7 +273,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000013"
+        "DOC-0000726"
       ],
       "assigned_by_this_rule": 1
     },
@@ -284,7 +284,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000157"
+        "DOC-0000579"
       ],
       "assigned_by_this_rule": 1
     },
@@ -295,7 +295,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000759"
+        "DOC-0000095"
       ],
       "assigned_by_this_rule": 1
     },
@@ -306,7 +306,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000299"
+        "DOC-0000150"
       ],
       "assigned_by_this_rule": 1
     },
@@ -317,7 +317,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000335"
+        "DOC-0000094"
       ],
       "assigned_by_this_rule": 1
     },
@@ -328,7 +328,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000005"
+        "DOC-0000614"
       ],
       "assigned_by_this_rule": 1
     },
@@ -339,7 +339,7 @@
       "kind": "Speaker bureau KOL",
       "documents": 1,
       "document_ids": [
-        "DOC-0000461"
+        "DOC-0000519"
       ],
       "assigned_by_this_rule": 1
     },
@@ -350,7 +350,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000061"
+        "DOC-0000572"
       ],
       "assigned_by_this_rule": 1
     },
@@ -361,7 +361,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000175"
+        "DOC-0000294"
       ],
       "assigned_by_this_rule": 1
     },
@@ -372,7 +372,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000375"
+        "DOC-0000590"
       ],
       "assigned_by_this_rule": 1
     },
@@ -383,7 +383,7 @@
       "kind": "Dispensing pharmacy",
       "documents": 1,
       "document_ids": [
-        "DOC-0000368"
+        "DOC-0000739"
       ],
       "assigned_by_this_rule": 1
     },
@@ -394,7 +394,7 @@
       "kind": "Market research vendor",
       "documents": 1,
       "document_ids": [
-        "DOC-0000354"
+        "DOC-0000147"
       ],
       "assigned_by_this_rule": 1
     },
@@ -405,7 +405,7 @@
       "kind": "Laboratory",
       "documents": 1,
       "document_ids": [
-        "DOC-0000715"
+        "DOC-0000362"
       ],
       "assigned_by_this_rule": 1
     },
@@ -416,7 +416,7 @@
       "kind": "Logistics",
       "documents": 1,
       "document_ids": [
-        "DOC-0000581"
+        "DOC-0000048"
       ],
       "assigned_by_this_rule": 1
     },
@@ -427,7 +427,7 @@
       "kind": "Advertising agency",
       "documents": 1,
       "document_ids": [
-        "DOC-0000639"
+        "DOC-0000574"
       ],
       "assigned_by_this_rule": 1
     },
@@ -438,7 +438,7 @@
       "kind": "External audit",
       "documents": 1,
       "document_ids": [
-        "DOC-0000377"
+        "DOC-0000777"
       ],
       "assigned_by_this_rule": 1
     },
@@ -449,7 +449,7 @@
       "kind": "Supplier",
       "documents": 1,
       "document_ids": [
-        "DOC-0000416"
+        "DOC-0000495"
       ],
       "assigned_by_this_rule": 1
     },
@@ -460,7 +460,7 @@
       "kind": "Consultant",
       "documents": 1,
       "document_ids": [
-        "DOC-0000090"
+        "DOC-0000454"
       ],
       "assigned_by_this_rule": 1
     },
@@ -471,7 +471,7 @@
       "kind": "Benefits administrator",
       "documents": 1,
       "document_ids": [
-        "DOC-0000751"
+        "DOC-0000764"
       ],
       "assigned_by_this_rule": 1
     },
@@ -482,7 +482,7 @@
       "kind": "Insurance broker",
       "documents": 1,
       "document_ids": [
-        "DOC-0000624"
+        "DOC-0000423"
       ],
       "assigned_by_this_rule": 1
     },
@@ -493,7 +493,7 @@
       "kind": "Staffing vendor",
       "documents": 1,
       "document_ids": [
-        "DOC-0000576"
+        "DOC-0000782"
       ],
       "assigned_by_this_rule": 1
     }
@@ -504,16 +504,16 @@
       "primary": "michael.brennan@mallinckrodt.com",
       "alias": "michael.brennan@covidien.com",
       "why": "legacy domain from before the spin-off",
-      "documents_from_primary": 223,
-      "documents_from_alias": 45
+      "documents_from_primary": 250,
+      "documents_from_alias": 44
     },
     {
       "person": "James Whitfield",
       "primary": "james.whitfield@mallinckrodt.com",
       "alias": "jwhitfield@mallinckrodt.com",
       "why": "an older account format still in use",
-      "documents_from_primary": 134,
-      "documents_from_alias": 12
+      "documents_from_primary": 168,
+      "documents_from_alias": 13
     }
   ],
   "singletons": [

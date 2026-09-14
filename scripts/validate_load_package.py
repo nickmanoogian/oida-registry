@@ -534,6 +534,23 @@ def main():
                   f"{len(sentinels)} listed in edge-cases.json")
 
     # ── Rules 16-18: the planted content is in the files, not just the manifest ──
+    #
+    # A batch written by chunk_load_package.py is a slice of a package, and the
+    # ground truth it carries describes the whole corpus: findings, PI instances
+    # and planted bodies that legitimately live in a sibling batch. Asserting
+    # against those turns a healthy batch into four failures and trains people to
+    # ignore the validator. So when batch-manifest.json says this is a declared
+    # slice, scope every ground-truth assertion to the rows actually present, and
+    # say how many were deferred. Without that manifest an absent control number
+    # is still a real failure, because a whole package should contain its own
+    # ground truth.
+    is_batch   = os.path.exists(os.path.join(pkg, "batch-manifest.json"))
+    present    = {r[i_ctrl] for r in rows}
+
+    def in_scope(ctrl):
+        """False only for a ground-truth row this batch was never meant to hold."""
+        return (not is_batch) or (ctrl in present)
+
     pi_path   = os.path.join(pkg, "pi-ground-truth.csv")
     find_path = os.path.join(pkg, "findings.json")
     i_err     = header.index("Processing Error Type") if "Processing Error Type" in header else None
@@ -560,6 +577,8 @@ def main():
         cache, absent, unreadable, broken, checked = {}, [], [], 0, 0
         for r in pi_rows:
             ctrl = r["Control Number"]
+            if not in_scope(ctrl):
+                continue
             rel  = paths.get(ctrl)
             if not rel:
                 absent.append(f"{ctrl}: no native"); continue
@@ -636,6 +655,7 @@ def main():
         if os.path.exists(pi_path):
             with open(pi_path, encoding="utf-8") as fh:
                 want = [r for r in csv.DictReader(fh)]
+            want = [r for r in want if in_scope(r["Control Number"])]
             txt_absent = []
             for r in want:
                 c = r["Control Number"]
@@ -656,7 +676,7 @@ def main():
             payload = json.load(f)
         findings = {f["id"]: f for f in payload["findings"]}
 
-        missing_body = []
+        missing_body, deferred = [], 0
         for finding in payload["findings"]:
             for ctrl, body in (
                 (finding["control_number"], finding.get("body")),
@@ -664,6 +684,9 @@ def main():
                  finding.get("distinguisher_body")),
             ):
                 if not ctrl or not body:
+                    continue
+                if not in_scope(ctrl):
+                    deferred += 1
                     continue
                 # Without natives the planted body lands in the text sidecar,
                 # which is then the only copy of it in the package.
@@ -677,10 +700,12 @@ def main():
                     missing_body.append(f"{ctrl}: body not in native")
         check("every planted body reached its native" if has_natives
               else "every planted body reached its extracted text", not missing_body,
-              "; ".join(missing_body[:2]) if missing_body else "bodies verified")
+              "; ".join(missing_body[:2]) if missing_body
+              else (f"bodies verified, {deferred} in other batches" if deferred
+                    else "bodies verified"))
 
         buried = findings.get("buried_deep")
-        if buried:
+        if buried and in_scope(buried["control_number"]):
             rel = paths.get(buried["control_number"])
             ok_sheet, detail = False, "no native"
             if rel and full(rel).endswith(".xlsx"):
