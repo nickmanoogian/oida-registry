@@ -1805,6 +1805,29 @@ STEP B3 — Field mapping
   means to will erase the first pass. If you import the extracted text as its
   own overlay job, map ONLY Control Number and ExtractedTextFilePath.
 
+  MULTI-SELECT FIELDS DEFAULT TO MERGE, WHICH IS PROBABLY NOT WHAT YOU WANT.
+  Choosing Overlay Only reveals a "Multi-Select Field Overlay Behavior" setting,
+  and it arrives on Merge Values. Merge keeps the values already on the document
+  and adds the new ones, so a field like Issues or Rsmf Participants ends up
+  holding the union of two builds rather than what this load file says. If the
+  point of the overlay is to bring documents up to date, pick REPLACE VALUES.
+  Merge is right only when you are deliberately adding to a coding pass.
+
+  Overlay Only also asks for an Overlay Identifier, which defaults to Control
+  Number. That is correct for these packages and it is the only column that
+  qualifies: the identifier has to be a Fixed-Length Text field whose category
+  is Generic or Identifier.
+
+  USE AN OVERLAY RATHER THAN A RELOAD WHEN THE DOCUMENT SET HAS NOT CHANGED.
+  Rebuilding a tier changes field values, not which documents exist, so the
+  control numbers stay the same. An overlay keyed on Control Number then brings
+  a workspace up to date with no deletion and no window where it sits empty.
+  Check before you assume it: pull the control numbers out of the workspace and
+  diff them against column 1 of the load file. If the sets match, overlay. If
+  the load file has rows the workspace lacks, you need Append/Overlay, and if
+  the workspace holds documents the load file does not, an overlay will leave
+  them behind untouched.
+
   RELATIVITY'S OWN RECOMMENDATIONS FOR A JOB THIS SIZE
   ----------------------------------------------------
   From help.relativity.com, General Recommendations for Structured Import and
