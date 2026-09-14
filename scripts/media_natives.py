@@ -53,7 +53,6 @@ values into the file.
 """
 
 import io
-import json
 import struct
 import zlib
 

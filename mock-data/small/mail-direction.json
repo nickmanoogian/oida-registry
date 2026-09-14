@@ -1,0 +1,17 @@
+{
+  "note": "Which way the email edges point, and how many people are on them. Before this rule every email in every tier was sent by its own custodian to exactly one recipient.",
+  "emails": 806,
+  "eligible": 669,
+  "protected": 137,
+  "self_addressed_repaired": 35,
+  "multi_recipient": 190,
+  "inbound": 306,
+  "measured": {
+    "emails_with_both_ends": 806,
+    "sent_by_their_own_custodian": 502,
+    "received_by_their_own_custodian": 304,
+    "still_self_addressed": 2,
+    "with_more_than_one_recipient": 190,
+    "distinct_senders": 19
+  }
+}

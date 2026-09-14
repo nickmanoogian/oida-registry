@@ -63,7 +63,9 @@ def _people(value_name, value_addr):
         # Mismatched halves mean something upstream rewrote one side only. Trust
         # the addresses, which are what every census counts.
         names = names[:len(addrs)] + [""] * max(0, len(addrs) - len(names))
-    return list(zip(names, addrs))
+    # strict=False on purpose: the guard above has already padded names to the
+    # address count, and addresses are the side every census counts.
+    return list(zip(names, addrs, strict=False))
 
 
 def _pack(pairs):

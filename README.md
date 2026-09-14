@@ -323,9 +323,25 @@ unzip small-errors.zip
 ```
 
 Each contains ~1,423 native files in per-custodian folders, `load-file.dat`,
-`custodian-sources.csv` and `IMPORT_README.txt`. Ready to import immediately. The errored
-package adds `EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`,
-`language-mix.json` and `findings.json`.
+`custodian-sources.csv` and `IMPORT_README.txt`. The errored package adds
+`EXPECTED_ERRORS.csv`, and both now carry `pi-ground-truth.csv`, `language-mix.json`
+and `findings.json`.
+
+**One step before you import.** 24 of the columns have nowhere to land in a stock
+workspace, and Relativity ignores an unmatched column silently rather than warning about
+it, so importing without them succeeds and quietly drops 24 columns of data. The package
+ships the script that creates them:
+
+```bash
+export RELATIVITY_URL=https://yourinstance.relativity.one
+export RELATIVITY_TOKEN=...          # or RELATIVITY_USER + RELATIVITY_PASSWORD
+python3 scripts/create_workspace_fields.py --workspace <id>
+```
+
+Run it **before** you open the Import/Export wizard: the wizard reads the workspace field
+list once when it opens and caches it, so fields created underneath an open wizard do not
+appear until you cancel and reload the page. `IMPORT_README.txt` opens with the full
+five step quickstart.
 
 > **The v1.12.0 release assets predate Rule 19.** Every `.xlsx` and `.pdf` in them is
 > stamped with the build date and every `.pptx` with python-pptx's 2013 template date, which
@@ -367,7 +383,7 @@ make load-small-synthetic
 
 Output in `load-packages/small/`:
 - `natives/` — 1,400+ actual `.eml`, `.docx`, `.xlsx`, `.pptx`, `.pdf`, `.rsmf` files, in one folder per custodian
-- `load-file.dat` — Relativity Concordance load file (53 fields, all metadata)
+- `load-file.dat` — Relativity Concordance load file (61 fields with natives, 60 with `--no-natives`)
 - `custodian-sources.csv` — one row per custodian: the processing data source setup sheet
 - `IMPORT_README.txt` — step-by-step Relativity processing and import instructions
 

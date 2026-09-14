@@ -47,6 +47,7 @@ from zipfile import ZipFile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import media_natives
+import workspace_fields
 from dat_format import DAT_FIELD_SEP, DAT_NEWLINE, DAT_QUOTE, DELIMITER_NOTE  # noqa: F401
 from tier_files import GROUND_TRUTH_FILES
 
@@ -1396,8 +1397,87 @@ def custodian_readme_block(stats, flat):
     return "\n".join(lines)
 
 
+def _tree_size(path):
+    """Bytes on disk under path, 0 if it is not there."""
+    total = 0
+    for root, _dirs, files in os.walk(path):
+        for name in files:
+            try:
+                total += os.path.getsize(os.path.join(root, name))
+            except OSError:
+                pass
+    return total
+
+
+def _human_size(n):
+    """Round numbers for the README, so the size line reads like a person wrote it."""
+    if n >= 1_000_000_000:
+        return f"about {n/1e9:.1f} GB unzipped"
+    if n >= 1_000_000:
+        return f"about {n/1e6:.0f} MB unzipped"
+    return f"about {n/1e3:.0f} KB unzipped"
+
+
 IMPORT_README = """RELATIVITY IMPORT INSTRUCTIONS
 ====================================
+
+QUICKSTART
+==========
+Five steps. Everything after this section is detail you only need when one of
+them misbehaves.
+
+  1. CREATE THE CUSTOM FIELDS, BEFORE YOU OPEN THE WIZARD.
+
+         export RELATIVITY_URL=https://yourinstance.relativity.one
+         export RELATIVITY_TOKEN=...          # or RELATIVITY_USER + RELATIVITY_PASSWORD
+         python3 scripts/create_workspace_fields.py --workspace <id>
+
+     {custom_field_count} of this package's {field_count} columns have nowhere to land in a stock
+     workspace. Relativity ignores an unmatched column silently, so skipping
+     this step gives you a job that reports success with {custom_field_count} columns of data
+     missing. The script is in this package, stdlib only, idempotent, and
+     --dry-run prints the list without contacting the instance.
+
+     BEFORE, not during. The Import/Export wizard reads the workspace field
+     list once when it opens and caches it for the whole session. Create
+     fields with the wizard already open and Auto Map keeps reporting the old
+     number, {automap_count} of {field_count}, no matter how many times you go Back and Continue.
+     The fix is to cancel, reload the page, and start the wizard again.
+
+  2. PICK YOUR TRANSFER ROUTE BY SIZE. This package is {package_size}.
+
+         under ~100 MB     browser upload. Zip {zip_contents}, with
+                           {zip_root_word} AT THE ZIP ROOT.
+         over ~100 MB      Express Transfer, or chunk it. See TRANSFER ROUTE
+                           below. The browser path does not fail fast on a
+                           package this size; it fails after a day.
+
+  3. RUN THE WIZARD.
+         New Import/Export Job -> Import -> Structured (Processed) Data -> Document
+         Job name: 50 CHARACTERS MAX. Longer and Continue just stops working,
+           with the error hidden underneath the field.
+         Load file: load-file.dat. The delimiters are already correct if the
+           header preview shows {field_count} columns rather than one.
+
+  4. MAP THE FIELDS.
+         Click Auto Map Fields. Expect {automap_count_after} of {field_count}.
+         Then set the path columns by hand, in Additional Field Settings:
+           ExtractedTextFilePath -> Extracted Text, setting "Text File", UTF-8
+{native_quickstart_line}         That should take you to {field_count} of {field_count}.
+
+  5. OVERWRITE MODE: Append Only for a first load into an empty workspace.
+     Overlay against an empty workspace fails, and in any overlay mode a blank
+     cell erases the existing value rather than being skipped.
+
+  6. CLICK "PRECHECK LOAD FILE" BEFORE "IMPORT". It sits next to the Import
+     button and it is the only thing that inspects the package before the job
+     commits to it: date formats, field type alignment, text length against
+     field maximums, column count consistency, and the file paths on a sample.
+     Measured on the extra large tier, 275,273 rows, about three minutes. Set
+     against a bad package failing a day later, that is nothing.
+
+Then: Import.
+
 
 This package contains:
   natives/               native files, organised into one folder per custodian
@@ -1456,7 +1536,7 @@ STEP B2 — Workspace → Import → Relativity Load File → select load-file.d
 STEP B3 — Field mapping
   The .dat file uses the standard Concordance delimiters. Set these before
   mapping, or the importer reads the whole row as one field and the mapping
-  screen shows a single column instead of 59:
+  screen shows a single column instead of {field_count}:
     {delimiters}
 
   MOST COLUMNS AUTO-MAP, because they are named after Relativity's own document
@@ -1525,9 +1605,85 @@ STEP B3 — Field mapping
 
       zip -r native-and-text.zip text natives     # or just text, if no natives
 
-  Express Transfer is the alternative and takes the files unzipped, but
-  Relativity says not to zip data when Express Transfer is active and to avoid
-  it for ZIP data under 20 GB, which is this package.
+  TRANSFER ROUTE: THE ZIP PATH HAS A CEILING, AND IT IS NOT 20 GB
+  ----------------------------------------------------------------
+  Relativity documents a 20 GB cap on a single structured import data set
+  without Express Transfer, and every tier here is far under it. That number
+  is not the one that matters. What we measured on a real instance:
+
+      small     1.2 MB dat +  11 MB zip     completed in minutes
+      medium    8.3 MB dat + 5.4 MB zip     completed
+      large     107 MB dat +  90 MB zip     completed
+      xlarge    199 MB dat + 168 MB zip     FAILED
+
+  The xlarge job did not fail fast. It retried for 24.6 hours and then gave up
+  with "The job failed after reaching maximum number of retry attempts. The
+  system was unable to retrieve the last job error." Relativity could not name
+  its own error, so the size pattern is the evidence rather than the message.
+
+  Treat roughly 100 MB as the practical ceiling for the browser zip path, and
+  above it take one of these two instead:
+
+  EXPRESS TRANSFER (simplest). A desktop app you install from the first screen
+  of the Import/Export wizard. Its own description of what it is for: "Import
+  single data sets greater than 20 GB without requiring a ZIP file." With it
+  active the wizard gains a "Select data to Import -> Data Location -> Local
+  Folder" step and you point it straight at this package directory. No zip, no
+  path-root trap, no separate Native & Text upload.
+
+  Three things to know. The folder picker is a native OS dialog, so it cannot be
+  driven by anything scripting the browser.
+
+  Point it at the package directory ITSELF, the one holding load-file.dat. If
+  you unzipped a published release asset, that is not the folder you landed in:
+  the archive is built from the repository root, so it unpacks to
+  load-packages/{tier}/ and you have to go two levels down. Picking the parent
+  is the single easiest mistake here and we made it.
+
+  And check you are pointing at the current copy rather than an older build
+  sitting beside it. Nothing in the wizard shows you the column count until the
+  load file preview, several steps in, by which point you have spent the whole
+  setup on the wrong data. From a shell, before you start:
+
+      head -c 4000 load-file.dat | tr '\024' '\n' | grep -c .
+
+  A current package answers {field_count}.
+
+  IF THE JOB STOPS AT "FAILED TO START UPLOAD". The message asks you to make
+  sure Express Transfer is running and to run its connectivity check. Check
+  whether it is running before you act on that, because ours was, and had been
+  for three days. A long lived Express Transfer can keep its process and its
+  local port alive while the listener behind them stops answering.
+
+  What that looked like, measured, so you can tell this apart from an app that
+  is genuinely closed:
+
+    the local port accepted a TCP connection but never answered an HTTP
+    request, hanging until the client gave up
+
+    six of its connections to the instance sat in CLOSE_WAIT, meaning the far
+    end had closed them and the app had not reaped them
+
+  Quitting and relaunching fixed both: the new listener answered in a tenth of
+  a second and held no half-closed sockets. Retry in the wizard then picked the
+  job straight back up with nothing else re-entered, so a restart costs you the
+  app sign-in and nothing more. On macOS, the process to look for is
+  Relativity.Express.Shell, and quitting the app may leave it behind.
+
+  CHUNKING (when Express Transfer is not available). Split the package into
+  batches that each land inside the range that works:
+
+      python3 scripts/chunk_load_package.py --in . --out batches --rows 50000
+
+  The script is in this package. Each batch is a complete, self consistent
+  import: its load file and its text/ and natives/ trees carry exactly its own
+  rows. Import them in any order, all Append Only. The thing chunking by hand
+  gets wrong is letting the rows and the files drift apart, and a batch whose
+  load file references a text file its zip does not contain imports a document
+  with no text and reports success, which is the quietest possible way to lose
+  data. Verify each batch before importing:
+
+      python3 scripts/validate_load_package.py batches/batch-01
 
   THE SETTING THAT SILENTLY BREAKS THE TEXT LAYER
   -----------------------------------------------
@@ -1552,9 +1708,16 @@ STEP B3 — Field mapping
   Fixed-Length Text field whose category is Generic or Identifier. Control
   Number qualifies; most of the other columns do not.
 
-  RUN THIS FIRST, OR TWENTY-FOUR COLUMNS IMPORT AS NOTHING
+  RUN THIS FIRST, OR {custom_field_count} COLUMNS IMPORT AS NOTHING
   --------------------------------------------------------
       python3 scripts/create_workspace_fields.py --workspace <id>
+
+  RUN IT BEFORE YOU OPEN THE WIZARD. Import/Export reads the workspace field
+  list once, when the wizard opens, and caches it for the rest of the session.
+  Create fields underneath an open wizard and Auto Map keeps reporting the
+  pre-existing count, {automap_count} of {field_count}, however many times you go Back and
+  Continue. Only cancelling and reloading the page clears it. The fields are
+  there; the wizard is looking at a stale list.
 
   The script is in this package, in scripts/, alongside the workspace_fields.py
   it reads. It needs nothing else: no checkout, no install, stdlib only.
@@ -1563,20 +1726,20 @@ STEP B3 — Field mapping
       export RELATIVITY_TOKEN=...      # or RELATIVITY_USER + RELATIVITY_PASSWORD
 
   It is idempotent, so re-running after a partial failure is safe, and --dry-run
-  prints the twenty-four without contacting the instance at all.
+  prints them without contacting the instance at all.
 
   WHY. Auto Map Fields matches a column to a workspace field of the exact same
   name, case-insensitively. A stock workspace template has 472 Document fields,
-  and measured against one: Auto Map matched 35 of the 61 columns in this
-  package. The other 26 were ignored, and Relativity ignores an unmatched column
+  and measured against one: Auto Map matched {automap_count} of the {field_count} columns in this
+  package. The other {unmapped_count} were ignored, and Relativity ignores an unmatched column
   silently rather than warning about it, so the job reports success and the data
   is simply absent.
 
-  Those 26 are twenty-four columns plus the two file-path columns, which never
-  auto-map anywhere and are configured through Additional Field Settings instead
-  (Native File and Text File, both covered below).
+  Those {unmapped_count} are {custom_field_count} custom columns plus the {path_column_word} file-path column{path_column_plural},
+  which never auto-map anywhere and are configured through Additional Field
+  Settings instead.
 
-  The twenty-four are not junk. They carry the data a stock template has nowhere
+  The {custom_field_count} are not junk. They carry the data a stock template has nowhere
   to put: the Rule 21 data source dimension that Collection Coverage is measured
   against; the RSMF chat layer, whose messages reach the workspace through three
   columns and no other route, because this package ships no .rsmf natives for
@@ -1669,22 +1832,21 @@ STEP B3 — Field mapping
 
   * AUTO MAP IS SPACE SENSITIVE. It matches names case-insensitively but not
     space-insensitively, which is why these columns are named exactly as the
-    workspace names its fields. 33 of them match a stock workspace outright.
+    workspace names its fields. {automap_count} of them match a stock workspace outright.
 
-  * DO NOT UNZIP-AND-EXPRESS-TRANSFER. Relativity says not to zip data when
-    Express Transfer is active. This package ships as a zip, so either unzip it
-    first or leave Express Transfer off. Our paths are relative, so Express
-    Transfer is not required either way.
+  * DO NOT ZIP FOR EXPRESS TRANSFER. Relativity says not to zip data when
+    Express Transfer is active, and Express Transfer wants a folder rather than
+    an archive. This package ships as a zip, so unzip it first and point
+    Express Transfer at the resulting directory.
 
   * CREATE FIELD, IF YOU NEED ONE, offers Currency, Date, Decimal, Fixed-Length
     Text, Long Text, Multiple Choice, Single Choice, User, Whole Number and
     Yes/No. Nothing here needs a type outside that list.
 
-  * SIZE. Without Express Transfer a single structured import data set is capped
-    at 20 GB. Every tier here is far under that: the extra large load file plus
-    its extracted text is about 0.5 GB unzipped. Relativity also says to avoid
-    Express Transfer for ZIP data under 20 GB, which is exactly this package, so
-    leave it off.
+  * SIZE. The documented cap is 20 GB for a single structured import data set
+    without Express Transfer, and every tier here is far under it. Do not read
+    that as permission to use the browser zip path at any size below it: the
+    measured ceiling is nearer 100 MB. See TRANSFER ROUTE above.
 
   * RESTRICTED FILE TYPES. An instance setting can restrict file types, and
     Import/Export silently SKIPS restricted files. If a native count comes up
@@ -2053,7 +2215,12 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     scripts_dir = os.path.join(out_dir, "scripts")
     os.makedirs(scripts_dir, exist_ok=True)
     here = os.path.dirname(os.path.abspath(__file__))
-    for name in ("create_workspace_fields.py", "workspace_fields.py"):
+    # chunk_load_package.py and the dat_format.py it reads ship too: IMPORT_README
+    # points at the chunker as the answer for a package too big for the browser
+    # zip path, and that instruction is worth nothing if the file is not here.
+    for name in ("create_workspace_fields.py", "workspace_fields.py",
+                 "chunk_load_package.py", "dat_format.py",
+                 "validate_load_package.py", "error_natives.py"):
         src = os.path.join(here, name)
         if os.path.exists(src):
             shutil.copyfile(src, os.path.join(scripts_dir, name))
@@ -2064,9 +2231,37 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     # Write import readme
     readme_path = os.path.join(out_dir, "IMPORT_README.txt")
     with open(readme_path, "w") as f:
+        # Every count in IMPORT_README is derived, not typed. The hardcoded ones
+        # drifted the moment a column was added and contradicted each other in
+        # three places before this.
+        n_custom   = len(workspace_fields.WORKSPACE_FIELDS)
+        n_paths    = sum(1 for c in columns if c.endswith("FilePath"))
+        n_unmapped = n_custom + n_paths
+        n_automap  = len(columns) - n_unmapped
+        dat_bytes  = os.path.getsize(os.path.join(out_dir, "load-file.dat"))
+        pkg_bytes  = dat_bytes + _tree_size(os.path.join(out_dir, "text")) \
+                               + _tree_size(os.path.join(out_dir, "natives"))
+        if "NativeFilePath" in columns:
+            native_line = ("           NativeFilePath        -> Native File\n")
+        else:
+            native_line = ("           (no NativeFilePath column: this package ships no natives)\n")
         f.write(IMPORT_README.replace("{tier}", tier_name)
                             .replace("{delimiters}", DELIMITER_NOTE)
                             .replace("{field_count}", str(len(columns)))
+                            .replace("{custom_field_count}", str(n_custom))
+                            .replace("{path_column_word}", "two" if n_paths == 2 else "one")
+                            .replace("{path_column_plural}", "s" if n_paths == 2 else "")
+                            .replace("{unmapped_count}", str(n_unmapped))
+                            .replace("{automap_count}", str(n_automap))
+                            .replace("{automap_count_after}", str(len(columns) - n_paths))
+                            .replace("{native_quickstart_line}", native_line)
+                            .replace("{zip_contents}",
+                                     "text/ and natives/ together"
+                                     if "NativeFilePath" in columns else "text/")
+                            .replace("{zip_root_word}",
+                                     "those folders"
+                                     if "NativeFilePath" in columns else "that folder")
+                            .replace("{package_size}", _human_size(pkg_bytes))
                              .replace("{custodian_block}", custodian_readme_block(cust_stats, flat))
                 + expected_errors_readme_block(error_rows)
                 + ground_truth_readme_block(out_dir, ground_truth)
