@@ -162,6 +162,7 @@ mock-medium:
 	dvc get $(REGISTRY) mock-data/medium/entities.json        --out $(MOCK_OUT)/medium/entities.json
 	dvc get $(REGISTRY) mock-data/medium/data-sources.json    --out $(MOCK_OUT)/medium/data-sources.json
 	dvc get $(REGISTRY) mock-data/medium/collection-shape.json --out $(MOCK_OUT)/medium/collection-shape.json
+	dvc get $(REGISTRY) mock-data/medium/mail-direction.json   --out $(MOCK_OUT)/medium/mail-direction.json
 	@echo "Medium tier ready at $(MOCK_OUT)/medium/"
 
 mock-large:
@@ -176,6 +177,7 @@ mock-large:
 	dvc get $(REGISTRY) mock-data/large/entities.json          --out $(MOCK_OUT)/large/entities.json
 	dvc get $(REGISTRY) mock-data/large/data-sources.json      --out $(MOCK_OUT)/large/data-sources.json
 	dvc get $(REGISTRY) mock-data/large/collection-shape.json  --out $(MOCK_OUT)/large/collection-shape.json
+	dvc get $(REGISTRY) mock-data/large/mail-direction.json   --out $(MOCK_OUT)/large/mail-direction.json
 	gunzip -f $(MOCK_OUT)/large/documents.csv.gz
 	gunzip -f $(MOCK_OUT)/large/email-families.json.gz
 	@echo "Large tier ready at $(MOCK_OUT)/large/"
@@ -192,6 +194,7 @@ mock-xlarge:
 	dvc get $(REGISTRY) mock-data/xlarge/entities.json          --out $(MOCK_OUT)/xlarge/entities.json
 	dvc get $(REGISTRY) mock-data/xlarge/data-sources.json      --out $(MOCK_OUT)/xlarge/data-sources.json
 	dvc get $(REGISTRY) mock-data/xlarge/collection-shape.json  --out $(MOCK_OUT)/xlarge/collection-shape.json
+	dvc get $(REGISTRY) mock-data/xlarge/mail-direction.json   --out $(MOCK_OUT)/xlarge/mail-direction.json
 	gunzip -f $(MOCK_OUT)/xlarge/documents.csv.gz
 	gunzip -f $(MOCK_OUT)/xlarge/email-families.json.gz
 	@echo "Extra large tier ready at $(MOCK_OUT)/xlarge/"

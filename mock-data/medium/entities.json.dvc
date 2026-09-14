@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.19.0/medium-entities.json
-  size: 20872
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/medium-entities.json
+  size: 20896
 outs:
 - path: entities.json
-  size: 20872
+  size: 20896
   isexec: false

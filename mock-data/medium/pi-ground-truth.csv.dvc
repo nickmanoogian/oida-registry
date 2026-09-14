@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.19.0/medium-pi-ground-truth.csv
-  size: 67185
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/medium-pi-ground-truth.csv
+  size: 59879
 outs:
 - path: pi-ground-truth.csv
-  size: 67185
+  size: 59879
   isexec: false

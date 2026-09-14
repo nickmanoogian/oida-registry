@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/xlarge-mail-direction.json
+  size: 575
+outs:
+- path: mail-direction.json
+  size: 575
+  isexec: false

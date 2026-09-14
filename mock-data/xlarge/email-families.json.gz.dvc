@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.19.0/xlarge-email-families.json.gz
-  size: 1441326
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/xlarge-email-families.json.gz
+  size: 1441328
 outs:
 - path: email-families.json.gz
-  size: 1441326
+  size: 1441328
   isexec: false
