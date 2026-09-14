@@ -1459,11 +1459,29 @@ them misbehaves.
          Load file: load-file.dat. The delimiters are already correct if the
            header preview shows {field_count} columns rather than one.
 
-  4. MAP THE FIELDS.
-         Click Auto Map Fields. Expect {automap_count_after} of {field_count}.
-         Then set the path columns by hand, in Additional Field Settings:
+  4. MAP THE FIELDS: LOAD THE PROFILE, DO NOT MAP BY HAND.
+         On the load file screen, set Profile to "From Local Disk" and pick
+         scripts/oida-import-profile.ie from this package. It carries the whole
+         mapping and, more importantly, the two Additional Field Settings that
+         cannot be expressed in a column name and that fail silently when
+         missed: ExtractedTextFilePath as a Text File in UTF-8, and
+         NativeFilePath as a Native File.
+
+         Load it and the mapping screen opens at {profile_mapped} of {field_count} with nothing
+         clicked. You do not touch Auto Map Fields at all.{native_profile_note}
+
+         The profile is portable. It records a workspace field id per column,
+         but Relativity resolves by name: built in one workspace and loaded in
+         another, it opened at {profile_mapped} of {field_count} unaided with the Text File
+         setting intact. Measured on a package built with natives; a
+         --no-natives package simply has no NativeFilePath column for the
+         profile's native setting to attach to.
+
+         IF YOU MAP BY HAND INSTEAD, click Auto Map Fields, expect
+         {automap_count} of {field_count}, and then set the path columns yourself in the
+         Additional Field Settings column:
            ExtractedTextFilePath -> Extracted Text, setting "Text File", UTF-8
-{native_quickstart_line}         That should take you to {field_count} of {field_count}.
+{native_quickstart_line}         That takes you to {field_count} of {field_count}.
 
   5. OVERWRITE MODE: Append Only for a first load into an empty workspace.
      Overlay against an empty workspace fails, and in any overlay mode a blank
@@ -2243,7 +2261,8 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
     # zip path, and that instruction is worth nothing if the file is not here.
     for name in ("create_workspace_fields.py", "workspace_fields.py",
                  "chunk_load_package.py", "dat_format.py",
-                 "validate_load_package.py", "error_natives.py"):
+                 "validate_load_package.py", "error_natives.py",
+                 "oida-import-profile.ie"):
         src = os.path.join(here, name)
         if os.path.exists(src):
             shutil.copyfile(src, os.path.join(scripts_dir, name))
@@ -2278,6 +2297,13 @@ def build(tier_name, tier_dir, out_dir, use_oida, limit, seed, flat=False,
                             .replace("{automap_count}", str(n_automap))
                             .replace("{automap_count_after}", str(len(columns) - n_paths))
                             .replace("{native_quickstart_line}", native_line)
+                            .replace("{profile_mapped}",
+                                     str(len(columns) - (1 if "NativeFilePath" in columns else 0)))
+                            .replace("{native_profile_note}",
+                                     ("\n         NativeFilePath is the one row left unmapped, because Relativity\n"
+                                      "         carries it as a job setting rather than a field mapping. The\n"
+                                      "         profile already sets it; nothing more to do.")
+                                     if "NativeFilePath" in columns else "")
                             .replace("{zip_contents}",
                                      "text/ and natives/ together"
                                      if "NativeFilePath" in columns else "text/")
