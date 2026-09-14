@@ -1423,7 +1423,7 @@ IMPORT_README = """RELATIVITY IMPORT INSTRUCTIONS
 
 QUICKSTART
 ==========
-Five steps. Everything after this section is detail you only need when one of
+Six steps. Everything after this section is detail you only need when one of
 them misbehaves.
 
   1. CREATE THE CUSTOM FIELDS, BEFORE YOU OPEN THE WIZARD.
