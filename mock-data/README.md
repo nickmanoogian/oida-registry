@@ -24,19 +24,19 @@ corpus: most of what people ask for is already a flag, and the parts that are no
 | **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) | 40, the same roster as large |
 | **Orgs** | 3 | 3 | 4 (+ outside counsel) | 4 (+ outside counsel) |
 | **Phases** | 2–3 | 1–4 | 1–4 | 1–4 |
-| **Scripted hot docs** | 8 | 11 | 13 | 13 |
+| **Scripted hot docs** | 8 | 13 | 13 | 13 |
 | **Scripted threads** | 2 | 5 | 5 | 5 |
 | **Planted findings** | 5 | 5 | 5 | 5 |
 | **External entities** | 40 (28 singletons) | 60 (42) | 120 (84) | 120 (84) |
 | **Aliased people** | 2 | 3 | 5 | 5 |
-| **PI instances** | 102 | 443 | 3,326 | 6,048 |
+| **PI instances** | 99 | 394 | 3,338 | 6,106 |
 | **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% | German 1.2%, Polish 0.8%, Spanish 0.4% |
 | **Data sources** | 8 | 10 | 10 | 10 |
 | **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
 | **Privileged** | 30 | 146 | 1,991 | 3,654 |
-| **`documents.csv`** | 1.4 MB | 9 MB | 130 MB | 260 MB |
-| **Where it lives** | in git | v1.16.0 release, via DVC | v1.16.0 release, via DVC | v1.16.0 release, via DVC |
+| **`documents.csv`** | 1.5 MB | 10 MB | 148 MB | 275 MB |
+| **Where it lives** | in git | release asset, via DVC | release asset, via DVC | release asset, via DVC |
 
 ---
 
@@ -51,7 +51,7 @@ are building, so this is the table to read first. Measured on the **small** tier
 | **Collection Coverage** | 48 months of dates, **8 data sources with measurably different metadata profiles** (Rule 21) across 66 source-and-custodian folders, and a **planted gap and spike** (Rule 22): the top custodian has zero documents across three months that hold 28, 32 and 26 for everybody else against a median of 28, and one month carries 3.9x the median. Every native stamped from the manifest (Rule 19) | **The widget buckets on a file system date, and eleven ZIP containers stretch its axis across 37 years.** Rule 4 gives a zip entry with no date of its own `Date Created` = 1980-01-01, which is the DOS epoch and exactly what real processing writes. On the medium tier that is 11 documents, every one a `Container - ZIP` carrying a perfectly good `Primary Date` between 2010 and 2017. `Primary Date` in the corpus spans **96 months** and nothing earlier than 2010-01. A run over those same 9,980 documents returned **456 month buckets, 359 of them empty**, with 11 documents sitting alone in 1980-01 and the eight years of real collection squeezed into the last fifth of the chart. This is not something to fix in the corpus: dateless zip entries are ubiquitous in real collections, so any tool that buckets coverage on a created date will do this to a real matter too. It is a finding, and it is the reason Rule 4 plants the sentinel |
 | **File Types** | 25 distinct file type categories, containers with real children (Rule 3), chat and mobile RSMF, audio and video flagged unviewable, legacy formats, and unsupported types that land in error (Rule 6). The load file carries the category in `File Type` and the extension in `File Extension`, and **every native is now genuinely the format its extension claims** (Rule 25), so `Relativity Native Type` is populated on import | **Only if you import the natives, and the widget reads its own field, not yours.** `Relativity Native Type` is reserved: it carries the System keyword and Import/Export does not offer it as a mapping target, so no column can populate it. Measured twice over the same 9,980 documents, correcting `File Type` in between, the widget reported `Unidentified` for all of them both times. Attach the natives and Relativity derives the field itself, by sniffing content rather than trusting the extension. The remaining residue is the **Unsupported** set (`.mdb`, `.accdb`, `.pages`, `.numbers`, `.key`, `.olm`), which ships as text on purpose because its whole job is to fail processing, and which therefore identifies as ASCII Text |
 | **Document Categories** | Four narrative phases with distinct subject matter, 8 issue tag clusters, a second-language population on an unrelated topic, one document dense with PI and irrelevant to the matter, and **24 documents that belong to two categories at once** (Rule 22) | — |
-| **PI Detect** | 102 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against. **All 102 are reachable from the extracted text layer (Rule 23), so a load file with no natives still feeds this widget** | **`pi-ground-truth.csv` scores recall, never precision.** The real OIDA text carries its own personal information, so a detector finds far more than was seeded: on the medium tier it flagged 3,839 of 9,096 documents against 443 seeded instances. Those are not false positives. Diffing a detector's total against this file will look like a catastrophic precision problem and will be measuring the wrong thing |
+| **PI Detect** | 99 instances across 18 documents (Rule 16), spread over email bodies, spreadsheet cells, a PDF form and a chat, all non-issuable values, with `pi-ground-truth.csv` to diff against. **All 99 are reachable from the extracted text layer (Rule 23), so a load file with no natives still feeds this widget** | **`pi-ground-truth.csv` scores recall, never precision.** The real OIDA text carries its own personal information, so a detector finds far more than was seeded: on the medium tier it flagged 3,839 of 9,096 documents against 394 seeded instances. Those are not false positives. Diffing a detector's total against this file will look like a catastrophic precision problem and will be measuring the wrong thing |
 | **Primary Language Composition** | German at 2.0% on unrelated facilities notices (Rule 17), real prose in the natives, **written with its own diacritics and planted only into file types whose native carries a body**, tunable with `--second-language-share` | Only one second language in the small tier. Medium adds Polish, large and extra large add Spanish. **Expect languages nobody planted**: the real OIDA text brings its own, and a run over medium returned Chinese and an Other bucket alongside the seeded German and Polish. Documents with no extracted text land in "unable to identify", which on medium was exactly the 868 that have none |
 
 For scale rather than coverage, the **extra large** tier is the same matter at 275,273

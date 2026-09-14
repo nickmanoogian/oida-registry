@@ -248,7 +248,7 @@ make mock-xlarge
 
 275,273 documents. It is large's matter at 1.86x: the same 40 custodians, the same scripted
 documents and threads, the same file type mix, with the volumes and the production shape
-scaled up. `documents.csv` is 260 MB open and arrives gzipped at 59 MB.
+scaled up. `documents.csv` is 275 MB open and arrives gzipped in the release asset.
 
 To build it yourself with a different seed instead, `make mock-regen-xlarge`.
 
@@ -475,7 +475,7 @@ had nothing to work with, and nothing tested what metadata surfaces before anyon
 
 | Rule | What it seeds | Ground truth |
 |---|---|---|
-| **16** | 102 PI instances across 18 documents in the small tier, spread over email bodies, spreadsheet cells, a PDF form and a chat. Every value non-issuable: never-issued SSN areas, published test card numbers, the 555-01xx block, the `.invalid` TLD | `pi-ground-truth.csv`, one row per instance |
+| **16** | 99 PI instances across 18 documents in the small tier, spread over email bodies, spreadsheet cells, a PDF form and a chat. Every value non-issuable: never-issued SSN areas, published test card numbers, the 555-01xx block, the `.invalid` TLD | `pi-ground-truth.csv`, one row per instance |
 | **17** | A second language at ~2%, on facilities notices deliberately unrelated to the matter, with real prose in the natives | `language-mix.json` |
 | **18** | A matched pair and a decoy: one finding visible on metadata alone and unreadable, one visible only by reading with zero keyword hits, one innocent lookalike whose distinguisher is buried in a second record, and one workbook whose payload sits on tab 11 of 12 | `findings.json`, with what each is findable by and invisible to |
 
