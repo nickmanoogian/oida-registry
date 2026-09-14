@@ -229,7 +229,11 @@ def pdf_creation_date(path):
 
 def main():
     ap = argparse.ArgumentParser(description="Validate a built Relativity load package")
-    ap.add_argument("package", help="Path to the package directory")
+    # Defaults to the current directory, because the common case is someone
+    # standing inside a package they just unzipped running the copy that
+    # shipped with it.
+    ap.add_argument("package", nargs="?", default=".",
+                    help="Path to the package directory (default: the current directory)")
     ap.add_argument("--flat", action="store_true",
                     help="Package was built with --flat; skip the per-custodian folder checks")
     args = ap.parse_args()
