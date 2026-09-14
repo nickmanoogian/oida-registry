@@ -1,7 +1,7 @@
 deps:
-- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.19.0/large-language-mix.json
-  size: 973630
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/large-language-mix.json
+  size: 1436852
 outs:
 - path: language-mix.json
-  size: 973630
+  size: 1436852
   isexec: false

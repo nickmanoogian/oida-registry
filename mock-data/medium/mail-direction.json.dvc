@@ -1,0 +1,7 @@
+deps:
+- path: https://github.com/nickmanoogian/oida-registry/releases/download/v1.23.0/medium-mail-direction.json
+  size: 561
+outs:
+- path: mail-direction.json
+  size: 561
+  isexec: false
