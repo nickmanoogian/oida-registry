@@ -52,3 +52,8 @@
 *.pyc
 __pycache__/
 .DS_Store
+
+# Playwright MCP writes page snapshots, console logs and downloaded files here
+# while driving Relativity. None of it belongs in the repo, and a stray installer
+# landed in it once already.
+.playwright-mcp/
