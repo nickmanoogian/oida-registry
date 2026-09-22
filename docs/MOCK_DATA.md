@@ -387,12 +387,12 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `README.md` | Top-level usage for engineers and non-engineers |
 | `docs/MOCK_DATA.md` | **This file** — canonical mock/real data reference |
 | `mock-data/README.md` | Mock-tier usage and key fields |
-| `mock-data/RULES.md` | The 19 rules that define a realistic Relativity dataset |
+| `mock-data/RULES.md` | The 25 rules that define a realistic Relativity dataset |
 | `mock-data/DEMO_GUIDE.md` | Narrative walkthrough for demos |
-| `mock-data/{small,medium,large}/` | The three synthetic tiers (small in git; others via DVC) |
+| `mock-data/{small,medium,large,xlarge}/` | The four synthetic tiers (small in git; others via DVC) |
 | `data-products/` | Real OIDA structured datasets (`.dvc` pointers) + `SCHEMA.md` |
 | `metadata/`, `samples/`, `manifest.tsv.gz.dvc` | Real archive index, sample, and full manifest |
-| `load-packages/` | Pre-built Relativity load package (`small.zip`) |
+| `load-packages/` | Pre-built Relativity load packages (`small.zip`, `small-errors.zip`) plus the real-archive `small-real/` (§3.2) |
 | `scripts/` | Generator, validator, exporter, downloader, manifest and URL tools |
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
 | `CHANGELOG.md` | Version history (current: v1.23.0) |
