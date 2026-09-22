@@ -108,7 +108,7 @@ small tier has 306 attachments across 131 emails. **Edge cases** (Rule 13, off b
 non-English, broken families, orphan attachments, duplicate MD5, and more — so a feature that
 aggregates over a collection is tested against incomplete input, not just complete rows.
 
-Each tier contains nine files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all nine:
+Each tier contains eleven files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all eleven:
 
 | File | Description |
 |------|-------------|
@@ -121,6 +121,8 @@ Each tier contains nine files, and `make mock-medium` / `mock-large` / `mock-xla
 | `findings.json` | Known-answer findings and the decoy (Rule 18) |
 | `entities.json` | The external entity population, alias addresses and singleton tail (Rule 20) |
 | `data-sources.json` | Each data source: what it collects, its folder, its document and custodian counts, and the metadata profile measured from the data (Rule 21) |
+| `collection-shape.json` | The planted date gap, the planted spike, and the dual-category population, each with what to expect and how to verify it (Rule 22) |
+| `mail-direction.json` | Which way the email edges point: how many arrive vs. depart, how many carry more than one recipient, and how many documents were left alone because another rule owns them (Rule 24) |
 
 `docs/REQUEST_TEMPLATE.md` is the intake form for a corpus request, with a map from each
 common ask to the flag that serves it and an honest list of what is not modelled yet.
@@ -357,6 +359,16 @@ a library default, and encrypted artefacts use password `oida` (renamed from
 in `IMPORT_README.txt`). `make check` (lint → typecheck → import cycles →
 validators → scenario matrix → determinism) is the gate to run before a PR.
 
+**Getting a built package into a workspace** (v1.22.0–v1.23.0): every package ships
+`scripts/oida-import-profile.ie`, an Import/Export profile that maps 60 of 61 columns
+on load — including the two Additional Field Settings that fail silently when set by
+hand, `ExtractedTextFilePath` as a Text File and `NativeFilePath` as a Native File.
+Above roughly 100 MB, the browser zip-upload path becomes unreliable (the xlarge
+package failed after a 24.6-hour retry loop); `scripts/chunk_load_package.py` splits a
+built package into self-consistent, import-sized batches for Express Transfer or a
+manual retry. Full walkthrough, including the transfer-size table and the fields that
+must be created before the wizard opens, is in the top-level [`README.md`](../README.md).
+
 **ECI real-data export:** see §3.3 (`make export-insys`).
 
 **Full archive manifest:**
@@ -383,14 +395,22 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `load-packages/` | Pre-built Relativity load package (`small.zip`) |
 | `scripts/` | Generator, validator, exporter, downloader, manifest and URL tools |
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
-| `CHANGELOG.md` | Version history (current: v1.14.0) |
+| `CHANGELOG.md` | Version history (current: v1.23.0) |
 
-Current release: **v1.14.0** (2026-09-09). Since v1.6.0, every tier gained
+Current release: **v1.23.0** (2026-09-14). Since v1.6.0, every tier gained
 attachments and `Record Type` (Rule 15/14), PI/language/planted-findings ground
 truth (Rules 16–18), a stamped native date layer (Rule 19), edge cases that starve
 a feature on purpose (Rule 13), an extra large (275,273-doc) tier, and
-import-failure load-file variants (`make load-broken`) — see
-[`../CHANGELOG.md`](../CHANGELOG.md) for the full history.
+import-failure load-file variants (`make load-broken`). Since v1.19.0: the external
+entity population and data-source dimension (Rules 20–21), a planted collection
+gap/spike/dual-category population (Rule 22), an extracted-text sidecar layer so
+Document Categories and PI Detect work without natives (Rule 23), mail direction so
+inbound mail and multi-recipient `To` fields exist at all (Rule 24), natives that
+are genuinely the format their extension claims rather than text files in disguise
+(Rule 25), the DOS-epoch date sentinel dropped from ZIP children, an Import/Export
+profile that maps 60 of 61 columns unaided, and a chunking tool for packages too
+large for a single browser import — see [`../CHANGELOG.md`](../CHANGELOG.md) for the
+full history.
 
 ---
 
