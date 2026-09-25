@@ -12,23 +12,36 @@ how to regenerate everything from scratch.
 > the tooling that maintains this file, so the repo copy is authoritative and the
 > Confluence page is a manual paste of it.
 
+> **How the numbers here were checked.** Last verified 2026-09-25 against `main` at
+> `a853e5e`. Every tier figure comes from regenerating all four tiers at the default
+> seed and counting the output; the small tier regenerates byte-identical to the
+> committed copy. Package contents were read out of the published v1.23.0 asset, and
+> the pointer counts out of the `.dvc` files themselves. Nothing below was carried
+> forward on trust.
+
 ---
 
 ## 1. What the registry is
 
 The registry is a **DVC data registry**: a git repo that holds pointers, tools,
 and documentation rather than the data itself. Think of it as a card catalog, not
-a library shelf. The actual bytes live in a public Amazon S3 bucket
-(`s3://opioid-industry-documents-archive-dataset-bucket`, no credentials needed);
-this repo holds `.dvc` pointer files plus scripts so anyone can reproducibly pull
-exactly the files they need.
+a library shelf. This repo holds 69 `.dvc` pointer files plus scripts so anyone can
+reproducibly pull exactly the files they need.
+
+The bytes sit in two places, which matters when a pointer breaks:
+
+| Pointers | Count | Where the bytes are |
+|---|---|---|
+| `data-products/`, `metadata/`, `samples/` | 33 | The public OIDA S3 bucket, over plain https (`https://opioid-industry-documents-archive-dataset-bucket.s3.amazonaws.com/…`, no credentials) |
+| `mock-data/{medium,large,xlarge}/`, `load-packages/*.zip` | 35 | GitHub release assets on this repo, all currently **v1.23.0** |
+| `manifest.tsv.gz` | 1 | A GitHub release asset, still on **v1.0.0** — the manifest has not been rebuilt since |
 
 The repo publishes three distinct bodies of data:
 
 | Body | What it is | Real or synthetic | Where |
 |------|-----------|-------------------|-------|
 | **OIDA data-products & archive** | The real Opioid Industry Documents Archive — prescriber CSVs, order records, full document collections, and a 22.3M-file raw archive | **Real** public litigation data | `data-products/`, `metadata/`, `samples/`, `manifest.tsv.gz` |
-| **Relativity mock-data tiers** | Synthetic Relativity workspace metadata (small/medium/large) built around a scripted MDL 2804 narrative | **Synthetic** (generated, deterministic per seed) | `mock-data/` |
+| **Relativity mock-data tiers** | Synthetic Relativity workspace metadata (small/medium/large/xlarge) built around a scripted MDL 2804 narrative | **Synthetic** (generated, deterministic per seed) | `mock-data/` |
 | **ECI real-data export** | The full real Insys document set exported from the OIDA index with real Relativity *processing* fields only | **Real** (no cap, no sampling, no synthetic values) | produced by `scripts/export_insys_documents.py` |
 
 The mock-data tiers and the ECI real-data export are the two things the ECI demo
@@ -62,9 +75,14 @@ The narrative runs across four phases:
 | **3 — Crisis** | 2015–2016 | Legal holds, whistleblower, SOM deletion, AG subpoenas | ~55% | ~15% |
 | **4 — Litigation** | 2017–2018 | MDL discovery, settlement, privilege logs, clawbacks | ~35% | ~25% |
 
-Issue-tag clustering follows the same story: `SOM Override`, `Speaker Bureau
-Payments`, `DEA Correspondence`, `Prior Auth Fraud`, `McKinsey Strategy`, `Legal
-Hold`, `Whistleblower`, `State AG Investigation`.
+Issue-tag clustering follows the same story. The generator's full vocabulary is
+eleven tags, drawn per org and phase: `SOM Override`, `Speaker Bureau Payments`,
+`Speaker Bureau` (its phase-1 form), `Sales Incentives`, `DEA Correspondence`, `DEA
+Reporting`, `Prior Auth Fraud`, `McKinsey Strategy`, `Legal Hold`, `Whistleblower`,
+`State AG Investigation`. In the small tier the ones that actually land, most common
+first, are Speaker Bureau Payments (92 documents), SOM Override (43), DEA
+Correspondence (43), Legal Hold (35), State AG Investigation (35), Sales Incentives
+(30), McKinsey Strategy (29), Prior Auth Fraud (25) and Whistleblower (22).
 
 > **A note on naming.** Earlier drafts of this program used placeholder company
 > names; the current generator uses the **real MDL 2804 defendant names**
@@ -93,20 +111,38 @@ matter, deterministic per random seed (default `42`).
 | **Custodians** | 10 (8 MNK + 1 Insys + 1 McKinsey) | 10 (7 MNK + 2 Insys + 1 McKinsey) | 40 (36 MNK + 2 Insys + 1 McKinsey + 1 outside counsel) | 40, the same roster as large |
 | **Orgs represented** | 3 | 3 | 4 | 4 |
 | **Phases present** | 2–3 | 1–4 | 1–4 | 1–4 |
-| **Scripted hot docs** | 8 | 11 | 13 | 13 |
+| **Scripted hot docs** | 8 | 13 | 13 | 13 |
 | **Scripted email threads** | 2 | 5 | 5 | 5 |
 | **Sent to review** | 724 | 4,002 | 56,344 | 104,618 |
 | **Responsive** | 213 | 1,089 | 14,434 | 26,653 |
-| **Privileged** | 30 | 146 | 1,991 | 3,654 |
+| **Privileged** | 29 | 146 | 1,991 | 3,654 |
+| **Planted findings** | 5 | 5 | 5 | 5 |
+| **External entities** | 40 (28 singletons) | 60 (42) | 120 (84) | 120 (84) |
+| **Aliased people** | 2 | 3 | 5 | 5 |
+| **Seeded PI instances** | 99 | 394 | 3,338 | 6,106 |
+| **Second languages** | German 2.0% | German 1.5%, Polish 1.0% | German 1.2%, Polish 0.8%, Spanish 0.4% | same as large |
+| **Data sources** | 8 | 9 | 10 | 10 |
+| **`documents.csv`** | 1.5 MB | 10 MB | 148 MB | 275 MB |
 | **Storage** | committed to git | DVC release artifact | DVC release artifact (gzipped) | DVC release artifact (gzipped) |
 | **Best for** | quick tests, CI fixtures, component dev | feature dev, analytics, full workflow | scale/performance testing, TAR | scale past a quarter of a million documents |
+
+Every figure above was measured by regenerating each tier at the default seed and
+counting the output, not carried forward from a previous release. Two that commonly
+go stale: **`Privileged` in the small tier is 29**, which is what the generator's own
+story summary prints, and the **medium tier carries all 13 scripted hot documents**,
+not a subset — only small, at 1,439 documents, is too small to hold the full set.
 
 Every document also carries a **`Record Type`** (`Email` / `EDoc` / `Container` / `Attachment`,
 Rule 14) and **attachments are re-parented real documents, not invented rows** (Rule 15): the
 small tier has 306 attachments across 131 emails. **Edge cases** (Rule 13, off by default,
-`--edge-cases`) starve twelve scenarios — no custodian, no date, sentinel dates, no text,
-non-English, broken families, orphan attachments, duplicate MD5, and more — so a feature that
-aggregates over a collection is tested against incomplete input, not just complete rows.
+`--edge-cases`) starve thirteen scenarios — no custodian, no date, sentinel dates, no text,
+non-English, mixed language, blank recipients, list-only recipients, orphan attachments, broken
+families, duplicate MD5, media with no text, and text too long for a model context — so a feature
+that aggregates over a collection is tested against incomplete input, not just complete rows.
+(`scripts/edge_cases.py` is the authority on the count; the prose in `RULES.md` still says twelve
+while its own table lists all thirteen. The shipped `small-errors` package agrees with thirteen:
+its `edge-cases.json` names 13 scenarios covering 211 starved documents, each drawn from a
+disjoint pool so no document carries two faults.)
 
 Each tier contains eleven files, and `make mock-medium` / `mock-large` / `mock-xlarge` pull all eleven:
 
@@ -200,7 +236,9 @@ Use §3.1 when you need review fields, a narrative, or a particular failure mode
 ### 3.3 Real OIDA data-products and raw archive
 
 The real, analysis-ready datasets and the raw document archive that back the whole
-project. Pulled the same way (`dvc get …` or a direct S3 URL).
+project. Pulled the same way (`dvc get …` or a direct https URL). Everything in this
+table except `manifest.tsv.gz` resolves to the public OIDA S3 bucket; the manifest is
+built by this repo and published as a GitHub release asset (still v1.0.0).
 
 | Item | Size | What it contains |
 |------|------|-----------------|
@@ -282,8 +320,10 @@ Bradley (CCO, 223), Gregory Nash (Director, SOM Compliance, 133), Robert Ashton
 ## 5. The scripted evidence
 
 Filter `Control Number LIKE 'HOT-%'` for the 13 scripted hot documents (8 present
-in small, 11 in medium, 13 in large) and `Email Thread ID LIKE 'STHR-%'` for the
-scripted threads.
+in small; all 13 in medium, large and extra large) and `Email Thread ID LIKE 'STHR-%'`
+for the scripted threads. Above the small tier the generator also *flags* far more
+documents hot than it scripts — 161 in large, 183 in extra large — so filter on the
+`HOT-` control number when you want the scripted set specifically.
 
 The anchor documents include the SOM override memo (`HOT-0000001`), the McKinsey
 "turbocharge" deck (`HOT-0000002`), the DEA meeting forward (`HOT-0000003`), the
@@ -300,7 +340,7 @@ these. Full detail is in [`../mock-data/DEMO_GUIDE.md`](../mock-data/DEMO_GUIDE.
 ECI (Early Case Intelligence) is a no-LLM, processing-fields-only orientation view
 of a collection. Two datasets from this repo feed it:
 
-- **The ECI real-data export (§3.3)** is what production ECI consumes. It is built
+- **The ECI real-data export (§3.4)** is what production ECI consumes. It is built
   strictly from real OIDA *processing* fields — the same fields ECI computes its
   insights from (custodian × time coverage, file-type mix, date ranges, sizes,
   languages derived from OCR). Because review/analytics fields are absent from a
@@ -340,7 +380,7 @@ Three variants ship, each testing a different failure surface:
 | Package | Contents | Build |
 |---|---|---|
 | `small.zip` | Clean — everything imports and processes | `make load-small` |
-| `small-errors.zip` | Fabricated processing failures **and** the twelve Rule 13 edge-case starves, plus `edge-cases.json` mapping every one | `make load-small-errors` |
+| `small-errors.zip` | Fabricated processing failures **and** the thirteen Rule 13 edge-case starves, plus `edge-cases.json` mapping every one | `make load-small-errors` |
 | `load-broken` (local only, not published) | Seven variants that fail at **import**, not processing: missing native, duplicate control number, bad date, unqualified delimiter, bad encoding, short row, blank required field | `make load-broken` |
 
 ```bash
@@ -359,7 +399,7 @@ a library default, and encrypted artefacts use password `oida` (renamed from
 in `IMPORT_README.txt`). `make check` (lint → typecheck → import cycles →
 validators → scenario matrix → determinism) is the gate to run before a PR.
 
-**Getting a built package into a workspace** (v1.22.0–v1.23.0): every package ships
+**Getting a built package into a workspace:** every package ships
 `scripts/oida-import-profile.ie`, an Import/Export profile that maps 60 of 61 columns
 on load — including the two Additional Field Settings that fail silently when set by
 hand, `ExtractedTextFilePath` as a Text File and `NativeFilePath` as a Native File.
@@ -369,7 +409,15 @@ built package into self-consistent, import-sized batches for Express Transfer or
 manual retry. Full walkthrough, including the transfer-size table and the fields that
 must be created before the wizard opens, is in the top-level [`README.md`](../README.md).
 
-**ECI real-data export:** see §3.3 (`make export-insys`).
+> **Verified in the published asset**, not just in the build script: the v1.23.0
+> `small-load-package.zip` contains `load-packages/small/scripts/oida-import-profile.ie`
+> (11,966 bytes). The v1.23.0 tag points at the commit that added it (#70), so every
+> package pulled by `dvc get` carries it. The one commit after the tag (#71) moved the
+> two load-package pointers off v1.22.1 onto v1.23.0 and touches no asset. Neither
+> commit has a `CHANGELOG.md` entry — `[Unreleased]` is still empty — so the changelog
+> is the one place that does not mention the profile.
+
+**ECI real-data export:** see §3.4 (`make export-insys`).
 
 **Full archive manifest:**
 
@@ -397,7 +445,9 @@ python scripts/fetch_manifest.py --prefix f/ --out f_manifest.tsv.gz
 | `.github/workflows/` | `health-check.yml` (weekly S3 URL check), `validate.yml` (per-PR rules + determinism) |
 | `CHANGELOG.md` | Version history (current: v1.23.0) |
 
-Current release: **v1.23.0** (2026-09-14). Since v1.6.0, every tier gained
+Current release: **v1.23.0**, tagged 2026-09-14 at commit `d50cebf`. `main` is one
+commit ahead of the tag (#71, which repointed the two load-package `.dvc` files from
+v1.22.1 to v1.23.0); all 35 release-asset pointers now resolve to v1.23.0. Since v1.6.0, every tier gained
 attachments and `Record Type` (Rule 15/14), PI/language/planted-findings ground
 truth (Rules 16–18), a stamped native date layer (Rule 19), edge cases that starve
 a feature on purpose (Rule 13), an extra large (275,273-doc) tier, and
